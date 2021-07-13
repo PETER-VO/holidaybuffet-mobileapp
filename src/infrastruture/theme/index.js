@@ -11,4 +11,4 @@ export const theme = {
     fonts,
     fontSizes,
     fontWeights,
-};
+}
