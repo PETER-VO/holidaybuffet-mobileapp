@@ -57,7 +57,7 @@ export const RestaurantInfoCard = ({ restaurant = {} }) => {
                         <Image style={{ width: 15, height: 15 }} source={{ uri: icon }} />
                     </SectionEnd>
                 </Section>
-                <Address>Kauppakatu 42 A6</Address>
+                <Address>{address}</Address>
             </Info>
         </RestaurantCard>
     )

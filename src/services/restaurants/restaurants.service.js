@@ -20,6 +20,7 @@ export const restaurantsTransform = ({ results = [] }) => {
 
         return {
             ...restaurant,
+            address: restaurant.vicinity,
             isClosedTemporarily: restaurant.business_status === "CLOSED_TEMPORARILY",
             isOpenNow: restaurant.opening_hours && restaurant.opening_hours.open_now,
         }
