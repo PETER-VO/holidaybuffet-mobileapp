@@ -7,7 +7,8 @@ import {
     AccountCover,
     AccountContainer,
     AuthButton,
-    AuthInput
+    AuthInput,
+    ErrorContainer
 } from '../components/account.styles';
 
 export const LoginScreen = () => {
@@ -39,7 +40,9 @@ export const LoginScreen = () => {
                 </Spacer>
                 {error && (
                     <Spacer size="large">
-                        <Text variant="error">{error}</Text>
+                        <ErrorContainer>
+                            <Text variant="error">{error}</Text>
+                        </ErrorContainer>
                     </Spacer>
                 )}
                 <Spacer size='large'>
