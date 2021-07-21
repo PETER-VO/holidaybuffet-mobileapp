@@ -1,5 +1,5 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components/native";
 import {
   useFonts as useOswald,
@@ -12,6 +12,7 @@ import { LocationContextProvider } from "./src/services/location/location.contex
 import { Navigation } from "./src/infrastruture/navigation";
 import { FavouritesContextProvider } from './src/services/favourites/favourites.context';
 import * as firebase from 'firebase';
+import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -24,9 +25,25 @@ const firebaseConfig = {
   measurementId: "G-GNGJSN6H6L"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      firebase.auth().signInWithEmailAndPassword("ducphong030699@gmail.com", "3759350")
+        .then(user => {
+          setIsAuthenticated(true);
+        }).catch(error => {
+          console.log(error);
+        });
+    }, 2000);
+  }, [])
+
   const [oswaldLoaded] = useOswald({
     Oswald_400Regular,
   });
@@ -39,16 +56,19 @@ export default function App() {
     return null;
   }
 
+  if (!isAuthenticated) return null;
   return (
     <>
       <ThemeProvider theme={theme}>
-        <FavouritesContextProvider>
-          <LocationContextProvider>
-            <RestaurantsContextProvider>
-              <Navigation />
-            </RestaurantsContextProvider>
-          </LocationContextProvider>
-        </FavouritesContextProvider>
+        <AuthenticationContextProvider>
+          <FavouritesContextProvider>
+            <LocationContextProvider>
+              <RestaurantsContextProvider>
+                <Navigation />
+              </RestaurantsContextProvider>
+            </LocationContextProvider>
+          </FavouritesContextProvider>
+        </AuthenticationContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
