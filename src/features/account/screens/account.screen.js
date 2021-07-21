@@ -1,6 +1,4 @@
 import React from 'react';
-
-import { Button } from 'react-native-paper';
 import { Spacer } from '../../../components/spacer/spacer.component';
 
 import {
