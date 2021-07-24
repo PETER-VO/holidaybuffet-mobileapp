@@ -26,20 +26,7 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      firebase.auth().signInWithEmailAndPassword("ducphong030699@gmail.com", "3759350")
-        .then(user => {
-          setIsAuthenticated(true);
-        }).catch(error => {
-          console.log(error);
-        });
-    }, 2000);
-  }, [])
 
   const [oswaldLoaded] = useOswald({
     Oswald_400Regular,
@@ -53,7 +40,8 @@ export default function App() {
     return null;
   }
 
-  if (!isAuthenticated) return null;
+
+
   return (
     <>
       <ThemeProvider theme={theme}>

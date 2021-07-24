@@ -15,50 +15,73 @@ import {
 import { ActivityIndicator, Colors } from "react-native-paper";
 
 export const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const { onLogin, isLoading, error } = useContext(AuthenticationContext);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [code, setCode] = useState('');
+    const [verificationId, setVerificationId] = useState(null);
+    const recaptchaVerifier = useRef(null);
+    const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
+
+    const sendVerification = () => {
+        const phoneProvider = new firebase.auth.PhoneAuthProvider();
+        phoneProvider
+            .verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
+            .then(setVerificationId);
+    };
+
+    const confirmCode = () => {
+        const credential = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            code
+        );
+        firebase
+            .auth()
+            .signInWithCredential(credential)
+            .then((result) => {
+                console.log(result);
+            });
+    };
+
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <AccountBackground>
                 <AccountCover />
+                <FirebaseRecaptchaVerifierModal
+                    ref={recaptchaVerifier}
+                    firebaseConfig={firebaseConfig}
+                />
                 <Title>Meals To Go</Title>
                 <AccountContainer>
                     <AuthInput
-                        label="E-mail"
-                        value={email}
+                        label="Phone Number"
                         textContentType="emailAddress"
-                        keyboardType="email-address"
-                        autoCaptialize="none"
-                        onChangeText={(u) => setEmail(u)}
+                        keyboardType="phone-pad"
+                        autoCompleteType="tel"
+                        onChangeText={setPhoneNumber}
                     />
                     <Spacer size='large'>
-                        <AuthInput
-                            label="password"
-                            value={password}
-                            textContentType="password"
-                            secureTextEntry
-                            autoCaptialize="none"
-                            onChangeText={(p) => setPassword(p)}
-                        />
-                    </Spacer>
-                    {error && (
-                        <Spacer size="large">
-                            <ErrorContainer>
-                                <Text variant="error">{error}</Text>
-                            </ErrorContainer>
-                        </Spacer>
-                    )}
-                    <Spacer size='large'>
-                        {!isLoading ? (<AuthButton
+                        <AuthButton
                             icon="lock-open-outline"
                             mode="contained"
-                            onPress={() => onLogin(email, password)}
+                            onPress={sendVerification}
                         >
-                            Login
-                        </AuthButton>) : (
-                            (<ActivityIndicator animating={true} color={Colors.blue300} />)
-                        )}
+                            Send Verification
+                        </AuthButton>
+                    </Spacer>
+
+                    <AuthInput
+                        label="Confirmation Code"
+                        keyboardType="number-pad"
+                        onChangeText={setCode}
+                    />
+                    <Spacer size='large'>
+                        <AuthButton
+                            icon="lock-open-outline"
+                            mode="contained"
+                            onPress={confirmCode}
+                        >
+                            Send Verification
+                        </AuthButton>
                     </Spacer>
                 </AccountContainer>
                 <Spacer size="large">

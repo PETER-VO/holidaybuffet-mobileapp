@@ -14,10 +14,6 @@ import { FavouritesContext } from "../../../services/favourites/favourites.conte
 import { RestaurantList } from "../components/restaurant-list.styles";
 import { FadeInView } from "../../../components/animations/fade.animation";
 
-const SearchContainer = styled.View`
-  padding: ${(props) => props.theme.space[3]};
-`;
-
 const Loading = styled(ActivityIndicator)`
   margin-left: -25px;
 `;
@@ -41,7 +37,8 @@ export const RestaurantsScreen = ({ navigation }) => {
             )}
             <Search
                 isFavouritesToggled={isToggled}
-                onFavouritesToggle={() => setIsToggled(!isToggled)} />
+                onFavouritesToggle={() => setIsToggled(!isToggled)}
+            />
             {
                 isToggled && <FavouritesBar favourites={favourites} onNavigate={navigation.navigate} />
             }

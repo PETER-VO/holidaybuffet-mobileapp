@@ -20,6 +20,11 @@ export const AuthenticationContextProvider = ({ children }) => {
 
     const onLogin = (email, password) => {
         setIsLoading(true);
+        if (!email || !password) {
+            setError('All information is not empty!')
+            return;
+        }
+
         loginRequest(email, password).then((user) => {
             setUser(user);
             setIsLoading(false);
@@ -31,6 +36,11 @@ export const AuthenticationContextProvider = ({ children }) => {
 
     const onRegister = (email, password, repeatedPassword) => {
         setIsLoading(true);
+        if (!email || !password || !repeatedPassword) {
+            setError('All information is not empty!')
+            return;
+        }
+
         if (password !== repeatedPassword) {
             setError('Error: Passwords do not match');
             return;
@@ -54,7 +64,7 @@ export const AuthenticationContextProvider = ({ children }) => {
     return (
         <AuthenticationContext.Provider
             value={{
-                isAuthenticated: !!user,
+                isAuthenticated: user,
                 user,
                 isLoading,
                 error,

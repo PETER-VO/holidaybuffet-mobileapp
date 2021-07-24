@@ -5,6 +5,7 @@ import { SafeArea } from "../../../components/utils/safe-area.component";
 import styled from "styled-components/native";
 import { Spacer } from "../../../components/spacer/spacer.component";
 import { Text } from "../../../components/typography/text.component";
+import { TouchableOpacity } from 'react-native';
 
 const SettingsItem = styled(List.Item)`
     padding: ${props => props.theme.space[3]};
