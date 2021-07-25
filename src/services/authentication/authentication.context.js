@@ -1,79 +1,131 @@
-import React, { useState, createContext } from "react";
-import * as firebase from "firebase";
-import { loginRequest } from './authentication.service';
+import React, { useState, createContext } from 'react';
+import * as firebase from 'firebase';
+import {
+	loginRequest,
+	sendVerificationRequest,
+	confirmCodeRequest,
+} from './authentication.service';
 
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useState(null);
-    const [error, setError] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [user, setUser] = useState(null);
+	const [verificationId, setVerificationId] = useState(null);
+	const [error, setError] = useState([]);
 
-    firebase.auth().onAuthStateChanged((usr) => {
-        if (usr) {
-            setUser(usr);
-            setIsLoading(false);
-        } else {
-            setIsLoading(false);
-        }
-    })
+	firebase.auth().onAuthStateChanged((usr) => {
+		if (usr) {
+			setUser(usr);
+			setIsLoading(false);
+		} else {
+			setIsLoading(false);
+		}
+	});
 
-    const onLogin = (email, password) => {
-        setIsLoading(true);
-        if (!email || !password) {
-            setError('All information is not empty!')
-            return;
-        }
+	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
+		setIsLoading(true);
 
-        loginRequest(email, password).then((user) => {
-            setUser(user);
-            setIsLoading(false);
-        }).catch((e) => {
-            setIsLoading(false);
-            setError(e.toString());
-        })
-    };
+		if (!phoneNumber) {
+			return;
+		}
+		console.log('Hi');
 
-    const onRegister = (email, password, repeatedPassword) => {
-        setIsLoading(true);
-        if (!email || !password || !repeatedPassword) {
-            setError('All information is not empty!')
-            return;
-        }
+		sendVerificationRequest(phoneNumber, recaptchaVerifier)
+			.then((id) => {
+				setIsLoading(false);
+				setVerificationId(id);
+			})
+			.catch((e) => {
+				setIsLoading(false);
+				setError(e.toString());
+				console.log(e.toString());
+			});
+	};
 
-        if (password !== repeatedPassword) {
-            setError('Error: Passwords do not match');
-            return;
-        }
+	const verificationCode = (code) => {
+		setIsLoading(true);
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(u => {
-                setUser(u);
-                setIsLoading(false);
-            }).catch(() => {
-                setIsLoading(false);
-                setError(e.toString());
-            })
-    }
+		if (!code) {
+			return;
+		}
+		console.log('Hi2');
 
-    const onLogout = () => {
-        setUser(null);
-        firebase.auth().signOut();
-    }
+		confirmCodeRequest(verificationId, code)
+			.then((result) => {
+				setIsLoading(false);
+				console.log(result);
+			})
+			.catch((e) => {
+				setIsLoading(false);
+				setError(e.toString());
+				console.log(e.toString());
+			});
+	};
 
-    return (
-        <AuthenticationContext.Provider
-            value={{
-                isAuthenticated: user,
-                user,
-                isLoading,
-                error,
-                onLogin,
-                onRegister,
-                onLogout,
-            }}
-        >
-            {children}
-        </AuthenticationContext.Provider>
-    )
-}
+	const onLogin = (email, password) => {
+		setIsLoading(true);
+		if (!email || !password) {
+			setError('All information is not empty!');
+			return;
+		}
+
+		loginRequest(email, password)
+			.then((user) => {
+				setUser(user);
+				setIsLoading(false);
+			})
+			.catch((e) => {
+				setIsLoading(false);
+				setError(e.toString());
+			});
+	};
+
+	const onRegister = (email, password, repeatedPassword) => {
+		setIsLoading(true);
+		if (!email || !password || !repeatedPassword) {
+			setError('All information is not empty!');
+			return;
+		}
+
+		if (password !== repeatedPassword) {
+			setError('Error: Passwords do not match');
+			return;
+		}
+
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(email, password)
+			.then((u) => {
+				setUser(u);
+				setIsLoading(false);
+			})
+			.catch(() => {
+				setIsLoading(false);
+				setError(e.toString());
+			});
+	};
+
+	const onLogout = () => {
+		setUser(null);
+		firebase.auth().signOut();
+	};
+
+	return (
+		<AuthenticationContext.Provider
+			value={{
+				isAuthenticated: user,
+				user,
+				isLoading,
+				error,
+				onLogin,
+				onRegister,
+				onLogout,
+				verificationPhoneNumber,
+				verificationCode,
+			}}
+		>
+			{children}
+		</AuthenticationContext.Provider>
+	);
+};
