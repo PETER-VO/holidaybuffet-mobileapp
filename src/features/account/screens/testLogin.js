@@ -34,7 +34,14 @@ export const testLogin = () => {
 				style={styles.containerAvoidingView}
 			>
 				<Text style={styles.textTitle}>Please input your phone number</Text>
-				<View style={styles.containerInput}>
+				<View
+					style={[
+						styles.containerInput,
+						{
+							borderBottomColor: focusInput ? '#244DB7' : '#ffffff',
+						},
+					]}
+				>
 					<View style={styles.openDialogView}></View>
 					<Text>+358 |</Text>
 					<TextInput

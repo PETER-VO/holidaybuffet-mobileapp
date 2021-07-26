@@ -9,6 +9,7 @@ import {
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
+	const exceptedError = ['Error: Cancelled by user'];
 	const [isLoading, setIsLoading] = useState(false);
 	const [user, setUser] = useState(null);
 	const [verificationId, setVerificationId] = useState(null);
@@ -29,7 +30,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 		if (!phoneNumber) {
 			return;
 		}
-		console.log('Hi');
 
 		sendVerificationRequest(phoneNumber, recaptchaVerifier)
 			.then((id) => {
@@ -38,8 +38,9 @@ export const AuthenticationContextProvider = ({ children }) => {
 			})
 			.catch((e) => {
 				setIsLoading(false);
-				setError(e.toString());
-				console.log(e.toString());
+				if (e.toString() !== exceptedError[0]) {
+					setError(e.toString());
+				}
 			});
 	};
 
@@ -58,8 +59,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 			})
 			.catch((e) => {
 				setIsLoading(false);
-				setError(e.toString());
-				console.log(e.toString());
+				console.log('2', e.toString());
+				if (e.toString() !== exceptedError[0]) {
+					setError(e.toString());
+				}
 			});
 	};
 
@@ -108,7 +111,13 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 	const onLogout = () => {
 		setUser(null);
+		setVerificationId(null);
+		setError([]);
 		firebase.auth().signOut();
+	};
+
+	const clearError = () => {
+		setError([]);
 	};
 
 	return (
@@ -123,6 +132,8 @@ export const AuthenticationContextProvider = ({ children }) => {
 				onLogout,
 				verificationPhoneNumber,
 				verificationCode,
+				verificationId,
+				clearError,
 			}}
 		>
 			{children}
