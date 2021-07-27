@@ -91,7 +91,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 					ref={recaptchaVerifier}
 					firebaseConfig={firebaseConfig}
 				/>
-				<Title>Meals To Go</Title>
+				<Title>Holiday Buffet</Title>
 				<AccountContainer>
 					<ViewInput>
 						<CodeInput

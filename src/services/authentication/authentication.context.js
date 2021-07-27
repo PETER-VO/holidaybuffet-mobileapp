@@ -50,12 +50,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 		if (!code) {
 			return;
 		}
-		console.log('Hi2');
 
 		confirmCodeRequest(verificationId, code)
 			.then((result) => {
 				setIsLoading(false);
-				console.log(result);
 			})
 			.catch((e) => {
 				setIsLoading(false);

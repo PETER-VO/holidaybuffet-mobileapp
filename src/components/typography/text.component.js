@@ -1,5 +1,4 @@
-import styled from "styled-components/native";
-
+import styled from 'styled-components/native';
 
 const defaultTextStyles = (theme) => `
   font-family: ${theme.fonts.body};
@@ -33,19 +32,42 @@ const label = (theme) => `
     font-weight: ${theme.fontWeights.medium};
 `;
 
+const subject = (theme) => `
+    font-family: ${theme.fonts.body};
+    font-weight: ${theme.fontWeights.medium};
+    color: ${theme.colors.text.primary};
+    flex-wrap: wrap;
+    margin-left: 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: ${theme.fontSizes.h4};
+`;
+
+const subSubject = (theme) => `
+    font-family: ${theme.fonts.heading};
+    font-size: ${theme.fontSizes.body};
+    font-weight: ${theme.fontWeights.medium};
+    color: ${theme.colors.text.primary};
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 20px;
+`;
+
 const variants = {
-    body,
-    label,
-    caption,
-    error,
-    hint,
+	body,
+	label,
+	caption,
+	error,
+	hint,
+	subject,
+	subSubject,
 };
 
 export const Text = styled.Text`
-  ${({ theme }) => defaultTextStyles(theme)}
-  ${({ variant, theme }) => variants[variant](theme)}
+	${({ theme }) => defaultTextStyles(theme)}
+	${({ variant, theme }) => variants[variant](theme)}
 `;
 
 Text.defaultProps = {
-    variant: "body",
+	variant: 'body',
 };

@@ -62,7 +62,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 					ref={recaptchaVerifier}
 					firebaseConfig={firebaseConfig}
 				/>
-				<Title>Meals To Go</Title>
+				<Title>Holiday Buffet</Title>
 				<AccountContainer>
 					<ContainerPhoneInput
 						style={{
