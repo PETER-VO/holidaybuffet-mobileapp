@@ -1,6 +1,7 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import * as firebase from 'firebase';
 import {
+	createUserProfileDocument,
 	loginRequest,
 	sendVerificationRequest,
 	confirmCodeRequest,
@@ -15,14 +16,22 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [verificationId, setVerificationId] = useState(null);
 	const [error, setError] = useState([]);
 
-	firebase.auth().onAuthStateChanged((usr) => {
-		if (usr) {
-			setUser(usr);
-			setIsLoading(false);
-		} else {
-			setIsLoading(false);
-		}
-	});
+	if (!user) {
+		firebase.auth().onAuthStateChanged(async (user) => {
+			if (user) {
+				const userRef = await createUserProfileDocument(user, null);
+				userRef.onSnapshot((snapShot) => {
+					setUser({
+						id: snapShot.id,
+						...snapShot.data(),
+					});
+				});
+				setIsLoading(false);
+			} else {
+				setIsLoading(false);
+			}
+		});
+	}
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);

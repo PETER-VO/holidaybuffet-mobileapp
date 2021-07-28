@@ -74,6 +74,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							ref={(input) => (textInput = input)}
 							placeholder='41 750 3319'
 							keyboardType='numeric'
+							onChangePhone
 							value={phoneNumber}
 							onChangeText={onChangePhone}
 							secureTextEntry={false}

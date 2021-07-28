@@ -4,13 +4,15 @@ import { AuthenticationContext } from '../../services/authentication/authenticat
 import { AppNavigator } from './app.navigator';
 import { AccountNavigator } from './account.navigator';
 import { Text } from 'react-native';
-
+import { QRCodeScreen } from '../../features/qrcode/qrcode.screen';
+import ScanScreen from '../../features/qrcode/scan-qrcide.screen';
 export const Navigation = () => {
 	const { isAuthenticated } = useContext(AuthenticationContext);
 
 	return (
 		<NavigationContainer>
-			{isAuthenticated ? <AppNavigator /> : <AccountNavigator />}
+			<ScanScreen />
+			{/* {isAuthenticated ? <AppNavigator /> : <AccountNavigator />} */}
 		</NavigationContainer>
 	);
 };
