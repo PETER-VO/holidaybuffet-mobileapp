@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
 	View,
 	StyleSheet,
@@ -8,19 +8,28 @@ import {
 	ScrollView,
 	Button,
 } from 'react-native';
-
 import { Text } from '../../../components/typography/text.component';
 import { SafeArea } from '../../../components/utils/safe-area.component';
 import { AntDesign } from '@expo/vector-icons';
+import { RestaurantsContext } from '../../../services/restaurants/restaurants.context';
+import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
 export const RestaurantFeedback = ({ navigation }) => {
 	const [defaultRating, setDefaultRating] = useState(2);
 	const [maxRating, setMaxRating] = useState([1, 2, 3, 4, 5]);
+	const [rating, setRating] = useState('');
+	const [content, setContent] = useState('');
+	const { addFeedback } = useContext(RestaurantsContext);
+	const { user } = useContext(AuthenticationContext);
 
 	const starImgFilled =
 		'https://github.com/tranhonghan/images/blob/main/star_filled.png?raw=true';
 	const starImgCorner =
 		'https://github.com/tranhonghan/images/blob/main/star_corner.png?raw=true';
+
+	useEffect(() => {
+		setRating(defaultRating);
+	}, [defaultRating]);
 
 	const CustomRatingBar = () => {
 		return (
@@ -45,6 +54,15 @@ export const RestaurantFeedback = ({ navigation }) => {
 				})}
 			</View>
 		);
+	};
+
+	const onSubmit = (e) => {
+		const feedbackObj = {
+			rating,
+			content,
+		};
+
+		addFeedback(user, feedbackObj);
 	};
 
 	return (
@@ -73,11 +91,12 @@ export const RestaurantFeedback = ({ navigation }) => {
 						placeholderTextColor={'#9E9E9E'}
 						numberOfLines={12}
 						multiline={true}
+						onChangeText={(e) => setContent(e)}
 					/>
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={styles.buttonStyle}
-						onPress={() => alert(defaultRating)}
+						onPress={(e) => onSubmit(e)}
 					>
 						<Text style={styles.textBtn}>PUBLISH FEEDBACK</Text>
 					</TouchableOpacity>

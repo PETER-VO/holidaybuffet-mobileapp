@@ -1,10 +1,11 @@
 import React, { useState, createContext, useEffect } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 import {
 	createUserProfileDocument,
 	loginRequest,
 	sendVerificationRequest,
 	confirmCodeRequest,
+	incrementCreditRequest,
 } from './authentication.service';
 
 export const AuthenticationContext = createContext();
@@ -19,7 +20,9 @@ export const AuthenticationContextProvider = ({ children }) => {
 	if (!user) {
 		firebase.auth().onAuthStateChanged(async (user) => {
 			if (user) {
-				const userRef = await createUserProfileDocument(user, null);
+				const userRef = await createUserProfileDocument(user, {
+					role: 'user',
+				});
 				userRef.onSnapshot((snapShot) => {
 					setUser({
 						id: snapShot.id,
@@ -55,7 +58,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 	const verificationCode = (code) => {
 		setIsLoading(true);
-
+		addFeedback;
 		if (!code) {
 			return;
 		}
@@ -66,7 +69,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 			})
 			.catch((e) => {
 				setIsLoading(false);
-				console.log('2', e.toString());
 				if (e.toString() !== exceptedError[0]) {
 					setError(e.toString());
 				}
@@ -89,6 +91,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 				setIsLoading(false);
 				setError(e.toString());
 			});
+	};
+
+	const incrementCredit = (data) => {
+		incrementCreditRequest(data);
 	};
 
 	const onRegister = (email, password, repeatedPassword) => {
@@ -141,6 +147,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				verificationCode,
 				verificationId,
 				clearError,
+				incrementCredit,
 			}}
 		>
 			{children}

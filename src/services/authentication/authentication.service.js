@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 import { firestore } from '../../firebase/firebase.utils';
 
 export const loginRequest = (email, password) =>
@@ -23,14 +23,11 @@ export const confirmCodeRequest = async (verificationId, code) => {
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
 	if (!userAuth) return;
-
 	const userRef = firestore.doc(`users/${userAuth.uid}`);
-
 	const snapShot = await userRef.get();
 	if (!snapShot.exists) {
 		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
-
 		try {
 			userRef.set({
 				phoneNumber,
@@ -42,4 +39,17 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 		}
 	}
 	return userRef;
+};
+
+export const incrementCreditRequest = async (data) => {
+	const increment = firebase.firestore.FieldValue.increment(1);
+	const creditRef = firestore.doc(`users/${data}`);
+
+	try {
+		await creditRef.update({
+			credits: increment,
+		});
+	} catch (e) {
+		console.log('Error increment credit: ', e.message);
+	}
 };

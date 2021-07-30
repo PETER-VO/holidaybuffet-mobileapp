@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity, Text, Button } from 'react-native';
 import styled from 'styled-components/native';
 import QRCode from 'react-native-qrcode-svg';
 import { SafeArea } from '../../components/utils/safe-area.component';
@@ -11,7 +11,7 @@ const ViewContainer = styled.View`
 	flex: 1;
 `;
 
-export const QRCodeScreen = () => {
+export const QRCodeScreen = ({ navigation }) => {
 	let svg = null;
 	const [imgUrl, setImgUrl] = useState('');
 	const { user } = useContext(AuthenticationContext);
@@ -36,6 +36,12 @@ export const QRCodeScreen = () => {
 				{imgUrl ? (
 					<Image style={{ width: 350, height: 350 }} source={{ uri: imgUrl }} />
 				) : null}
+				<Button
+					onPress={() => {
+						navigation.navigate('ScanQRCode');
+					}}
+					title='Button'
+				/>
 			</ViewContainer>
 		</SafeArea>
 	);

@@ -8,7 +8,7 @@ import { FavouritesScreen } from '../../features/settings/screens/favourties.scr
 
 const SettingsStack = createStackNavigator();
 
-export const SettingNavigator = ({ route, navigation }) => {
+export const SettingNavigator = () => {
 	return (
 		<SettingsStack.Navigator
 			headerMode='screen'

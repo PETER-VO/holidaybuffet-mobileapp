@@ -1,18 +1,18 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import { RestaurantsNavigator } from './restaurants.navigator';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { FavouritesContextProvider } from '../../services/favourites/favourites.context';
 import { LocationContextProvider } from '../../services/location/location.context';
 import { RestaurantsContextProvider } from '../../services/restaurants/restaurants.context';
 import { SettingNavigator } from './settings.navigator';
-import { QRCodeScreen } from '../../features/qrcode/qrcode.screen';
+import { RestaurantsNavigator } from './restaurants.navigator';
+import { QRCodeNavigator } from './qrcode.navigator';
 
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
 	Restaurants: 'md-restaurant',
-	Map: 'md-map',
+	QRCode: 'md-qr-code-outline',
 	Settings: 'md-settings',
 };
 
@@ -37,7 +37,7 @@ export const AppNavigator = () => (
 					}}
 				>
 					<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
-					<Tab.Screen name='QR Code' component={QRCodeScreen} />
+					<Tab.Screen name='QRCode' component={QRCodeNavigator} />
 					<Tab.Screen name='Settings' component={SettingNavigator} />
 				</Tab.Navigator>
 			</RestaurantsContextProvider>

@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { AuthenticationContext } from '../../services/authentication/authentication.context';
 
-export default function App() {
+export const ScanQRCode = ({ navigation }) => {
 	const [hasPermission, setHasPermission] = useState(null);
-	const [scanned, setScanned] = useState(false);
+	const { incrementCredit } = useContext(AuthenticationContext);
+	const [scan, setScan] = useState(true);
+	const [uid, setUid] = useState('');
 
 	useEffect(() => {
 		(async () => {
@@ -13,10 +16,25 @@ export default function App() {
 		})();
 	}, []);
 
-	const handleBarCodeScanned = ({ type, data }) => {
-		setScanned(true);
-		alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+	const handleBarCodeScanned = async ({ type, data }) => {
+		if (data) {
+			setScan(false);
+			setUid(data);
+			navigation.navigate('ScanSuccess', { type, data });
+		}
 	};
+
+	useEffect(() => {
+		if (!scan) {
+			console.log('OK');
+			incrementCredit(uid);
+		}
+	}, [scan]);
+
+	useEffect(() => {
+		setScan(true);
+		setUid('');
+	}, []);
 
 	if (hasPermission === null) {
 		return <Text>Requesting for camera permission</Text>;
@@ -28,15 +46,12 @@ export default function App() {
 	return (
 		<View style={styles.container}>
 			<BarCodeScanner
-				onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+				onBarCodeScanned={handleBarCodeScanned}
 				style={StyleSheet.absoluteFillObject}
 			/>
-			{scanned && (
-				<Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-			)}
 		</View>
 	);
-}
+};
 
 const styles = StyleSheet.create({
 	container: {
