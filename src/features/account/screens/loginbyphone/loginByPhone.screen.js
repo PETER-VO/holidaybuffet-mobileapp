@@ -1,8 +1,9 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { Spacer } from '../../../../components/spacer/spacer.component';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import * as firebase from 'firebase';
+import { ActivityIndicator, Colors } from 'react-native-paper';
 import {
 	AccountBackground,
 	AccountCover,
@@ -15,6 +16,10 @@ import {
 	ContainerPhoneInput,
 	SubText,
 } from '../../components/account.styles';
+import {
+	Loading,
+	LoadingContainer,
+} from '../../../../components/animations/loading.animation';
 import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 import { Text } from '../../../../components/typography/text.component';
 
@@ -24,6 +29,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [focusInput, setFocusInput] = useState(true);
 	const [code, setCode] = useState('');
+	const [move, setMove] = useState(false);
 	const recaptchaVerifier = useRef(null);
 	const [toggle, setToggle] = useState(false);
 	const firebaseConfig = firebase.apps.length
@@ -43,12 +49,21 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		if (toggle && verificationId) {
-			setToggle(false);
+			setToggle(true);
+			setTimeout(() => {
+				setToggle(false);
+				setMove(true);
+			}, 2000);
+		}
+	});
+
+	useEffect(() => {
+		if (move) {
 			navigation.navigate('InputOTP', {
 				phoneNumber: `${postalCode}${phoneNumber}`,
 			});
 		}
-	});
+	}, [move]);
 
 	useEffect(() => {
 		setTimeout(() => textInput.focus(), 150);
@@ -87,7 +102,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							</ErrorContainer>
 						</Spacer>
 					)}
-					<Spacer size='large'>
+					{!toggle ? (
 						<AuthButton
 							icon='lock-open-outline'
 							style={{
@@ -105,8 +120,11 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 						>
 							Send Verification
 						</AuthButton>
-					</Spacer>
+					) : (
+						<ActivityIndicator animating={true} color={Colors.blue300} />
+					)}
 				</AccountContainer>
+
 				<Spacer size='large'>
 					<AuthButton
 						mode='contained'

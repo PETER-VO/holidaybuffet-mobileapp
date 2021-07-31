@@ -9,8 +9,6 @@ import { useFonts as useLato, Lato_400Regular } from '@expo-google-fonts/lato';
 import { theme } from './src/infrastruture/theme';
 import { Navigation } from './src/infrastruture/navigation';
 import { AuthenticationContextProvider } from './src/services/authentication/authentication.context';
-import firebase from './src/firebase/firebase.utils';
-import { QRCodeScreen } from './src/features/qrcode/qrcode.screen';
 
 export default function App() {
 	const [oswaldLoaded] = useOswald({

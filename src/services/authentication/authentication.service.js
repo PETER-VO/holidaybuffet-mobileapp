@@ -42,13 +42,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 };
 
 export const incrementCreditRequest = async (data) => {
-	const increment = firebase.firestore.FieldValue.increment(1);
-	const creditRef = firestore.doc(`users/${data}`);
-
+	const userRef = firestore.doc(`users/${data}`);
+	let updatedCredit = 1;
+	await userRef.onSnapshot((snapShot) => {
+		const { credits } = snapShot.data();
+		updatedCredit += credits;
+	});
 	try {
-		await creditRef.update({
-			credits: increment,
-		});
+		setTimeout(() => {
+			userRef.update({
+				credits: updatedCredit,
+			});
+		}, 2000);
 	} catch (e) {
 		console.log('Error increment credit: ', e.message);
 	}

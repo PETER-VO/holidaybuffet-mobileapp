@@ -7,6 +7,7 @@ import { Spacer } from '../../../components/spacer/spacer.component';
 import { Text } from '../../../components/typography/text.component';
 import { TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Alert } from 'react-native';
 
 const SettingsItem = styled(List.Item)`
 	padding: ${(props) => props.theme.space[3]};
@@ -18,6 +19,22 @@ const AvatarContainer = styled.View`
 
 export const SettingScreen = ({ navigation }) => {
 	const { onLogout, user } = useContext(AuthenticationContext);
+
+	const alertConfirmLogout = () =>
+		Alert.alert(
+			'Do you want to logout',
+			'My Alert Msg',
+			[
+				{
+					text: 'Cancel',
+					onPress: () => console.log('Cancel Pressed'),
+					style: 'cancel',
+				},
+				{ text: 'OK', onPress: () => onLogout() },
+			],
+			{ cancelable: false }
+		);
+
 	return (
 		<SafeArea>
 			<AvatarContainer>
@@ -37,7 +54,7 @@ export const SettingScreen = ({ navigation }) => {
 				<SettingsItem
 					style={{ padding: 16 }}
 					title='Credits'
-					description='7 coins'
+					description={user.credits ? `${user.credits} coins` : '0 coins'}
 					left={(props) => (
 						<List.Icon {...props} color='black' icon='piggy-bank' />
 					)}
@@ -46,7 +63,7 @@ export const SettingScreen = ({ navigation }) => {
 					style={{ padding: 16 }}
 					title='Logout'
 					left={(props) => <List.Icon {...props} color='black' icon='door' />}
-					onPress={onLogout}
+					onPress={alertConfirmLogout}
 				/>
 			</List.Section>
 		</SafeArea>

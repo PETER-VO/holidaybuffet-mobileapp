@@ -41,18 +41,15 @@ export const RestaurantsContextProvider = ({ children }) => {
 
 	const addFeedback = (user, feedback) => {
 		setIsLoading(true);
-
-		setTimeout(() => {
-			createFeedback(user, feedback)
-				.then((results) => {
-					setIsLoading(false);
-					setFeedback(results);
-				})
-				.catch((error) => {
-					setIsLoading(false);
-					setError(error);
-				});
-		}, 2000);
+		createFeedback(user, feedback)
+			.then((results) => {
+				setIsLoading(false);
+				setFeedback(results);
+			})
+			.catch((error) => {
+				setIsLoading(false);
+				setError(error);
+			});
 	};
 
 	useEffect(() => {

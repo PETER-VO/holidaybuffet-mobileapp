@@ -85,8 +85,8 @@ export const ContainerPhoneInput = styled.View`
 
 export const PhoneInput = styled(TextInput)`
 	margin-left: 5px;
-	flex: 1;
 	height: 50px;
+	width: 180px;
 `;
 
 export const CodeInput = styled(TextInput)`

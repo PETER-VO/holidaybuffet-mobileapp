@@ -19,6 +19,7 @@ import {
 } from '../../components/account.styles';
 import { Text } from '../../../../components/typography/text.component';
 import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
+import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export const InputOTPScreen = ({ navigation, route }) => {
 	let textInput = useRef(null);
@@ -38,6 +39,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		isLoading,
 		verificationPhoneNumber,
 		clearError,
+		processVerificationCode,
 	} = useContext(AuthenticationContext);
 
 	const decrementClock = () => {
@@ -138,17 +140,21 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						</Spacer>
 					)}
 					<Spacer size='large'>
-						<AuthButton
-							icon='lock-open-outline'
-							style={{ backgroundColor: enableResend ? '#2182BD' : 'gray' }}
-							disabled={!enableResend}
-							mode='contained'
-							onPress={() => {
-								onResendOTP();
-							}}
-						>
-							Resend OTP ({countDown})
-						</AuthButton>
+						{!processVerificationCode ? (
+							<AuthButton
+								icon='lock-open-outline'
+								style={{ backgroundColor: enableResend ? '#2182BD' : 'gray' }}
+								disabled={!enableResend}
+								mode='contained'
+								onPress={() => {
+									onResendOTP();
+								}}
+							>
+								Resend OTP ({countDown})
+							</AuthButton>
+						) : (
+							<ActivityIndicator animating={true} color={Colors.blue300} />
+						)}
 					</Spacer>
 				</AccountContainer>
 				<Spacer size='large'>

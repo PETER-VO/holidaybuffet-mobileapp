@@ -9,12 +9,12 @@ export const ScanQRCode = ({ navigation }) => {
 	const [scan, setScan] = useState(true);
 	const [uid, setUid] = useState('');
 
-	useEffect(() => {
-		(async () => {
-			const { status } = await BarCodeScanner.requestPermissionsAsync();
-			setHasPermission(status === 'granted');
-		})();
-	}, []);
+	// useEffect(() => {
+	// 	(async () => {
+	// 		const { status } = await BarCodeScanner.requestPermissionsAsync();
+	// 		setHasPermission(status === 'granted');
+	// 	})();
+	// }, []);
 
 	const handleBarCodeScanned = async ({ type, data }) => {
 		if (data) {

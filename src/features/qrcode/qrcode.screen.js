@@ -36,12 +36,14 @@ export const QRCodeScreen = ({ navigation }) => {
 				{imgUrl ? (
 					<Image style={{ width: 350, height: 350 }} source={{ uri: imgUrl }} />
 				) : null}
-				<Button
-					onPress={() => {
-						navigation.navigate('ScanQRCode');
-					}}
-					title='Button'
-				/>
+				{user.role === 'admin' ? (
+					<Button
+						onPress={() => {
+							navigation.navigate('ScanQRCode');
+						}}
+						title='Button'
+					/>
+				) : null}
 			</ViewContainer>
 		</SafeArea>
 	);

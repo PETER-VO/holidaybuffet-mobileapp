@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import firebase from 'firebase/app';
 import {
 	createUserProfileDocument,
@@ -15,6 +15,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [user, setUser] = useState(null);
 	const [verificationId, setVerificationId] = useState(null);
+	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
 
 	if (!user) {
@@ -23,7 +24,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				const userRef = await createUserProfileDocument(user, {
 					role: 'user',
 				});
-				userRef.onSnapshot((snapShot) => {
+				await userRef.onSnapshot((snapShot) => {
 					setUser({
 						id: snapShot.id,
 						...snapShot.data(),
@@ -58,21 +59,22 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 	const verificationCode = (code) => {
 		setIsLoading(true);
-		addFeedback;
 		if (!code) {
 			return;
 		}
-
-		confirmCodeRequest(verificationId, code)
-			.then((result) => {
-				setIsLoading(false);
-			})
-			.catch((e) => {
-				setIsLoading(false);
-				if (e.toString() !== exceptedError[0]) {
-					setError(e.toString());
-				}
-			});
+		setProcessVerificationCode(true);
+		setTimeout(() => {
+			confirmCodeRequest(verificationId, code)
+				.then((result) => {
+					setProcessVerificationCode(false);
+				})
+				.catch((e) => {
+					setProcessVerificationCode(false);
+					if (e.toString() !== exceptedError[0]) {
+						setError(e.toString());
+					}
+				});
+		}, 2000);
 	};
 
 	const onLogin = (email, password) => {
@@ -148,6 +150,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				verificationId,
 				clearError,
 				incrementCredit,
+				processVerificationCode,
 			}}
 		>
 			{children}
