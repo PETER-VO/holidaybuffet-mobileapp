@@ -3,12 +3,10 @@ import {
 	createStackNavigator,
 	CardStyleInterpolators,
 } from '@react-navigation/stack';
-import { SettingScreen } from '../../features/settings/screens/settings.screen';
-import { FavouritesScreen } from '../../features/settings/screens/favourties.screen';
-import { ShowUserInformScreen } from '../../features/qrcode/show-user-inform.screen';
-import { ScanSuccessScreen } from '../../features/qrcode/scan-success.screen';
-import { ScanQRCode } from '../../features/qrcode/scan-qrcode.screen';
 import { QRCodeScreen } from '../../features/qrcode/qrcode.screen';
+import { ScanQRCode } from '../../features/qrcode/scan-qrcode.screen';
+import { ScanSuccessScreen } from '../../features/qrcode/scan-success.screen';
+import { ShowUserInformScreen } from '../../features/qrcode/show-user-inform.screen';
 
 const qrcodeStack = createStackNavigator();
 

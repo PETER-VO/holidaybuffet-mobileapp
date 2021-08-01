@@ -7,6 +7,7 @@ import { RestaurantsContextProvider } from '../../services/restaurants/restauran
 import { SettingNavigator } from './settings.navigator';
 import { RestaurantsNavigator } from './restaurants.navigator';
 import { QRCodeNavigator } from './qrcode.navigator';
+import { NotificationContextProvider } from '../../services/notification/notification.context';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,17 +30,19 @@ export const AppNavigator = () => (
 	<FavouritesContextProvider>
 		<LocationContextProvider>
 			<RestaurantsContextProvider>
-				<Tab.Navigator
-					screenOptions={createScreenOptions}
-					tabBarOptions={{
-						activeTintColor: 'tomato',
-						inactiveTintColor: 'gray',
-					}}
-				>
-					<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
-					<Tab.Screen name='QRCode' component={QRCodeNavigator} />
-					<Tab.Screen name='Settings' component={SettingNavigator} />
-				</Tab.Navigator>
+				<NotificationContextProvider>
+					<Tab.Navigator
+						screenOptions={createScreenOptions}
+						tabBarOptions={{
+							activeTintColor: 'tomato',
+							inactiveTintColor: 'gray',
+						}}
+					>
+						<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
+						<Tab.Screen name='QRCode' component={QRCodeNavigator} />
+						<Tab.Screen name='Settings' component={SettingNavigator} />
+					</Tab.Navigator>
+				</NotificationContextProvider>
 			</RestaurantsContextProvider>
 		</LocationContextProvider>
 	</FavouritesContextProvider>

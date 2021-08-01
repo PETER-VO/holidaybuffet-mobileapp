@@ -30,6 +30,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	const recaptchaVerifier = useRef(null);
 	const [enableResend, setEnableResend] = useState(false);
 	const [code, setCode] = useState('');
+	const [inputRef2, setInputRef2] = useState(null);
 	const firebaseConfig = firebase.apps.length
 		? firebase.app().options
 		: undefined;
@@ -85,6 +86,16 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	}, [code]);
 
+	// useEffect(() => {
+	// 	if (inputRef2) {
+	// 		setTimeout(() => inputRef2.focus(), 100);
+	// 	}
+	// }, [inputRef2]);
+
+	// useEffect(() => {
+	// 	setInputRef2(false);
+	// }, []);
+
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 			<AccountBackground>
@@ -97,9 +108,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 				<AccountContainer>
 					<ViewInput>
 						<CodeInput
-							ref={(input) => {
-								textInput = input;
-							}}
+							ref={(input) => input && setInputRef2(input)}
 							onChangeText={(n) => setCode(n)}
 							style={{ width: 0, height: 0 }}
 							value={code}
@@ -110,7 +119,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						/>
 						<TouchableOpacity
 							onPress={() => {
-								textInput.focus();
+								inputRef2.focus();
 							}}
 						>
 							<ContainerInput>

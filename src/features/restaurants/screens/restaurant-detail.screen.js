@@ -7,9 +7,6 @@ import { ScrollView } from 'react-native';
 
 export const RestaurantDetailScreen = ({ navigation, route }) => {
 	const [breakfastExpanded, setBreakfastExpanded] = useState(false);
-	const [lunchExpanded, setLunchExpanded] = useState(false);
-	const [dinnerExpanded, setDinnerExpanded] = useState(false);
-	const [drinksExpanded, setDrinksExpanded] = useState(false);
 
 	const { restaurant } = route.params;
 

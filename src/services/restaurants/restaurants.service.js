@@ -31,7 +31,6 @@ export const restaurantsTransform = ({ results = [] }) => {
 
 export const createFeedback = async (userAuth, feedback) => {
 	try {
-		console.log(userAuth);
 		const createdAt = new Date();
 		return firestore
 			.collection(`users/${userAuth.id}/feedbacks`)

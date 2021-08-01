@@ -30,6 +30,8 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 	const [focusInput, setFocusInput] = useState(true);
 	const [code, setCode] = useState('');
 	const [move, setMove] = useState(false);
+	const [checkForm, setCheckForm] = useState(false);
+	const [inputRef, setInputRef] = useState(null);
 	const recaptchaVerifier = useRef(null);
 	const [toggle, setToggle] = useState(false);
 	const firebaseConfig = firebase.apps.length
@@ -59,15 +61,18 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		if (move) {
+			setMove(false);
 			navigation.navigate('InputOTP', {
 				phoneNumber: `${postalCode}${phoneNumber}`,
 			});
 		}
 	}, [move]);
 
-	useEffect(() => {
-		setTimeout(() => textInput.focus(), 150);
-	}, []);
+	// useEffect(() => {
+	// 	if (inputRef) {
+	// 		setTimeout(() => inputRef.focus(), 200);
+	// 	}
+	// }, [inputRef]);
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -76,6 +81,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 				<FirebaseRecaptchaVerifierModal
 					ref={recaptchaVerifier}
 					firebaseConfig={firebaseConfig}
+					attemptInvisibleVerification={false}
 				/>
 				<Title>Holiday Buffet</Title>
 				<AccountContainer>
@@ -86,7 +92,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 					>
 						<SubText>+358 |</SubText>
 						<PhoneInput
-							ref={(input) => (textInput = input)}
+							ref={(input) => input && setInputRef(input)}
 							placeholder='41 750 3319'
 							keyboardType='numeric'
 							onChangePhone

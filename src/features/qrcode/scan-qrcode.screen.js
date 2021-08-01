@@ -26,7 +26,6 @@ export const ScanQRCode = ({ navigation }) => {
 
 	useEffect(() => {
 		if (!scan) {
-			console.log('OK');
 			incrementCredit(uid);
 		}
 	}, [scan]);

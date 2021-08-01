@@ -1,5 +1,5 @@
 import React, { useState, createContext } from 'react';
-import firebase from 'firebase/app';
+import * as firebase from 'firebase';
 import {
 	createUserProfileDocument,
 	loginRequest,
@@ -15,6 +15,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [user, setUser] = useState(null);
 	const [verificationId, setVerificationId] = useState(null);
+	const [tokenAuthPhone, setTokenAuthPhone] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
 
@@ -125,10 +126,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const onLogout = () => {
+		firebase.auth().signOut();
 		setUser(null);
 		setVerificationId(null);
 		setError([]);
-		firebase.auth().signOut();
 	};
 
 	const clearError = () => {
