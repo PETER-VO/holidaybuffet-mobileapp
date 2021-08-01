@@ -5,10 +5,8 @@ import { SafeArea } from '../../../components/utils/safe-area.component';
 import styled from 'styled-components/native';
 import { Spacer } from '../../../components/spacer/spacer.component';
 import { Text } from '../../../components/typography/text.component';
-import { Button, TouchableOpacity } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { Alert } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { CouponComponent } from '../components/coupon.component';
 
 const SettingsItem = styled(List.Item)`
 	padding: ${(props) => props.theme.space[3]};
@@ -20,6 +18,7 @@ const AvatarContainer = styled.View`
 
 export const SettingScreen = ({ navigation }) => {
 	const [coinExpanded, setCoinExpanded] = useState(false);
+	const [array, setArray] = useState([1, 2, 3]);
 	const { onLogout, user } = useContext(AuthenticationContext);
 
 	const alertConfirmLogout = () =>
@@ -58,22 +57,22 @@ export const SettingScreen = ({ navigation }) => {
 					title='Credits'
 					description={user.credits ? `${user.credits} coins` : '0 coins'}
 					left={(props) => (
-						<List.Icon {...props} color='black' icon='piggy-bank' />
+						<List.Icon
+							{...props}
+							color='black'
+							style={{ marginLeft: 0 }}
+							icon='piggy-bank'
+						/>
 					)}
 					expanded={coinExpanded}
 					onPress={() => setCoinExpanded(!coinExpanded)}
 				>
-					<ListItem>
-						<ListItem.Content>
-							<ListItem.Title>Title</ListItem.Title>
-							<ListItem.Subtitle>Subtitle</ListItem.Subtitle>
-							{/* <ListItem.ButtonGroup
-								buttons={'Button'}
-								containerStyle={{ height: 100 }}
-							/> */}
-						</ListItem.Content>
-					</ListItem>
+					{array.map((e, i, a) => {
+						console.log(a.length);
+						return <CouponComponent key={i} />;
+					})}
 				</List.Accordion>
+
 				<SettingsItem
 					style={{ padding: 16 }}
 					title='Logout'

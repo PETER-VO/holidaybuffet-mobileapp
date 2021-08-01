@@ -38,9 +38,9 @@ export const AppNavigator = () => (
 							inactiveTintColor: 'gray',
 						}}
 					>
+						<Tab.Screen name='Settings' component={SettingNavigator} />
 						<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
 						<Tab.Screen name='QRCode' component={QRCodeNavigator} />
-						<Tab.Screen name='Settings' component={SettingNavigator} />
 					</Tab.Navigator>
 				</NotificationContextProvider>
 			</RestaurantsContextProvider>

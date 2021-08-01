@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "MealsToGo",
 		"slug": "MealsToGo",
-		"version": "0.0.1",
+		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"splash": {
@@ -22,14 +22,22 @@
 				"foregroundImage": "./assets/icon.png",
 				"backgroundColor": "#FFFFFF"
 			},
-			"package": "com.phongvodeveloper.MealsToGo"
+			"package": "com.phongvodeveloper.MealsToGo",
+			"useNextNotificationsApi": true
 		},
-		"notification": {
-			"icon": "./assets/icon.png",
-			"color": "#311b92",
-			"iosDisplayInForeground": true,
-			"androidMode": "default",
-			"androidCollapsedTitle": "Updates from Colab.notes"
-		}
+		"plugins": [
+			[
+				"expo-notifications",
+				{
+					"icon": "./assets/logo.png",
+					"color": "#ffffff",
+					"sounds": [
+						"./local/path/to/mySound.wav",
+						"./local/path/to/myOtherSound.wav"
+					],
+					"mode": "production"
+				}
+			]
+		]
 	}
 }

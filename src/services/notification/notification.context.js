@@ -48,7 +48,8 @@ async function sendPushNotification(token, title, body) {
 		sound: 'default',
 		title: title,
 		body: body,
-		data: { someData: 'goes here' },
+		data: { data: 'click now' },
+		_displayInForeground: true,
 	};
 
 	await fetch('https://exp.host/--/api/v2/push/send', {
