@@ -17,14 +17,14 @@ export const FavouritesContextProvider = ({ children }) => {
 		}
 	};
 
-	const loadFavourites = (uid) => {
+	const loadFavourites = async (uid) => {
 		try {
-			const value = AsyncStorage.getItem(`@favourites-${uid}`);
+			const value = await AsyncStorage.getItem(`@favourites-${uid}`);
 			if (value != null) {
 				setFavourites(JSON.parse(value));
 			}
 		} catch (e) {
-			console.log('error loading ', e);
+			console.log('error loading ', e.message);
 		}
 	};
 

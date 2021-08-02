@@ -11,7 +11,5 @@ export const getAllPhoneTokens = async () => {
 	listUserPhoneTokens = listUserPhoneTokens.filter(
 		(e, i, a) => a.indexOf(e) === i
 	);
-
-	console.log('1: ', listUserPhoneTokens.length);
 	return listUserPhoneTokens;
 };

@@ -1,8 +1,8 @@
 import React, { useState, createContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as firebase from 'firebase';
 import {
 	createUserProfileDocument,
-	loginRequest,
 	sendVerificationRequest,
 	confirmCodeRequest,
 	incrementCreditRequest,
@@ -15,28 +15,41 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [user, setUser] = useState(null);
 	const [verificationId, setVerificationId] = useState(null);
-	const [tokenAuthPhone, setTokenAuthPhone] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
+	const [checkVerificationCode, setCheckVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
 
 	if (!user) {
-		firebase.auth().onAuthStateChanged(async (user) => {
-			if (user) {
-				const userRef = await createUserProfileDocument(user, {
-					role: 'user',
-				});
-				await userRef.onSnapshot((snapShot) => {
-					setUser({
-						id: snapShot.id,
-						...snapShot.data(),
-					});
-				});
-				setIsLoading(false);
-			} else {
-				setIsLoading(false);
-			}
+		const value = AsyncStorage.getItem(`@users`);
+		value.then((result) => {
+			setUser(JSON.parse(result));
 		});
 	}
+
+	const saveUserToFirebase = () => {
+		if (!user) {
+			firebase.auth().onAuthStateChanged(async (user) => {
+				if (user) {
+					const userRef = await createUserProfileDocument(user, {
+						role: 'user',
+					});
+					await userRef.onSnapshot(async (snapShot) => {
+						const userObj = { id: snapShot.id, ...snapShot.data() };
+						setUser({
+							userObj,
+						});
+						const jsonValue = JSON.stringify(userObj);
+						await AsyncStorage.setItem(`@users`, jsonValue);
+					});
+					setIsLoading(false);
+					setCheckVerificationCode(false);
+				} else {
+					console.log('Cannot connect to firebase to get user!');
+					setIsLoading(false);
+				}
+			});
+		}
+	};
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);
@@ -66,7 +79,8 @@ export const AuthenticationContextProvider = ({ children }) => {
 		setProcessVerificationCode(true);
 		setTimeout(() => {
 			confirmCodeRequest(verificationId, code)
-				.then((result) => {
+				.then(() => {
+					setCheckVerificationCode(true);
 					setProcessVerificationCode(false);
 				})
 				.catch((e) => {
@@ -78,54 +92,12 @@ export const AuthenticationContextProvider = ({ children }) => {
 		}, 2000);
 	};
 
-	const onLogin = (email, password) => {
-		setIsLoading(true);
-		if (!email || !password) {
-			setError('All information is not empty!');
-			return;
-		}
-
-		loginRequest(email, password)
-			.then((user) => {
-				setUser(user);
-				setIsLoading(false);
-			})
-			.catch((e) => {
-				setIsLoading(false);
-				setError(e.toString());
-			});
-	};
-
 	const incrementCredit = (data) => {
 		incrementCreditRequest(data);
 	};
 
-	const onRegister = (email, password, repeatedPassword) => {
-		setIsLoading(true);
-		if (!email || !password || !repeatedPassword) {
-			setError('All information is not empty!');
-			return;
-		}
-
-		if (password !== repeatedPassword) {
-			setError('Error: Passwords do not match');
-			return;
-		}
-
-		firebase
-			.auth()
-			.createUserWithEmailAndPassword(email, password)
-			.then((u) => {
-				setUser(u);
-				setIsLoading(false);
-			})
-			.catch(() => {
-				setIsLoading(false);
-				setError(e.toString());
-			});
-	};
-
 	const onLogout = () => {
+		AsyncStorage.removeItem('@users');
 		firebase.auth().signOut();
 		setUser(null);
 		setVerificationId(null);
@@ -143,8 +115,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 				user,
 				isLoading,
 				error,
-				onLogin,
-				onRegister,
 				onLogout,
 				verificationPhoneNumber,
 				verificationCode,
@@ -152,9 +122,54 @@ export const AuthenticationContextProvider = ({ children }) => {
 				clearError,
 				incrementCredit,
 				processVerificationCode,
+				checkVerificationCode,
+				saveUserToFirebase,
 			}}
 		>
 			{children}
 		</AuthenticationContext.Provider>
 	);
 };
+
+// const onRegister = (email, password, repeatedPassword) => {
+// 	setIsLoading(true);
+// 	if (!email || !password || !repeatedPassword) {
+// 		setError('All information is not empty!');
+// 		return;
+// 	}
+
+// 	if (password !== repeatedPassword) {
+// 		setError('Error: Passwords do not match');
+// 		return;
+// 	}
+
+// 	firebase
+// 		.auth()
+// 		.createUserWithEmailAndPassword(email, password)
+// 		.then((u) => {
+// 			setUser(u);
+// 			setIsLoading(false);
+// 		})
+// 		.catch(() => {
+// 			setIsLoading(false);
+// 			setError(e.toString());
+// 		});
+// };
+
+// const onLogin = (email, password) => {
+// 	setIsLoading(true);
+// 	if (!email || !password) {
+// 		setError('All information is not empty!');
+// 		return;
+// 	}
+
+// 	loginRequest(email, password)
+// 		.then((user) => {
+// 			setUser(user);
+// 			setIsLoading(false);
+// 		})
+// 		.catch((e) => {
+// 			setIsLoading(false);
+// 			setError(e.toString());
+// 		});
+// };

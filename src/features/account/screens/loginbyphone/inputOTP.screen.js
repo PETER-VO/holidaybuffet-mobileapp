@@ -35,12 +35,15 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		? firebase.app().options
 		: undefined;
 	const {
+		user,
 		verificationCode,
 		error,
 		isLoading,
 		verificationPhoneNumber,
 		clearError,
 		processVerificationCode,
+		saveUserToFirebase,
+		checkVerificationCode,
 	} = useContext(AuthenticationContext);
 
 	const decrementClock = () => {
@@ -86,6 +89,12 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	}, [code]);
 
+	useEffect(() => {
+		if (checkVerificationCode) {
+			saveUserToFirebase();
+			// saveUserToAsynStore();
+		}
+	}, [checkVerificationCode]);
 	// useEffect(() => {
 	// 	if (inputRef2) {
 	// 		setTimeout(() => inputRef2.focus(), 100);
@@ -119,7 +128,9 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						/>
 						<TouchableOpacity
 							onPress={() => {
+								setCode('');
 								inputRef2.focus();
+								clearError();
 							}}
 						>
 							<ContainerInput>

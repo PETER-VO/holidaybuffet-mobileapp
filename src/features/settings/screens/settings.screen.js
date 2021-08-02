@@ -68,7 +68,6 @@ export const SettingScreen = ({ navigation }) => {
 					onPress={() => setCoinExpanded(!coinExpanded)}
 				>
 					{array.map((e, i, a) => {
-						console.log(a.length);
 						return <CouponComponent key={i} />;
 					})}
 				</List.Accordion>

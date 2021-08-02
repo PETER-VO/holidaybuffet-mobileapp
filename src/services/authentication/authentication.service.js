@@ -48,6 +48,10 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	return userRef;
 };
 
+export const getUserFromId = async (id) => {
+	return (userRef = firestore.doc(`users/${id}`));
+};
+
 export const incrementCreditRequest = async (data) => {
 	const userRef = firestore.doc(`users/${data}`);
 	let updatedCredit = 1;
