@@ -22,7 +22,6 @@ import { AuthenticationContext } from '../../../../services/authentication/authe
 import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export const InputOTPScreen = ({ navigation, route }) => {
-	let textInput = useRef(null);
 	let clockCall = null;
 	const lengthInput = 6;
 	const defaultCountDown = 5;
@@ -30,7 +29,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	const recaptchaVerifier = useRef(null);
 	const [enableResend, setEnableResend] = useState(false);
 	const [code, setCode] = useState('');
-	const [inputRef2, setInputRef2] = useState(null);
+	const [inputRef, setInputRef] = useState(null);
 	const firebaseConfig = firebase.apps.length
 		? firebase.app().options
 		: undefined;
@@ -92,18 +91,14 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	useEffect(() => {
 		if (checkVerificationCode) {
 			saveUserToFirebase();
-			// saveUserToAsynStore();
 		}
 	}, [checkVerificationCode]);
-	// useEffect(() => {
-	// 	if (inputRef2) {
-	// 		setTimeout(() => inputRef2.focus(), 100);
-	// 	}
-	// }, [inputRef2]);
 
-	// useEffect(() => {
-	// 	setInputRef2(false);
-	// }, []);
+	useEffect(() => {
+		if (error) {
+			setCode('');
+		}
+	}, [error]);
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -117,7 +112,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 				<AccountContainer>
 					<ViewInput>
 						<CodeInput
-							ref={(input) => input && setInputRef2(input)}
+							ref={(input) => input && setInputRef(input)}
 							onChangeText={(n) => setCode(n)}
 							style={{ width: 0, height: 0 }}
 							value={code}
@@ -128,8 +123,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						/>
 						<TouchableOpacity
 							onPress={() => {
-								setCode('');
-								inputRef2.focus();
+								inputRef.focus();
 								clearError();
 							}}
 						>

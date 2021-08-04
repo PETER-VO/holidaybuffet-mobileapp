@@ -3,10 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { AuthenticationContext } from '../../services/authentication/authentication.context';
 import { AppNavigator } from './app.navigator';
 import { AccountNavigator } from './account.navigator';
-import LottieView from 'lottie-react-native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { SafeArea } from '../../components/utils/safe-area.component';
-import { Text } from 'react-native';
 
 export const Navigation = () => {
 	const { isAuthenticated } = useContext(AuthenticationContext);
@@ -20,10 +18,6 @@ export const Navigation = () => {
 
 	return (
 		<NavigationContainer>
-			{/* {isAuthenticated ? <AppNavigator /> : <AccountNavigator />} */}
-			{/* {isLoading ? (
-				
-			) : null} */}
 			{isLoading ? (
 				<SafeArea style={{ justifyContent: 'center' }}>
 					<ActivityIndicator

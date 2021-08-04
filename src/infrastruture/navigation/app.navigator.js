@@ -8,12 +8,13 @@ import { SettingNavigator } from './settings.navigator';
 import { RestaurantsNavigator } from './restaurants.navigator';
 import { QRCodeNavigator } from './qrcode.navigator';
 import { NotificationContextProvider } from '../../services/notification/notification.context';
+import { CouponNavigator } from './coupons.navigator';
 
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
 	Restaurants: 'md-restaurant',
-	QRCode: 'md-qr-code-outline',
+	Coupons: 'md-gift',
 	Settings: 'md-settings',
 };
 
@@ -38,9 +39,10 @@ export const AppNavigator = () => (
 							inactiveTintColor: 'gray',
 						}}
 					>
-						<Tab.Screen name='Settings' component={SettingNavigator} />
+						<Tab.Screen name='Coupons' component={CouponNavigator} />
 						<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
-						<Tab.Screen name='QRCode' component={QRCodeNavigator} />
+						{/* <Tab.Screen name='QRCode' component={QRCodeNavigator} /> */}
+						<Tab.Screen name='Settings' component={SettingNavigator} />
 					</Tab.Navigator>
 				</NotificationContextProvider>
 			</RestaurantsContextProvider>

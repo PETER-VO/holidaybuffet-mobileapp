@@ -6,6 +6,10 @@ import {
 	Oswald_400Regular,
 } from '@expo-google-fonts/oswald';
 import { useFonts as useLato, Lato_400Regular } from '@expo-google-fonts/lato';
+import {
+	useFonts as useTradeWinds,
+	TradeWinds_400Regular,
+} from '@expo-google-fonts/trade-winds';
 import { theme } from './src/infrastruture/theme';
 import { Navigation } from './src/infrastruture/navigation';
 import { AuthenticationContextProvider } from './src/services/authentication/authentication.context';
@@ -19,7 +23,11 @@ export default function App() {
 		Lato_400Regular,
 	});
 
-	if (!oswaldLoaded || !latoLoaded) {
+	const [tradeWindsLoaded] = useTradeWinds({
+		TradeWinds_400Regular,
+	});
+
+	if (!oswaldLoaded || !latoLoaded || !tradeWindsLoaded) {
 		return null;
 	}
 

@@ -36,7 +36,7 @@ export const RestaurantsContextProvider = ({ children }) => {
 					setIsLoading(false);
 					setError(error);
 				});
-		}, 2000);
+		}, 1000);
 	};
 
 	const addFeedback = (user, feedback) => {

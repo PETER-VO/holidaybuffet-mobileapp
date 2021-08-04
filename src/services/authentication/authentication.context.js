@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as firebase from 'firebase';
 import {
@@ -25,6 +25,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 			setUser(JSON.parse(result));
 		});
 	}
+
+	useEffect(() => {
+		console.log(user);
+	}, [user]);
 
 	const saveUserToFirebase = () => {
 		if (!user) {
