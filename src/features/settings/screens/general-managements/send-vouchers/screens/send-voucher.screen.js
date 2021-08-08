@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, Image, View, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, ActivityIndicator, Colors } from 'react-native-paper';
 import { CheckBoxCustom } from '../../../../../../components/utils/check-box-custom.component';
 import { InputCustom } from '../../../../../../components/utils/input-custom.component';
 import { SafeArea } from '../../../../../../components/utils/safe-area.component';
 import { TextTradesWindFont } from '../../../../../../components/utils/text-trades-wind-font.component';
 import { Ionicons } from '@expo/vector-icons';
+import { VoucherContext } from '../../../../../../services/voucher/voucher.context';
 
 export const SendVoucherScreen = () => {
 	const [isSelected_1, setIsSelected_1] = useState(false);
 	const [isSelected_2, setIsSelected_2] = useState(false);
 	const [isSelected_3, setIsSelected_3] = useState(false);
 	const [isSelected_4, setIsSelected_4] = useState(false);
+	const { filterUsersByCheckInNumber, quantity, isLoadingQuantity } =
+		useContext(VoucherContext);
+
+	useEffect(() => {
+		if (isSelected_4) {
+			filterUsersByCheckInNumber(null, null);
+		} else if (isSelected_3) {
+			filterUsersByCheckInNumber(11, null);
+		} else if (isSelected_2) {
+			filterUsersByCheckInNumber(6, 10);
+		} else if (isSelected_1) {
+			filterUsersByCheckInNumber(1, 5);
+		}
+	}, [isSelected_1, isSelected_2, isSelected_3, isSelected_4]);
 
 	return (
 		<SafeArea style={{ marginTop: 0, padding: 20 }}>
@@ -54,9 +69,15 @@ export const SendVoucherScreen = () => {
 				{/* Start Icon */}
 				<View style={{ alignItems: 'center', justifyContent: 'center' }}>
 					<Ionicons name='person' size={24} color='black' />
-					<Text style={{ color: '#CC412F', fontWeight: 'bold', fontSize: 16 }}>
-						0
-					</Text>
+					{isLoadingQuantity ? (
+						<ActivityIndicator animating={true} color={Colors.blue300} />
+					) : (
+						<Text
+							style={{ color: '#CC412F', fontWeight: 'bold', fontSize: 16 }}
+						>
+							{quantity}
+						</Text>
+					)}
 				</View>
 				{/* End Icon */}
 

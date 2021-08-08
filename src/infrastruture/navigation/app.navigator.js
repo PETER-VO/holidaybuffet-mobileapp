@@ -6,6 +6,8 @@ import { RestaurantsContextProvider } from '../../services/restaurants/restauran
 import { NotificationContextProvider } from '../../services/notification/notification.context';
 import { VoucherNavigator } from './vouchers.navigator';
 import { SettingNavigator } from './settings.navigator';
+import { UserContextProvider } from '../../services/user/user.context';
+import { VoucherContextProvider } from '../../services/voucher/voucher.context';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,17 +30,21 @@ export const AppNavigator = () => (
 	<FavouritesContextProvider>
 		<RestaurantsContextProvider>
 			<NotificationContextProvider>
-				<Tab.Navigator
-					screenOptions={createScreenOptions}
-					tabBarOptions={{
-						activeTintColor: 'tomato',
-						inactiveTintColor: 'gray',
-					}}
-				>
-					{/* <Tab.Screen name='Vouchers' component={VoucherNavigator} /> */}
-					{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
-					<Tab.Screen name='Settings' component={SettingNavigator} />
-				</Tab.Navigator>
+				<UserContextProvider>
+					<VoucherContextProvider>
+						<Tab.Navigator
+							screenOptions={createScreenOptions}
+							tabBarOptions={{
+								activeTintColor: 'tomato',
+								inactiveTintColor: 'gray',
+							}}
+						>
+							{/* <Tab.Screen name='Vouchers' component={VoucherNavigator} /> */}
+							{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
+							<Tab.Screen name='Settings' component={SettingNavigator} />
+						</Tab.Navigator>
+					</VoucherContextProvider>
+				</UserContextProvider>
 			</NotificationContextProvider>
 		</RestaurantsContextProvider>
 	</FavouritesContextProvider>

@@ -16,10 +16,6 @@ import {
 	ContainerPhoneInput,
 	SubText,
 } from '../../components/account.styles';
-import {
-	Loading,
-	LoadingContainer,
-} from '../../../../components/animations/loading.animation';
 import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 import { Text } from '../../../../components/typography/text.component';
 
