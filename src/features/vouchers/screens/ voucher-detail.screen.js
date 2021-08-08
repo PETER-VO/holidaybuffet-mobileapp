@@ -5,9 +5,9 @@ import { Button } from 'react-native-paper';
 
 import { SafeArea } from '../../../components/utils/safe-area.component';
 
-export const CouponDetailScreen = ({ navigation, route }) => {
-	const { coupon } = route.params;
-	const { id, userId, title, subTitle, expired, level } = coupon.item;
+export const VoucherDetailScreen = ({ navigation, route }) => {
+	const { voucher } = route.params;
+	const { subTitle, expired, level } = voucher.item;
 	return (
 		<SafeArea
 			style={{

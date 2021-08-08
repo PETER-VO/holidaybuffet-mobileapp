@@ -3,13 +3,13 @@ import { TouchableOpacity } from 'react-native';
 import { FadeInView } from '../../../components/animations/fade.animation';
 import { Spacer } from '../../../components/spacer/spacer.component';
 import { SafeArea } from '../../../components/utils/safe-area.component';
-import { CouponInfoCard } from '../components/coupon-info-card.component';
-import { CouponList } from '../components/coupon-list.styles';
+import { VoucherInfoCard } from '../components/voucher-info-card.component';
+import { VoucherList } from '../components/voucher-list.styles';
 
-export const CouponScreen = ({ navigation }) => {
-	const coupons = [
+export const VoucherScreen = ({ navigation }) => {
+	const vouchers = [
 		{
-			id: 'coupon1',
+			id: 'voucher1',
 			userId: 'user1',
 			title: 'GET OFF 20%',
 			subTitle: '20% OFF',
@@ -18,7 +18,7 @@ export const CouponScreen = ({ navigation }) => {
 			active: false,
 		},
 		{
-			id: 'coupon2',
+			id: 'voucher2',
 			userId: 'user2',
 			title: 'GET OFF 30%',
 			subTitle: '30% OFF',
@@ -27,7 +27,7 @@ export const CouponScreen = ({ navigation }) => {
 			active: true,
 		},
 		{
-			id: 'coupon3',
+			id: 'voucher3',
 			userId: 'user3',
 			title: 'GET OFF 40%',
 			subTitle: '40% OFF',
@@ -39,18 +39,18 @@ export const CouponScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea>
-			<CouponList
-				data={coupons}
+			<VoucherList
+				data={vouchers}
 				renderItem={(item) => {
 					return (
 						<TouchableOpacity
 							onPress={() =>
-								navigation.navigate('CouponDetail', { coupon: item })
+								navigation.navigate('VoucherDetail', { voucher: item })
 							}
 						>
 							<Spacer position='bottom' size='large'>
 								<FadeInView>
-									<CouponInfoCard key={item.id} coupon={item} />
+									<VoucherInfoCard key={item.id} voucher={item} />
 								</FadeInView>
 							</Spacer>
 						</TouchableOpacity>

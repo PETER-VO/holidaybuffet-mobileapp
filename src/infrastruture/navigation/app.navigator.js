@@ -2,19 +2,15 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { FavouritesContextProvider } from '../../services/favourites/favourites.context';
-import { LocationContextProvider } from '../../services/location/location.context';
 import { RestaurantsContextProvider } from '../../services/restaurants/restaurants.context';
-import { SettingNavigator } from './settings.navigator';
-import { RestaurantsNavigator } from './restaurants.navigator';
-import { QRCodeNavigator } from './qrcode.navigator';
 import { NotificationContextProvider } from '../../services/notification/notification.context';
-import { CouponNavigator } from './coupons.navigator';
+import { VoucherNavigator } from './vouchers.navigator';
 
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
 	Restaurants: 'md-restaurant',
-	Coupons: 'md-gift',
+	Vouchers: 'md-gift',
 	Settings: 'md-settings',
 };
 
@@ -29,23 +25,20 @@ const createScreenOptions = ({ route }) => {
 
 export const AppNavigator = () => (
 	<FavouritesContextProvider>
-		<LocationContextProvider>
-			<RestaurantsContextProvider>
-				<NotificationContextProvider>
-					<Tab.Navigator
-						screenOptions={createScreenOptions}
-						tabBarOptions={{
-							activeTintColor: 'tomato',
-							inactiveTintColor: 'gray',
-						}}
-					>
-						<Tab.Screen name='Coupons' component={CouponNavigator} />
-						<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
-						{/* <Tab.Screen name='QRCode' component={QRCodeNavigator} /> */}
-						<Tab.Screen name='Settings' component={SettingNavigator} />
-					</Tab.Navigator>
-				</NotificationContextProvider>
-			</RestaurantsContextProvider>
-		</LocationContextProvider>
+		<RestaurantsContextProvider>
+			<NotificationContextProvider>
+				<Tab.Navigator
+					screenOptions={createScreenOptions}
+					tabBarOptions={{
+						activeTintColor: 'tomato',
+						inactiveTintColor: 'gray',
+					}}
+				>
+					<Tab.Screen name='Vouchers' component={VoucherNavigator} />
+					{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
+						<Tab.Screen name='Settings' component={SettingNavigator} /> */}
+				</Tab.Navigator>
+			</NotificationContextProvider>
+		</RestaurantsContextProvider>
 	</FavouritesContextProvider>
 );

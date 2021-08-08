@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Text } from '../../../components/typography/text.component';
-import { CouponCard, CouponCardCover } from './coupon-info-card.styles';
+import { VoucherCard, VoucherCardCover } from './voucher-info-card.styles';
 
-export const CouponInfoCard = ({ coupon }) => {
-	const { id, userId, title, expired, level } = coupon.item;
+export const VoucherInfoCard = ({ voucher }) => {
+	const { id, userId, title, expired, level } = voucher.item;
 	return (
-		<CouponCard
+		<VoucherCard
 			style={{
 				elevation: 0,
 			}}
@@ -22,7 +22,7 @@ export const CouponInfoCard = ({ coupon }) => {
 					borderStyle: 'dashed',
 				}}
 			>
-				<CouponCardCover
+				<VoucherCardCover
 					style={{
 						flex: 0.38,
 						height: 173,
@@ -42,6 +42,6 @@ export const CouponInfoCard = ({ coupon }) => {
 					</Text>
 				</View>
 			</View>
-		</CouponCard>
+		</VoucherCard>
 	);
 };

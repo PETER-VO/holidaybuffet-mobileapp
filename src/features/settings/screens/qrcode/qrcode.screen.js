@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import { Image, TouchableOpacity, Text, Button } from 'react-native';
 import styled from 'styled-components/native';
 import QRCode from 'react-native-qrcode-svg';
-import { SafeArea } from '../../components/utils/safe-area.component';
-import { AuthenticationContext } from '../../services/authentication/authentication.context';
+import { SafeArea } from '../../../../components/utils/safe-area.component';
+import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 
 const ViewContainer = styled.View`
 	justify-content: center;
