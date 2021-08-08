@@ -13,8 +13,13 @@ export const SendVoucherScreen = () => {
 	const [isSelected_2, setIsSelected_2] = useState(false);
 	const [isSelected_3, setIsSelected_3] = useState(false);
 	const [isSelected_4, setIsSelected_4] = useState(false);
-	const { filterUsersByCheckInNumber, quantity, isLoadingQuantity } =
+	const [customerType, setCustomerType] = useState('');
+	const { filterUsersByCheckInNumber, quantity, isLoadingQuantity, level } =
 		useContext(VoucherContext);
+
+	useEffect(() => {
+		setCustomerType(level);
+	}, [level]);
 
 	useEffect(() => {
 		if (isSelected_4) {
@@ -85,7 +90,7 @@ export const SendVoucherScreen = () => {
 				<TextTradesWindFont title='Vouchers : ' />
 				<InputCustom title='Name' />
 				<InputCustom title='Keyword' />
-				<InputCustom title='Customer Type' />
+				<InputCustom title='Customer Type' value={customerType} />
 				{/* End Input */}
 
 				{/* Start Input Notification*/}

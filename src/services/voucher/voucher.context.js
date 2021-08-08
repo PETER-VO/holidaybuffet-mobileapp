@@ -6,6 +6,7 @@ export const VoucherContext = createContext();
 export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingQuantity, setIsLoadingQuantity] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
+	const [level, setLevel] = useState('');
 	const [quantity, setQuantity] = useState(0);
 	const { users } = useContext(UserContext);
 
@@ -13,11 +14,23 @@ export const VoucherContextProvider = ({ children }) => {
 		setQuantity(filteredCheckIns.length);
 	}, [filteredCheckIns]);
 
+	const checkInLevel = (count) => {
+		if (count >= 11) {
+			return 'Premium Customer';
+		} else if (count >= 5) {
+			return 'Loyal Customer';
+		}
+		return 'New Customer';
+	};
+
 	const filterUsersByCheckInNumber = (num_1, num_2) => {
 		setIsLoadingQuantity(true);
+		let type = checkInLevel(num_1);
+		setLevel(type);
 		setTimeout(() => {
 			if (users.length !== 0) {
 				if (!num_1 && !num_2) {
+					setIsLoadingQuantity(false);
 					setFilteredCheckIns(users);
 					return;
 				}
@@ -50,6 +63,7 @@ export const VoucherContextProvider = ({ children }) => {
 				filterUsersByCheckInNumber,
 				quantity,
 				isLoadingQuantity,
+				level,
 			}}
 		>
 			{children}
