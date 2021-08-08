@@ -7,6 +7,8 @@ import { SafeArea } from '../../../../../../components/utils/safe-area.component
 import { TextTradesWindFont } from '../../../../../../components/utils/text-trades-wind-font.component';
 import { Ionicons } from '@expo/vector-icons';
 import { VoucherContext } from '../../../../../../services/voucher/voucher.context';
+import { TimePickerCustom } from '../../../../../../components/utils/time-picker-custom.component';
+import { NotificationContext } from '../../../../../../services/notification/notification.context';
 
 export const SendVoucherScreen = () => {
 	const [isSelected_1, setIsSelected_1] = useState(false);
@@ -14,8 +16,49 @@ export const SendVoucherScreen = () => {
 	const [isSelected_3, setIsSelected_3] = useState(false);
 	const [isSelected_4, setIsSelected_4] = useState(false);
 	const [customerType, setCustomerType] = useState('');
-	const { filterUsersByCheckInNumber, quantity, isLoadingQuantity, level } =
-		useContext(VoucherContext);
+	const [expiredDate, setExpiredDate] = useState('');
+	const [keyword, setKeyword] = useState('');
+	const [titleVoucher, setTitleVoucher] = useState('');
+	const [titleNotification, setTitleNotification] = useState('');
+	const [description, setDescription] = useState('');
+	const { sendNotificationTest, sendNotificationForUsers } =
+		useContext(NotificationContext);
+
+	const {
+		filteredCheckIns,
+		filterUsersByCheckInNumber,
+		quantity,
+		isLoadingQuantity,
+		level,
+		addVoucherToUserForTesting,
+		addVoucherToUsers,
+		isLoadingTest,
+		isLoadingPublish,
+	} = useContext(VoucherContext);
+
+	const onTestSubmit = () => {
+		const feedback = {
+			titleVoucher,
+			customerType,
+			keyword,
+			expiredDate,
+			status: true,
+		};
+		addVoucherToUserForTesting(feedback);
+		sendNotificationTest(titleNotification, description);
+	};
+
+	const onPublishSubmit = () => {
+		const feedback = {
+			titleVoucher,
+			customerType,
+			keyword,
+			expiredDate,
+			status: true,
+		};
+		addVoucherToUsers(feedback);
+		sendNotificationForUsers(filteredCheckIns, titleNotification, description);
+	};
 
 	useEffect(() => {
 		setCustomerType(level);
@@ -87,16 +130,33 @@ export const SendVoucherScreen = () => {
 				{/* End Icon */}
 
 				{/* Start Input Vouchers */}
-				<TextTradesWindFont title='Vouchers : ' />
-				<InputCustom title='Name' />
-				<InputCustom title='Keyword' />
-				<InputCustom title='Customer Type' value={customerType} />
+				<TextTradesWindFont title='Vouchers :' />
+				<InputCustom
+					title='Name'
+					value={titleVoucher}
+					onChange={setTitleVoucher}
+				/>
+				<InputCustom title='Keyword' value={keyword} onChange={setKeyword} />
+				<InputCustom
+					title='Customer Type'
+					value={customerType}
+					onChange={setCustomerType}
+				/>
+				<TimePickerCustom getDate={(input) => setExpiredDate(input)} />
 				{/* End Input */}
 
 				{/* Start Input Notification*/}
 				<TextTradesWindFont title='Notification : ' />
-				<InputCustom title='Title' />
-				<InputCustom title='Description' />
+				<InputCustom
+					title='Title'
+					value={titleNotification}
+					onChange={setTitleNotification}
+				/>
+				<InputCustom
+					title='Description'
+					value={description}
+					onChange={setDescription}
+				/>
 				{/* End Input */}
 
 				{/* Start Button */}
@@ -107,26 +167,46 @@ export const SendVoucherScreen = () => {
 						justifyContent: 'space-between',
 					}}
 				>
-					<Button
-						style={{
-							backgroundColor: '#CC412F',
-							flex: 0.48,
-						}}
-						color='white'
-						onPress={() => console.log('pressme')}
-					>
-						Test
-					</Button>
-					<Button
-						style={{
-							backgroundColor: '#CC412F',
-							flex: 0.48,
-						}}
-						color='white'
-						onPress={() => console.log('pressme')}
-					>
-						Publish
-					</Button>
+					{isLoadingTest ? (
+						<ActivityIndicator
+							style={{
+								flex: 0.48,
+							}}
+							animating={true}
+							color={Colors.blue300}
+						/>
+					) : (
+						<Button
+							style={{
+								backgroundColor: '#CC412F',
+								flex: 0.48,
+							}}
+							color='white'
+							onPress={() => onTestSubmit()}
+						>
+							Test
+						</Button>
+					)}
+					{isLoadingPublish ? (
+						<ActivityIndicator
+							style={{
+								flex: 0.48,
+							}}
+							animating={true}
+							color={Colors.blue300}
+						/>
+					) : (
+						<Button
+							style={{
+								backgroundColor: '#CC412F',
+								flex: 0.48,
+							}}
+							color='white'
+							onPress={() => onPublishSubmit()}
+						>
+							Publish
+						</Button>
+					)}
 				</View>
 				{/* End Button */}
 			</ScrollView>

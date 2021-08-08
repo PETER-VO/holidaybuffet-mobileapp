@@ -1,14 +1,20 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
+import { AuthenticationContext } from '../authentication/authentication.context';
+import { NotificationContext } from '../notification/notification.context';
 import { UserContext } from '../user/user.context';
+import { addVoucherToUserId } from './voucher.service';
 
 export const VoucherContext = createContext();
 
 export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingQuantity, setIsLoadingQuantity] = useState(false);
+	const [isLoadingTest, setIsLoadingTest] = useState(false);
+	const [isLoadingPublish, setIsLoadingPublish] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
 	const [quantity, setQuantity] = useState(0);
 	const { users } = useContext(UserContext);
+	const { user } = useContext(AuthenticationContext);
 
 	useEffect(() => {
 		setQuantity(filteredCheckIns.length);
@@ -21,6 +27,34 @@ export const VoucherContextProvider = ({ children }) => {
 			return 'Loyal Customer';
 		}
 		return 'New Customer';
+	};
+
+	const addVoucherToUserForTesting = (feedback) => {
+		setIsLoadingTest(true);
+		try {
+			addVoucherToUserId(user.id, feedback);
+		} catch (e) {
+			console.log('Error adding test voucher');
+		}
+		setTimeout(() => {
+			setIsLoadingTest(false);
+		}, 2500);
+	};
+
+	const addVoucherToUsers = (voucher) => {
+		console.log('1');
+		setIsLoadingPublish(true);
+		try {
+			if (voucher && filteredCheckIns.length !== 0) {
+				filteredCheckIns.map((user) => addVoucherToUserId(user.id, voucher));
+			}
+		} catch (e) {
+			console.log('Error adding voucher: ', e.message);
+		}
+
+		setTimeout(() => {
+			setIsLoadingPublish(false);
+		}, 2500);
 	};
 
 	const filterUsersByCheckInNumber = (num_1, num_2) => {
@@ -53,6 +87,7 @@ export const VoucherContextProvider = ({ children }) => {
 				});
 				setFilteredCheckIns(filteredUsers);
 			}
+			user;
 			setIsLoadingQuantity(false);
 		}, 2400);
 	};
@@ -61,9 +96,14 @@ export const VoucherContextProvider = ({ children }) => {
 		<VoucherContext.Provider
 			value={{
 				filterUsersByCheckInNumber,
+				addVoucherToUserForTesting,
+				addVoucherToUsers,
 				quantity,
 				isLoadingQuantity,
 				level,
+				isLoadingTest,
+				isLoadingPublish,
+				filteredCheckIns,
 			}}
 		>
 			{children}

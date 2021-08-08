@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { AuthenticationContext } from '../authentication/authentication.context';
 import { getAllPhoneTokens } from './notification.service';
 
 export const NotificationContext = createContext();
@@ -30,10 +29,29 @@ export const NotificationContextProvider = ({ children }) => {
 		}, 3000);
 	};
 
+	const sendNotificationTest = (user, body) => {
+		if (user) {
+			sendPushNotification(user.phoneToken, title, body);
+		}
+	};
+
+	const sendNotificationForUsers = (users, title, body) => {
+		if (users) {
+			let phoneTokens = users.map((user) => user.phoneToken);
+			phoneTokens
+				.filter((token, idx, array) => array.indexOf(token) === idx)
+				.map((token) => {
+					sendPushNotification(token, title, body);
+				});
+		}
+	};
+
 	return (
 		<NotificationContext.Provider
 			value={{
 				sendNotificationAllDevices,
+				sendNotificationTest,
+				sendNotificationForUsers,
 				isLoading,
 			}}
 		>
