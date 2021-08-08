@@ -2,7 +2,10 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { AuthenticationContext } from '../authentication/authentication.context';
 import { NotificationContext } from '../notification/notification.context';
 import { UserContext } from '../user/user.context';
-import { addVoucherToUserId } from './voucher.service';
+import {
+	addVoucherToUserId,
+	getVouchersByUserIdRequest,
+} from './voucher.service';
 
 export const VoucherContext = createContext();
 
@@ -12,6 +15,7 @@ export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingPublish, setIsLoadingPublish] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
+	const [vouchers, setVouchers] = useState([]);
 	const [quantity, setQuantity] = useState(0);
 	const { users } = useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
@@ -19,6 +23,10 @@ export const VoucherContextProvider = ({ children }) => {
 	useEffect(() => {
 		setQuantity(filteredCheckIns.length);
 	}, [filteredCheckIns]);
+
+	useEffect(() => {
+		getVouchersByUserId();
+	}, []);
 
 	const checkInLevel = (count) => {
 		if (count >= 11) {
@@ -55,6 +63,14 @@ export const VoucherContextProvider = ({ children }) => {
 		setTimeout(() => {
 			setIsLoadingPublish(false);
 		}, 2500);
+	};
+
+	const getVouchersByUserId = () => {
+		getVouchersByUserIdRequest(user.id)
+			.then((results) => {
+				setVouchers(results);
+			})
+			.catch((e) => console.log('Error loading vouchers ', e.message));
 	};
 
 	const filterUsersByCheckInNumber = (num_1, num_2) => {
@@ -104,6 +120,7 @@ export const VoucherContextProvider = ({ children }) => {
 				isLoadingTest,
 				isLoadingPublish,
 				filteredCheckIns,
+				vouchers,
 			}}
 		>
 			{children}

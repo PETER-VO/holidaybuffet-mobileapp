@@ -39,7 +39,7 @@ export const AppNavigator = () => (
 								inactiveTintColor: 'gray',
 							}}
 						>
-							{/* <Tab.Screen name='Vouchers' component={VoucherNavigator} /> */}
+							<Tab.Screen name='Vouchers' component={VoucherNavigator} />
 							{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
 							<Tab.Screen name='Settings' component={SettingNavigator} />
 						</Tab.Navigator>

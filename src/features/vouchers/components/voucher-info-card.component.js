@@ -4,7 +4,7 @@ import { Text } from '../../../components/typography/text.component';
 import { VoucherCard, VoucherCardCover } from './voucher-info-card.styles';
 
 export const VoucherInfoCard = ({ voucher }) => {
-	const { id, userId, title, expired, level } = voucher.item;
+	const { id, titleVoucher, expiredDate } = voucher.item;
 	return (
 		<VoucherCard
 			style={{
@@ -36,9 +36,17 @@ export const VoucherInfoCard = ({ voucher }) => {
 						justifyContent: 'space-between',
 					}}
 				>
-					<Text style={{ fontSize: 20, marginBottom: 20 }}>{title}</Text>
+					<Text
+						style={{
+							fontSize: 20,
+							marginBottom: 20,
+							textTransform: 'uppercase',
+						}}
+					>
+						{titleVoucher}
+					</Text>
 					<Text variant='label' style={{ fontSize: 12 }}>
-						Valid Until: {expired}
+						Valid Until: {expiredDate}
 					</Text>
 				</View>
 			</View>

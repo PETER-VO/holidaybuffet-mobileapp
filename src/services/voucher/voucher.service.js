@@ -10,3 +10,16 @@ export const addVoucherToUserId = (userId, feedback) => {
 		console.log('error adding voucher: ', e.message);
 	}
 };
+
+export const getVouchersByUserIdRequest = async (userId) => {
+	const results = [];
+	const vouchersRef = firestore.collection(`users/${userId}/vouchers`);
+	const snapshot = await vouchersRef.get();
+	snapshot.forEach((doc) => {
+		results.push({
+			id: doc.id,
+			...doc.data(),
+		});
+	});
+	return results;
+};

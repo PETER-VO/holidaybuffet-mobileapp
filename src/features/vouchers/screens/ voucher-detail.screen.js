@@ -7,7 +7,7 @@ import { SafeArea } from '../../../components/utils/safe-area.component';
 
 export const VoucherDetailScreen = ({ navigation, route }) => {
 	const { voucher } = route.params;
-	const { subTitle, expired, level } = voucher.item;
+	const { id, expiredDate, customerType, keyword, titleVoucher } = voucher.item;
 	return (
 		<SafeArea
 			style={{
@@ -53,9 +53,10 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 						fontSize: 60,
 						fontWeight: 'bold',
 						textAlign: 'center',
+						textTransform: 'uppercase',
 					}}
 				>
-					{subTitle}
+					{keyword}
 				</Text>
 				<Text
 					style={{
@@ -65,7 +66,7 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 						textAlign: 'center',
 					}}
 				>
-					Gift Voucher For {level}
+					Gift Voucher For {customerType}
 				</Text>
 
 				<Text
@@ -77,7 +78,7 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 						marginTop: 20,
 					}}
 				>
-					Valid through {expired}
+					Valid through {expiredDate}
 				</Text>
 				<Image source={require('../../../../assets/qr-code.png')} />
 				<Button
