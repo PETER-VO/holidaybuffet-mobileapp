@@ -5,6 +5,7 @@ import { FavouritesContextProvider } from '../../services/favourites/favourites.
 import { RestaurantsContextProvider } from '../../services/restaurants/restaurants.context';
 import { NotificationContextProvider } from '../../services/notification/notification.context';
 import { VoucherNavigator } from './vouchers.navigator';
+import { SettingNavigator } from './settings.navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,9 +35,9 @@ export const AppNavigator = () => (
 						inactiveTintColor: 'gray',
 					}}
 				>
-					<Tab.Screen name='Vouchers' component={VoucherNavigator} />
-					{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
-						<Tab.Screen name='Settings' component={SettingNavigator} /> */}
+					{/* <Tab.Screen name='Vouchers' component={VoucherNavigator} /> */}
+					{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
+					<Tab.Screen name='Settings' component={SettingNavigator} />
 				</Tab.Navigator>
 			</NotificationContextProvider>
 		</RestaurantsContextProvider>

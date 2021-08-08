@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { Avatar, List } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 import { SafeArea } from '../../../components/utils/safe-area.component';
 import styled from 'styled-components/native';
-import { Spacer } from '../../../components/spacer/spacer.component';
-import { Text } from '../../../components/typography/text.component';
 import { Alert } from 'react-native';
-import { CouponComponent } from '../components/coupon.component';
+import { ImageQRCode } from '../../../components/utils/imageQRCode.component';
 
 const SettingsItem = styled(List.Item)`
 	padding: ${(props) => props.theme.space[3]};
@@ -38,11 +36,8 @@ export const SettingScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea>
-			<AvatarContainer>
-				<Avatar.Icon size={180} icon='human' backgroundColor='#2182BD' />
-				<Spacer position='top' size='large'>
-					<Text variant='label'>{user.email}</Text>
-				</Spacer>
+			<AvatarContainer style={{ padding: 30 }}>
+				<ImageQRCode value='hello' style={{ marginBottom: 0 }} />
 			</AvatarContainer>
 			<List.Section>
 				<SettingsItem
@@ -52,7 +47,7 @@ export const SettingScreen = ({ navigation }) => {
 					left={(props) => <List.Icon {...props} color='black' icon='heart' />}
 					onPress={() => navigation.navigate('Favourites')}
 				/>
-				<List.Accordion
+				{/* <List.Accordion
 					style={{ padding: 16 }}
 					title='Credits'
 					description={user.credits ? `${user.credits} coins` : '0 coins'}
@@ -70,7 +65,18 @@ export const SettingScreen = ({ navigation }) => {
 					{array.map((e, i, a) => {
 						return <CouponComponent key={i} />;
 					})}
-				</List.Accordion>
+				</List.Accordion> */}
+				{user.role === 'admin' ? (
+					<SettingsItem
+						style={{ padding: 16 }}
+						title='General Management'
+						description='Inform something'
+						left={(props) => (
+							<List.Icon {...props} color='black' icon='bullhorn' />
+						)}
+						onPress={() => navigation.navigate('ManagementControl')}
+					/>
+				) : null}
 
 				<SettingsItem
 					style={{ padding: 16 }}
@@ -78,17 +84,6 @@ export const SettingScreen = ({ navigation }) => {
 					left={(props) => <List.Icon {...props} color='black' icon='door' />}
 					onPress={alertConfirmLogout}
 				/>
-				{user.role === 'admin' ? (
-					<SettingsItem
-						style={{ padding: 16 }}
-						title='Notification'
-						description='Inform something'
-						left={(props) => (
-							<List.Icon {...props} color='black' icon='bullhorn' />
-						)}
-						onPress={() => navigation.navigate('Notification')}
-					/>
-				) : null}
 			</List.Section>
 		</SafeArea>
 	);

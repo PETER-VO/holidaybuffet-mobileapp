@@ -4,10 +4,12 @@ import {
 	CardStyleInterpolators,
 } from '@react-navigation/stack';
 import { SettingScreen } from '../../features/settings/screens/settings.screen';
-import { FavouritesScreen } from '../../features/settings/screens/favourties.screen';
 import { NotificationScreen } from '../../features/notification/notification.screen';
 import { NotificationContextProvider } from '../../services/notification/notification.context';
 import { AccountScreen } from '../../features/account/screens/account.screen';
+import { FavouritesScreen } from '../../features/settings/screens/favourites/favourties.screen';
+import { ManagementControl } from '../../features/settings/screens/general-managements/screens/management-control.screen';
+import { SendVoucherScreen } from '../../features/settings/screens/general-managements/send-vouchers/screens/send-voucher.screen';
 
 const SettingsStack = createStackNavigator();
 
@@ -21,6 +23,10 @@ export const SettingNavigator = () => {
 				}}
 			>
 				<SettingsStack.Screen
+					name='SendVouchers'
+					component={SendVoucherScreen}
+				/>
+				<SettingsStack.Screen
 					options={{
 						header: () => null,
 					}}
@@ -33,12 +39,10 @@ export const SettingNavigator = () => {
 					component={NotificationScreen}
 				/>
 				<SettingsStack.Screen
-					options={{
-						header: () => null,
-					}}
-					name='Logout'
-					component={AccountScreen}
+					name='ManagementControl'
+					component={ManagementControl}
 				/>
+				<SettingsStack.Screen name='Logout' component={AccountScreen} />
 			</SettingsStack.Navigator>
 		</NotificationContextProvider>
 	);
