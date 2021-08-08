@@ -1,39 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { AuthenticationContext } from '../../services/authentication/authentication.context';
 
 export const ScanQRCode = ({ navigation }) => {
 	const [hasPermission, setHasPermission] = useState(null);
-	const { incrementCredit } = useContext(AuthenticationContext);
-	const [scan, setScan] = useState(true);
-	const [uid, setUid] = useState('');
 
-	// useEffect(() => {
-	// 	(async () => {
-	// 		const { status } = await BarCodeScanner.requestPermissionsAsync();
-	// 		setHasPermission(status === 'granted');
-	// 	})();
-	// }, []);
+	useEffect(() => {
+		(async () => {
+			const { status } = await BarCodeScanner.requestPermissionsAsync();
+			setHasPermission(status === 'granted');
+		})();
+	}, []);
 
 	const handleBarCodeScanned = async ({ type, data }) => {
-		if (data) {
-			setScan(false);
-			setUid(data);
-			navigation.navigate('ScanSuccess', { type, data });
-		}
+		console.log('data: ', data);
 	};
-
-	useEffect(() => {
-		if (!scan) {
-			incrementCredit(uid);
-		}
-	}, [scan]);
-
-	useEffect(() => {
-		setScan(true);
-		setUid('');
-	}, []);
 
 	if (hasPermission === null) {
 		return <Text>Requesting for camera permission</Text>;

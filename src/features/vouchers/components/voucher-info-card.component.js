@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, TouchableOpacity, Alert } from 'react-native';
 import { Text } from '../../../components/typography/text.component';
 import { VoucherCard, VoucherCardCover } from './voucher-info-card.styles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { VoucherContext } from '../../../services/voucher/voucher.context';
 
-export const VoucherInfoCard = ({ voucher }) => {
+export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 	const { id, titleVoucher, expiredDate } = voucher.item;
+	const { deleteVoucher } = useContext(VoucherContext);
+
+	const alertConfirmRemove = () =>
+		Alert.alert('Do you want to remove?', "Don't do that! :(", [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{
+				text: 'Yes',
+				onPress: () => {
+					deleteVoucher(id);
+					onPressRemove();
+				},
+			},
+		]);
+
 	return (
 		<VoucherCard
 			style={{
@@ -29,6 +49,21 @@ export const VoucherInfoCard = ({ voucher }) => {
 					}}
 					source={require('../../../../assets/restaurant.png')}
 				/>
+				<TouchableOpacity
+					style={{
+						position: 'absolute',
+						top: 10,
+						right: 15,
+					}}
+					onPress={alertConfirmRemove}
+				>
+					<MaterialCommunityIcons
+						name='scissors-cutting'
+						size={28}
+						color='#CC412F'
+					/>
+				</TouchableOpacity>
+
 				<View
 					style={{
 						flexDirection: 'column',

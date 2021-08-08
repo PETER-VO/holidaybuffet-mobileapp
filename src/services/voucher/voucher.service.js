@@ -23,3 +23,11 @@ export const getVouchersByUserIdRequest = async (userId) => {
 	});
 	return results;
 };
+
+export const deleteVoucherByUserId = (userId, voucherId) => {
+	try {
+		firestore.doc(`users/${userId}/vouchers/${voucherId}`).delete();
+	} catch (e) {
+		console.log('Error delete voucher, ', e.message);
+	}
+};

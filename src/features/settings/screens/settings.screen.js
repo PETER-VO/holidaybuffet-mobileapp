@@ -67,15 +67,26 @@ export const SettingScreen = ({ navigation }) => {
 					})}
 				</List.Accordion> */}
 				{user.role === 'admin' ? (
-					<SettingsItem
-						style={{ padding: 16 }}
-						title='General Management'
-						description='Inform something'
-						left={(props) => (
-							<List.Icon {...props} color='black' icon='bullhorn' />
-						)}
-						onPress={() => navigation.navigate('ManagementControl')}
-					/>
+					<>
+						<SettingsItem
+							style={{ padding: 16 }}
+							title='General Management'
+							description='Inform something'
+							left={(props) => (
+								<List.Icon {...props} color='black' icon='bullhorn' />
+							)}
+							onPress={() => navigation.navigate('ManagementControl')}
+						/>
+						<SettingsItem
+							style={{ padding: 16 }}
+							title='General Management'
+							description='Inform something'
+							left={(props) => (
+								<List.Icon {...props} color='black' icon='qrcode-scan' />
+							)}
+							onPress={() => navigation.navigate('ScanQRCode')}
+						/>
+					</>
 				) : null}
 
 				<SettingsItem

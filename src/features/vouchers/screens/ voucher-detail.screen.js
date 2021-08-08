@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Text } from '../../../components/typography/text.component';
 import { Image, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { SafeArea } from '../../../components/utils/safe-area.component';
+import { ImageQRCode } from '../../../components/utils/imageQRCode.component';
+import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
 export const VoucherDetailScreen = ({ navigation, route }) => {
 	const { voucher } = route.params;
-	const { id, expiredDate, customerType, keyword, titleVoucher } = voucher.item;
+	const { id, expiredDate, customerType, keyword } = voucher.item;
+	const { user } = useContext(AuthenticationContext);
+
+	//user_id,voucher_id,category_id (1. check-in, 2. verify voucher)
+	let imageQRCode = `${user.id},${id},2`;
+
 	return (
 		<SafeArea
 			style={{
@@ -22,6 +29,7 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 		>
 			<View
 				style={{
+					flex: 1,
 					borderRadius: 1,
 					borderWidth: 4,
 					borderStyle: 'dashed',
@@ -29,7 +37,6 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 					justifyContent: 'center',
 					alignItems: 'center',
 					width: '100%',
-					height: '100%',
 				}}
 			>
 				<Text
@@ -80,7 +87,15 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 				>
 					Valid through {expiredDate}
 				</Text>
-				<Image source={require('../../../../assets/qr-code.png')} />
+				<View
+					style={{
+						flex: 0.7,
+						marginTop: 20,
+						alignItems: 'center',
+					}}
+				>
+					<ImageQRCode value={imageQRCode} />
+				</View>
 				<Button
 					style={{
 						backgroundColor: '#CC412F',

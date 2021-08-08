@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { FadeInView } from '../../../components/animations/fade.animation';
 import { Spacer } from '../../../components/spacer/spacer.component';
@@ -8,7 +8,15 @@ import { VoucherList } from '../components/voucher-list.styles';
 import { VoucherContext } from '../../../services/voucher/voucher.context';
 
 export const VoucherScreen = ({ navigation }) => {
-	const { vouchers } = useContext(VoucherContext);
+	const [isRemoveButton, setIsRemoveButton] = useState(false);
+	const { getVouchersByUserId, vouchers } = useContext(VoucherContext);
+
+	useEffect(() => {
+		if (isRemoveButton) {
+			getVouchersByUserId();
+		}
+		setIsRemoveButton(false);
+	}, [isRemoveButton]);
 
 	return (
 		<SafeArea>
@@ -23,7 +31,11 @@ export const VoucherScreen = ({ navigation }) => {
 						>
 							<Spacer position='bottom' size='large'>
 								<FadeInView>
-									<VoucherInfoCard key={item.id} voucher={item} />
+									<VoucherInfoCard
+										key={item.id}
+										voucher={item}
+										onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
+									/>
 								</FadeInView>
 							</Spacer>
 						</TouchableOpacity>

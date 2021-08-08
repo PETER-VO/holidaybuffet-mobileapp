@@ -5,6 +5,7 @@ import { UserContext } from '../user/user.context';
 import {
 	addVoucherToUserId,
 	getVouchersByUserIdRequest,
+	deleteVoucherByUserId,
 } from './voucher.service';
 
 export const VoucherContext = createContext();
@@ -27,6 +28,10 @@ export const VoucherContextProvider = ({ children }) => {
 	useEffect(() => {
 		getVouchersByUserId();
 	}, []);
+
+	const deleteVoucher = (voucherId) => {
+		deleteVoucherByUserId(user.id, voucherId);
+	};
 
 	const checkInLevel = (count) => {
 		if (count >= 11) {
@@ -121,6 +126,8 @@ export const VoucherContextProvider = ({ children }) => {
 				isLoadingPublish,
 				filteredCheckIns,
 				vouchers,
+				deleteVoucher,
+				getVouchersByUserId,
 			}}
 		>
 			{children}

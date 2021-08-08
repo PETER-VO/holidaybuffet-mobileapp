@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
-import { SafeArea } from '../../components/utils/safe-area.component';
+import { SafeArea } from '../../../../components/utils/safe-area.component';
 
 export const ScanSuccessScreen = ({ navigation, route }) => {
 	let animation = null;
@@ -11,7 +11,7 @@ export const ScanSuccessScreen = ({ navigation, route }) => {
 	}, []);
 
 	return (
-		<SafeArea style={{}}>
+		<SafeArea>
 			<View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
 				<LottieView
 					ref={(input) => {
@@ -28,7 +28,7 @@ export const ScanSuccessScreen = ({ navigation, route }) => {
 					onAnimationFinish={() => {
 						navigation.navigate('UserInformByQRCode', { route });
 					}}
-					source={require('../../../assets/success-tick.json')}
+					source={require('../../../../../assets/success-tick.json')}
 				/>
 			</View>
 		</SafeArea>
