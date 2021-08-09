@@ -12,6 +12,9 @@ import { ManagementControl } from '../../features/settings/screens/general-manag
 import { SendVoucherScreen } from '../../features/settings/screens/general-managements/send-vouchers/screens/send-voucher.screen';
 import { ScanQRCode } from '../../features/settings/screens/qrcode/scan-qrcode.screen';
 import { ScanQRCodeLoading } from '../../features/settings/screens/qrcode/scan-qrcode-loading.screen';
+import { ScanSuccessScreen } from '../../features/settings/screens/qrcode/scan-success.screen';
+import { ListUserScanScreen } from '../../features/settings/screens/qrcode/list-user-scan.screen';
+import { ShowUserInformScreen } from '../../features/settings/screens/qrcode/show-user-inform.screen';
 
 const SettingsStack = createStackNavigator();
 
@@ -47,15 +50,35 @@ export const SettingNavigator = () => {
 
 				{/* Start QR CODE */}
 				<SettingsStack.Screen name='ScanQRCode' component={ScanQRCode} />
-				{/* <SettingsStack.Screen
+				<SettingsStack.Screen
+					options={{
+						header: () => null,
+					}}
 					name='ScanSuccess'
 					component={ScanSuccessScreen}
-				/> */}
+				/>
 				<SettingsStack.Screen
+					options={{
+						header: () => null,
+					}}
 					name='ScanQRCodeLoading'
 					component={ScanQRCodeLoading}
 				/>
 				{/* End QR CODE */}
+
+				{/* Start List User Scan */}
+				<SettingsStack.Screen
+					options={{
+						header: () => null,
+					}}
+					name='ListUserScan'
+					component={ListUserScanScreen}
+				/>
+				<SettingsStack.Screen
+					name='ShowUserInform'
+					component={ShowUserInformScreen}
+				/>
+				{/* End List User Scan */}
 				<SettingsStack.Screen name='Logout' component={AccountScreen} />
 			</SettingsStack.Navigator>
 		</NotificationContextProvider>

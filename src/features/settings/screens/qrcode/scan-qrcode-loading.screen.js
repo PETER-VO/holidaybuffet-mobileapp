@@ -4,14 +4,16 @@ import { SafeArea } from '../../../../components/utils/safe-area.component';
 import LottieView from 'lottie-react-native';
 import { UserContext } from '../../../../services/user/user.context';
 import { VoucherContext } from '../../../../services/voucher/voucher.context';
+import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export const ScanQRCodeLoading = ({ navigation, route }) => {
-	let animation = null;
 	const [QRCode, setQRCode] = useState(route.params.QRCode);
+	const [isVerifyDone, setIsVerifyDone] = useState(false);
 	const {
 		verifyVoucherByQRCode,
 		allUserInfo,
 		error,
+		resetVoucherContext,
 		isVoucherError,
 		isVoucherValid,
 	} = useContext(VoucherContext);
@@ -29,35 +31,23 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 	}, [QRCode]);
 
 	useEffect(() => {
-		if (isVoucherValid) {
-			console.log('OK man: ', isVoucherValid);
+		if (isVoucherValid && allUserInfo) {
+			setTimeout(() => {
+				navigation.navigate('ScanSuccess');
+				resetVoucherContext();
+			}, 3000);
 		} else if (isVoucherError) {
-			console.log('Error');
+			setTimeout(() => {
+				console.log('Error');
+			}, 3000);
 		}
-	}, [isVoucherError, isVoucherValid]);
-
-	useEffect(() => {
-		animation.play();
-	}, []);
+	}, [isVoucherValid, isVoucherError, allUserInfo]);
 
 	return (
-		<SafeArea>
-			<View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-				<LottieView
-					ref={(input) => {
-						animation = input;
-					}}
-					key='animation'
-					resizeMode='cover'
-					duration={1500}
-					style={{
-						width: 300,
-						height: 300,
-					}}
-					loop={false}
-					source={require('../../../../../assets/8707-loading.json')}
-				/>
-			</View>
+		<SafeArea
+			style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
+		>
+			<ActivityIndicator animating={true} size={50} color={Colors.blue300} />
 		</SafeArea>
 	);
 };

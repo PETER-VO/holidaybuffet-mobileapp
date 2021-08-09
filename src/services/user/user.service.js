@@ -36,3 +36,23 @@ export const getAllFeedBackByUserIdRequest = async (userId) => {
 	});
 	return results;
 };
+
+export const addAllUserInformation = (information) => {
+	try {
+		const createdAt = new Date();
+
+		firestore
+			.collection(`ListsScan`)
+			.add({ createdAt, ...information })
+			.then(function (docRef) {
+				docRef.get().then(function (doc) {
+					console.log('Hello: ', doc.data());
+				});
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	} catch (e) {
+		console.log('error adding voucher: ', e.message);
+	}
+};

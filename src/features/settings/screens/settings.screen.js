@@ -86,6 +86,15 @@ export const SettingScreen = ({ navigation }) => {
 							)}
 							onPress={() => navigation.navigate('ScanQRCode')}
 						/>
+						<SettingsItem
+							style={{ padding: 16 }}
+							title='Scanned List'
+							description='List scanned users'
+							left={(props) => (
+								<List.Icon {...props} color='black' icon='clipboard-list' />
+							)}
+							onPress={() => navigation.navigate('ListUserScan')}
+						/>
 					</>
 				) : null}
 

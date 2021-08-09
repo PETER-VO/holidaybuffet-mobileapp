@@ -26,7 +26,7 @@ export const ScanSuccessScreen = ({ navigation, route }) => {
 					}}
 					loop={false}
 					onAnimationFinish={() => {
-						navigation.navigate('UserInformByQRCode', { route });
+						navigation.navigate('ListUserScan', { route });
 					}}
 					source={require('../../../../../assets/success-tick.json')}
 				/>

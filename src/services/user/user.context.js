@@ -3,6 +3,7 @@ import {
 	getAllUsersRequest,
 	getUserByUserIdRequest,
 	getAllFeedBackByUserIdRequest,
+	addAllUserInformation,
 } from './user.service';
 
 export const UserContext = createContext();
@@ -29,6 +30,10 @@ export const UserContextProvider = ({ children }) => {
 		return getAllFeedBackByUserIdRequest(userId);
 	};
 
+	const addAllUserInformationAfterScanQRCode = (information) => {
+		addAllUserInformation(information);
+	};
+
 	const checkInForUser = () => {
 		console.log('1');
 	};
@@ -44,6 +49,7 @@ export const UserContextProvider = ({ children }) => {
 				checkInForUser,
 				getUserByUserId,
 				getAllFeedBackByUserId,
+				addAllUserInformationAfterScanQRCode,
 			}}
 		>
 			{children}

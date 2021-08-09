@@ -29,8 +29,12 @@ export const VoucherContextProvider = ({ children }) => {
 	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
 	const [voucherUserId, setVoucherUserId] = useState(null);
 	const [QRCode, setQRCode] = useState('');
-	const { users, getUserByUserId, getAllFeedBackByUserId } =
-		useContext(UserContext);
+	const {
+		users,
+		getUserByUserId,
+		getAllFeedBackByUserId,
+		addAllUserInformationAfterScanQRCode,
+	} = useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
 
 	useEffect(() => {
@@ -90,7 +94,6 @@ export const VoucherContextProvider = ({ children }) => {
 			const voucherId = arrayCode[1];
 			await getVouchersByUserIdAndVoucherId(userId, voucherId)
 				.then((result) => {
-					console.log('resultVoucher: ', result);
 					setVoucherByUserIdAndVoucherId(result);
 				})
 				.catch((e) => {
@@ -124,7 +127,7 @@ export const VoucherContextProvider = ({ children }) => {
 				})
 				.catch((e) => {
 					setError('User does not exist!');
-					setIsVoucherError(false);
+					setIsVoucherError(true);
 				});
 			getAllFeedBackByUserId(userId)
 				.then((result) => {
@@ -132,7 +135,7 @@ export const VoucherContextProvider = ({ children }) => {
 				})
 				.catch((e) => {
 					setError('Can not get all feedbacks from userId!');
-					setIsVoucherError(false);
+					setIsVoucherError(true);
 				});
 			getVouchersByUserId(userId);
 		}
@@ -162,7 +165,6 @@ export const VoucherContextProvider = ({ children }) => {
 	const getVouchersByUserIdOnPhone = () => {
 		getVouchersByUserIdRequest(user.id)
 			.then((results) => {
-				console.log('Day ne: ', results);
 				setVouchers(results);
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
@@ -212,6 +214,20 @@ export const VoucherContextProvider = ({ children }) => {
 		}, 2400);
 	};
 
+	const resetVoucherContext = () => {
+		setIsLoadingQuantity(false);
+		setIsLoadingTest(false);
+		setIsLoadingPublish(false);
+		setVoucherByUserIdAndVoucherId(null);
+		setIsVoucherValid(false);
+		setIsVoucherError(false);
+		setAllUserInfo(null);
+		setUserInfoById(null);
+		setFeedbacksUserId(null);
+		setVoucherUserId(null);
+		setQRCode('');
+	};
+
 	return (
 		<VoucherContext.Provider
 			value={{
@@ -232,6 +248,7 @@ export const VoucherContextProvider = ({ children }) => {
 				isVoucherError,
 				isVoucherValid,
 				allUserInfo,
+				resetVoucherContext,
 			}}
 		>
 			{children}

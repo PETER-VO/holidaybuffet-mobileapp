@@ -5,7 +5,8 @@ import { AppNavigator } from './app.navigator';
 import { AccountNavigator } from './account.navigator';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { SafeArea } from '../../components/utils/safe-area.component';
-import { ScanQRCodeTest } from '../../features/settings/screens/qrcode/scan-qrcode-test.screen';
+import { ListUserScanScreen } from '../../features/settings/screens/qrcode/list-user-scan.screen';
+import { ShowUserInformScreen } from '../../features/settings/screens/qrcode/show-user-inform.screen';
 
 export const Navigation = () => {
 	const { isAuthenticated } = useContext(AuthenticationContext);
