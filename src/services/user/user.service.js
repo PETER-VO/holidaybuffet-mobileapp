@@ -12,3 +12,27 @@ export const getAllUsersRequest = async () => {
 	});
 	return results;
 };
+
+export const getUserByUserIdRequest = async (userId) => {
+	let result = {};
+	const userRef = firestore.doc(`users/${userId}`);
+	const doc = await userRef.get();
+	result = {
+		id: doc.id,
+		...doc.data(),
+	};
+	return result;
+};
+
+export const getAllFeedBackByUserIdRequest = async (userId) => {
+	let results = [];
+	const feedbackRef = firestore.collection(`users/${userId}/feedbacks`);
+	const snapshot = await feedbackRef.get();
+	snapshot.forEach((doc) => {
+		results.push({
+			id: doc.id,
+			...doc.data(),
+		});
+	});
+	return results;
+};

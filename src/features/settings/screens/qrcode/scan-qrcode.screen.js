@@ -13,7 +13,9 @@ export const ScanQRCode = ({ navigation }) => {
 	}, []);
 
 	const handleBarCodeScanned = async ({ type, data }) => {
-		console.log('data: ', data);
+		if (data) {
+			navigation.navigate('ScanQRCodeLoading', { QRCode: data });
+		}
 	};
 
 	if (hasPermission === null) {

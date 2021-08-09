@@ -112,6 +112,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 		setError([]);
 	};
 
+	const verifyCheckInForUser = () => {
+		console.log('1');
+	};
+
 	return (
 		<AuthenticationContext.Provider
 			value={{

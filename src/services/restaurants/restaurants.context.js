@@ -45,10 +45,8 @@ export const RestaurantsContextProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (location) {
-			retrieveRestaurants('Chicago');
-		}
-	}, [location]);
+		retrieveRestaurants('Chicago');
+	}, []);
 
 	return (
 		<RestaurantsContext.Provider

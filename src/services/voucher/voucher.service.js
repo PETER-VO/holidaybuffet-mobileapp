@@ -3,9 +3,18 @@ import { firestore } from '../../firebase/firebase.utils';
 export const addVoucherToUserId = (userId, feedback) => {
 	try {
 		const createdAt = new Date();
-		return firestore
+
+		firestore
 			.collection(`users/${userId}/vouchers`)
-			.add({ createdAt, ...feedback });
+			.add({ createdAt, ...feedback })
+			.then(function (docRef) {
+				docRef.get().then(function (doc) {
+					console.log('Hello: ', doc.data());
+				});
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
 	} catch (e) {
 		console.log('error adding voucher: ', e.message);
 	}
@@ -22,6 +31,17 @@ export const getVouchersByUserIdRequest = async (userId) => {
 		});
 	});
 	return results;
+};
+
+export const getVouchersByUserIdAndVoucherId = async (userId, voucherId) => {
+	let result = {};
+	const vouchersRef = firestore.doc(`users/${userId}/vouchers/${voucherId}`);
+	const doc = await vouchersRef.get();
+	result = {
+		id: doc.id,
+		...doc.data(),
+	};
+	return result;
 };
 
 export const deleteVoucherByUserId = (userId, voucherId) => {

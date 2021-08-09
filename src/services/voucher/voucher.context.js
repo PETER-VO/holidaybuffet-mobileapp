@@ -6,6 +6,7 @@ import {
 	addVoucherToUserId,
 	getVouchersByUserIdRequest,
 	deleteVoucherByUserId,
+	getVouchersByUserIdAndVoucherId,
 } from './voucher.service';
 
 export const VoucherContext = createContext();
@@ -16,9 +17,20 @@ export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingPublish, setIsLoadingPublish] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
+	const [error, setError] = useState('');
 	const [vouchers, setVouchers] = useState([]);
+	const [voucherByUserIdAndVoucherId, setVoucherByUserIdAndVoucherId] =
+		useState(null);
 	const [quantity, setQuantity] = useState(0);
-	const { users } = useContext(UserContext);
+	const [isVoucherValid, setIsVoucherValid] = useState(false);
+	const [isVoucherError, setIsVoucherError] = useState(false);
+	const [userInfoById, setUserInfoById] = useState(null);
+	const [allUserInfo, setAllUserInfo] = useState(null);
+	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
+	const [voucherUserId, setVoucherUserId] = useState(null);
+	const [QRCode, setQRCode] = useState('');
+	const { users, getUserByUserId, getAllFeedBackByUserId } =
+		useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
 
 	useEffect(() => {
@@ -26,7 +38,7 @@ export const VoucherContextProvider = ({ children }) => {
 	}, [filteredCheckIns]);
 
 	useEffect(() => {
-		getVouchersByUserId();
+		getVouchersByUserIdOnPhone();
 	}, []);
 
 	const deleteVoucher = (voucherId) => {
@@ -42,10 +54,10 @@ export const VoucherContextProvider = ({ children }) => {
 		return 'New Customer';
 	};
 
-	const addVoucherToUserForTesting = (feedback) => {
+	const addVoucherToUserForTesting = (voucher) => {
 		setIsLoadingTest(true);
 		try {
-			addVoucherToUserId(user.id, feedback);
+			addVoucherToUserId(user.id, voucher);
 		} catch (e) {
 			console.log('Error adding test voucher');
 		}
@@ -55,7 +67,6 @@ export const VoucherContextProvider = ({ children }) => {
 	};
 
 	const addVoucherToUsers = (voucher) => {
-		console.log('1');
 		setIsLoadingPublish(true);
 		try {
 			if (voucher && filteredCheckIns.length !== 0) {
@@ -70,10 +81,97 @@ export const VoucherContextProvider = ({ children }) => {
 		}, 2500);
 	};
 
-	const getVouchersByUserId = () => {
+	const verifyVoucherByQRCode = async (QRCode_) => {
+		if (QRCode_) {
+			setQRCode(QRCode_);
+			const arrayCode = QRCode_.split(',');
+			console.log('arrayCode ', arrayCode);
+			const userId = arrayCode[0];
+			const voucherId = arrayCode[1];
+			await getVouchersByUserIdAndVoucherId(userId, voucherId)
+				.then((result) => {
+					console.log('resultVoucher: ', result);
+					setVoucherByUserIdAndVoucherId(result);
+				})
+				.catch((e) => {
+					setError('The voucher does not exist!');
+					setIsVoucherError(true);
+				});
+		}
+	};
+
+	useEffect(() => {
+		if (voucherByUserIdAndVoucherId) {
+			let currentDate = new Date();
+			let userDate = voucherByUserIdAndVoucherId['expiredDate'].split('/');
+			let expiredDate = new Date(userDate[2], userDate[1] - 1, userDate[0]); // new Date(year, month, date).
+
+			if (currentDate.getTime() < expiredDate.getTime()) {
+				setIsVoucherValid(true);
+			} else {
+				setError('The voucher is expired!');
+				setIsVoucherError(true);
+			}
+		}
+	}, [voucherByUserIdAndVoucherId]);
+
+	useEffect(() => {
+		if (isVoucherValid && QRCode) {
+			let userId = QRCode.split(',')[0];
+			getUserByUserId(userId)
+				.then((result) => {
+					setUserInfoById(result);
+				})
+				.catch((e) => {
+					setError('User does not exist!');
+					setIsVoucherError(false);
+				});
+			getAllFeedBackByUserId(userId)
+				.then((result) => {
+					setFeedbacksUserId(result);
+				})
+				.catch((e) => {
+					setError('Can not get all feedbacks from userId!');
+					setIsVoucherError(false);
+				});
+			getVouchersByUserId(userId);
+		}
+	}, [isVoucherValid]);
+
+	useEffect(() => {
+		if (
+			userInfoById &&
+			voucherByUserIdAndVoucherId &&
+			feedbacksUserId &&
+			voucherUserId
+		) {
+			setAllUserInfo({
+				userInfo: { ...userInfoById },
+				usedVouchers: { ...voucherByUserIdAndVoucherId },
+				existedVouchers: { ...voucherUserId },
+				feedback: { ...feedbacksUserId },
+			});
+		}
+	}, [
+		voucherByUserIdAndVoucherId,
+		userInfoById,
+		feedbacksUserId,
+		voucherUserId,
+	]);
+
+	const getVouchersByUserIdOnPhone = () => {
 		getVouchersByUserIdRequest(user.id)
 			.then((results) => {
+				console.log('Day ne: ', results);
 				setVouchers(results);
+			})
+			.catch((e) => console.log('Error loading vouchers ', e.message));
+	};
+
+	const getVouchersByUserId = (userId) => {
+		getVouchersByUserIdRequest(userId)
+			.then((results) => {
+				setVoucherUserId(results);
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 	};
@@ -94,6 +192,7 @@ export const VoucherContextProvider = ({ children }) => {
 					let check_2 = false;
 					let check = false;
 					if (num_1) {
+						NotificationContext;
 						check_1 = user['check-in-no'] >= num_1;
 					}
 					if (num_2) {
@@ -127,7 +226,12 @@ export const VoucherContextProvider = ({ children }) => {
 				filteredCheckIns,
 				vouchers,
 				deleteVoucher,
-				getVouchersByUserId,
+				getVouchersByUserIdOnPhone,
+				verifyVoucherByQRCode,
+				error,
+				isVoucherError,
+				isVoucherValid,
+				allUserInfo,
 			}}
 		>
 			{children}

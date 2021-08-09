@@ -1,5 +1,9 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { getAllUsersRequest } from './user.service';
+import {
+	getAllUsersRequest,
+	getUserByUserIdRequest,
+	getAllFeedBackByUserIdRequest,
+} from './user.service';
 
 export const UserContext = createContext();
 
@@ -17,6 +21,18 @@ export const UserContextProvider = ({ children }) => {
 			.catch((e) => console.log('Get All Users error: ', e.message));
 	};
 
+	const getUserByUserId = (userId) => {
+		return getUserByUserIdRequest(userId);
+	};
+
+	const getAllFeedBackByUserId = (userId) => {
+		return getAllFeedBackByUserIdRequest(userId);
+	};
+
+	const checkInForUser = () => {
+		console.log('1');
+	};
+
 	useEffect(() => {
 		getAllUsers();
 	}, []);
@@ -25,6 +41,9 @@ export const UserContextProvider = ({ children }) => {
 		<UserContext.Provider
 			value={{
 				users,
+				checkInForUser,
+				getUserByUserId,
+				getAllFeedBackByUserId,
 			}}
 		>
 			{children}

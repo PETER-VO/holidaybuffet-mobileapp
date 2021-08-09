@@ -9,11 +9,11 @@ import { VoucherContext } from '../../../services/voucher/voucher.context';
 
 export const VoucherScreen = ({ navigation }) => {
 	const [isRemoveButton, setIsRemoveButton] = useState(false);
-	const { getVouchersByUserId, vouchers } = useContext(VoucherContext);
+	const { getVouchersByUserIdOnPhone, vouchers } = useContext(VoucherContext);
 
 	useEffect(() => {
 		if (isRemoveButton) {
-			getVouchersByUserId();
+			getVouchersByUserIdOnPhone();
 		}
 		setIsRemoveButton(false);
 	}, [isRemoveButton]);

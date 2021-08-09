@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { AuthenticationContext } from '../authentication/authentication.context';
 import { getAllPhoneTokens } from './notification.service';
 
 export const NotificationContext = createContext();
@@ -6,6 +7,7 @@ export const NotificationContext = createContext();
 export const NotificationContextProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const { user } = useContext(AuthenticationContext);
 
 	const sendNotificationAllDevices = (title, body) => {
 		if (!title) {
@@ -29,8 +31,8 @@ export const NotificationContextProvider = ({ children }) => {
 		}, 3000);
 	};
 
-	const sendNotificationTest = (user, body) => {
-		if (user) {
+	const sendNotificationTest = (title, body) => {
+		if (title) {
 			sendPushNotification(user.phoneToken, title, body);
 		}
 	};

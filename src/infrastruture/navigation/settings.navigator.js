@@ -11,6 +11,7 @@ import { FavouritesScreen } from '../../features/settings/screens/favourites/fav
 import { ManagementControl } from '../../features/settings/screens/general-managements/screens/management-control.screen';
 import { SendVoucherScreen } from '../../features/settings/screens/general-managements/send-vouchers/screens/send-voucher.screen';
 import { ScanQRCode } from '../../features/settings/screens/qrcode/scan-qrcode.screen';
+import { ScanQRCodeLoading } from '../../features/settings/screens/qrcode/scan-qrcode-loading.screen';
 
 const SettingsStack = createStackNavigator();
 
@@ -50,6 +51,10 @@ export const SettingNavigator = () => {
 					name='ScanSuccess'
 					component={ScanSuccessScreen}
 				/> */}
+				<SettingsStack.Screen
+					name='ScanQRCodeLoading'
+					component={ScanQRCodeLoading}
+				/>
 				{/* End QR CODE */}
 				<SettingsStack.Screen name='Logout' component={AccountScreen} />
 			</SettingsStack.Navigator>
