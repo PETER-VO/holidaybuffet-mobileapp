@@ -38,7 +38,7 @@ export const NotificationContextProvider = ({ children }) => {
 	};
 
 	const sendNotificationForUsers = (users, title, body) => {
-		if (users) {
+		if (title && users) {
 			let phoneTokens = users.map((user) => user.phoneToken);
 			phoneTokens
 				.filter((token, idx, array) => array.indexOf(token) === idx)

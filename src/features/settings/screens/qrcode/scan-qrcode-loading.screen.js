@@ -34,6 +34,7 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 		if (isVoucherValid && allUserInfo) {
 			setTimeout(() => {
 				navigation.navigate('ScanSuccess');
+
 				resetVoucherContext();
 			}, 3000);
 		} else if (isVoucherError) {

@@ -26,16 +26,15 @@ export const AuthenticationContextProvider = ({ children }) => {
 		});
 	}
 
-	useEffect(() => {
-		console.log(user);
-	}, [user]);
-
 	const saveUserToFirebase = () => {
 		if (!user) {
 			firebase.auth().onAuthStateChanged(async (user) => {
 				if (user) {
 					const userRef = await createUserProfileDocument(user, {
 						role: 'user',
+						customerType: 'New Customer',
+						noCheckIn: 0,
+						listDateCheckIn: [],
 					});
 					await userRef.onSnapshot(async (snapShot) => {
 						const userObj = { id: snapShot.id, ...snapShot.data() };
@@ -44,6 +43,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 						});
 						const jsonValue = JSON.stringify(userObj);
 						await AsyncStorage.setItem(`@users`, jsonValue);
+						const value = AsyncStorage.getItem(`@users`);
+						value.then((result) => {
+							setUser(JSON.parse(result));
+						});
 					});
 					setIsLoading(false);
 					setCheckVerificationCode(false);
@@ -96,10 +99,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 		}, 2000);
 	};
 
-	const incrementCredit = (data) => {
-		incrementCreditRequest(data);
-	};
-
 	const onLogout = () => {
 		AsyncStorage.removeItem('@users');
 		firebase.auth().signOut();
@@ -128,7 +127,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 				verificationCode,
 				verificationId,
 				clearError,
-				incrementCredit,
 				processVerificationCode,
 				checkVerificationCode,
 				saveUserToFirebase,

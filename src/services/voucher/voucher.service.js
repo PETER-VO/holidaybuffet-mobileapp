@@ -33,6 +33,19 @@ export const getVouchersByUserIdRequest = async (userId) => {
 	return results;
 };
 
+export const getListScannedUserRequest = async () => {
+	const results = [];
+	const listsScanRef = firestore.collection(`ListsScan`);
+	const snapshot = await listsScanRef.get();
+	snapshot.forEach((doc) => {
+		results.push({
+			id: doc.id,
+			...doc.data(),
+		});
+	});
+	return results;
+};
+
 export const getVouchersByUserIdAndVoucherId = async (userId, voucherId) => {
 	let result = {};
 	const vouchersRef = firestore.doc(`users/${userId}/vouchers/${voucherId}`);

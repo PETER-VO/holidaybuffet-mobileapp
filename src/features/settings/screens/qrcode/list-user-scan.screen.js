@@ -5,10 +5,11 @@ import { UserInfoCard } from './components/user-info-card.component';
 import { UserList } from './components/list-user-scan.styles';
 import { Spacer } from '../../../../components/spacer/spacer.component';
 import { FadeInView } from '../../../../components/animations/fade.animation';
+import { VoucherContext } from '../../../../services/voucher/voucher.context';
 
 export const ListUserScanScreen = ({ navigation }) => {
 	// const [isRemoveButton, setIsRemoveButton] = useState(false);
-	// const { getVouchersByUserIdOnPhone, vouchers } = useContext(VoucherContext);
+	const { getVouchersByUserIdOnPhone, vouchers } = useContext(VoucherContext);
 
 	// useEffect(() => {
 	// 	if (isRemoveButton) {

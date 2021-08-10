@@ -50,6 +50,7 @@ export const UserContextProvider = ({ children }) => {
 				getUserByUserId,
 				getAllFeedBackByUserId,
 				addAllUserInformationAfterScanQRCode,
+				getAllUsers,
 			}}
 		>
 			{children}

@@ -4,10 +4,10 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { FavouritesContextProvider } from '../../services/favourites/favourites.context';
 import { RestaurantsContextProvider } from '../../services/restaurants/restaurants.context';
 import { NotificationContextProvider } from '../../services/notification/notification.context';
-import { VoucherNavigator } from './vouchers.navigator';
 import { SettingNavigator } from './settings.navigator';
 import { UserContextProvider } from '../../services/user/user.context';
 import { VoucherContextProvider } from '../../services/voucher/voucher.context';
+import { VoucherNavigator } from './vouchers.navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,14 @@ export const AppNavigator = () => (
 							}}
 						>
 							<Tab.Screen name='Settings' component={SettingNavigator} />
-							<Tab.Screen name='Vouchers' component={VoucherNavigator} />
+							<Tab.Screen
+								name='Vouchers'
+								component={VoucherNavigator}
+								options={{ unmountOnBlur: true }}
+								listeners={({ navigation }) => ({
+									blur: () => navigation.setParams({ screen: undefined }),
+								})}
+							/>
 							{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
 						</Tab.Navigator>
 					</VoucherContextProvider>

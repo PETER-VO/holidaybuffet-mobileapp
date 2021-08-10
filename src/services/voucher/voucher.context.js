@@ -7,6 +7,7 @@ import {
 	getVouchersByUserIdRequest,
 	deleteVoucherByUserId,
 	getVouchersByUserIdAndVoucherId,
+	getListScannedUserRequest,
 } from './voucher.service';
 
 export const VoucherContext = createContext();
@@ -29,11 +30,13 @@ export const VoucherContextProvider = ({ children }) => {
 	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
 	const [voucherUserId, setVoucherUserId] = useState(null);
 	const [QRCode, setQRCode] = useState('');
+	const [listScannedUser, setListScannedUser] = useState([]);
 	const {
 		users,
 		getUserByUserId,
 		getAllFeedBackByUserId,
 		addAllUserInformationAfterScanQRCode,
+		getAllUsers,
 	} = useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
 
@@ -43,7 +46,18 @@ export const VoucherContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		getVouchersByUserIdOnPhone();
+		getAllListsScanUser();
 	}, []);
+
+	const getAllListsScanUser = () => {
+		getListScannedUserRequest()
+			.then((results) => {
+				setListScannedUser(results);
+			})
+			.catch((e) => {
+				console.log('Error get all list scan ', e.message);
+			});
+	};
 
 	const deleteVoucher = (voucherId) => {
 		deleteVoucherByUserId(user.id, voucherId);
@@ -118,11 +132,16 @@ export const VoucherContextProvider = ({ children }) => {
 		}
 	}, [voucherByUserIdAndVoucherId]);
 
+	const updateListDateCheckInForUser = (user) => {
+		console.log('Hei!', user);
+	};
+
 	useEffect(() => {
 		if (isVoucherValid && QRCode) {
 			let userId = QRCode.split(',')[0];
 			getUserByUserId(userId)
 				.then((result) => {
+					updateListDateCheckInForUser(result);
 					setUserInfoById(result);
 				})
 				.catch((e) => {
@@ -195,10 +214,10 @@ export const VoucherContextProvider = ({ children }) => {
 					let check = false;
 					if (num_1) {
 						NotificationContext;
-						check_1 = user['check-in-no'] >= num_1;
+						check_1 = user['noCheckIn'] >= num_1;
 					}
 					if (num_2) {
-						check_2 = user['check-in-no'] <= num_2;
+						check_2 = user['noCheckIn'] <= num_2;
 					} else {
 						check_2 = true;
 					}
@@ -209,10 +228,15 @@ export const VoucherContextProvider = ({ children }) => {
 				});
 				setFilteredCheckIns(filteredUsers);
 			}
-			user;
 			setIsLoadingQuantity(false);
 		}, 2400);
 	};
+
+	useEffect(() => {
+		if (isLoadingQuantity) {
+			getAllUsers();
+		}
+	}, [isLoadingQuantity]);
 
 	const resetVoucherContext = () => {
 		setIsLoadingQuantity(false);
