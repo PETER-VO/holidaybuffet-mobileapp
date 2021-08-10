@@ -6,15 +6,7 @@ export const addVoucherToUserId = (userId, feedback) => {
 
 		firestore
 			.collection(`users/${userId}/vouchers`)
-			.add({ createdAt, ...feedback })
-			.then(function (docRef) {
-				docRef.get().then(function (doc) {
-					console.log('Hello: ', doc.data());
-				});
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
+			.add({ createdAt, ...feedback });
 	} catch (e) {
 		console.log('error adding voucher: ', e.message);
 	}

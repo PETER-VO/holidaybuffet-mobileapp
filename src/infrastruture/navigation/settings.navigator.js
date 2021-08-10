@@ -68,9 +68,6 @@ export const SettingNavigator = () => {
 
 				{/* Start List User Scan */}
 				<SettingsStack.Screen
-					options={{
-						header: () => null,
-					}}
 					name='ListUserScan'
 					component={ListUserScanScreen}
 				/>

@@ -36,6 +36,7 @@ export const VoucherContextProvider = ({ children }) => {
 		getUserByUserId,
 		getAllFeedBackByUserId,
 		addAllUserInformationAfterScanQRCode,
+		updateListCheckInByUser,
 		getAllUsers,
 	} = useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
@@ -103,7 +104,6 @@ export const VoucherContextProvider = ({ children }) => {
 		if (QRCode_) {
 			setQRCode(QRCode_);
 			const arrayCode = QRCode_.split(',');
-			console.log('arrayCode ', arrayCode);
 			const userId = arrayCode[0];
 			const voucherId = arrayCode[1];
 			await getVouchersByUserIdAndVoucherId(userId, voucherId)
@@ -133,7 +133,7 @@ export const VoucherContextProvider = ({ children }) => {
 	}, [voucherByUserIdAndVoucherId]);
 
 	const updateListDateCheckInForUser = (user) => {
-		console.log('Hei!', user);
+		updateListCheckInByUser(user);
 	};
 
 	useEffect(() => {
@@ -159,6 +159,12 @@ export const VoucherContextProvider = ({ children }) => {
 			getVouchersByUserId(userId);
 		}
 	}, [isVoucherValid]);
+
+	useEffect(() => {
+		if (allUserInfo && isVoucherValid) {
+			addAllUserInformationAfterScanQRCode(allUserInfo);
+		}
+	}, [allUserInfo]);
 
 	useEffect(() => {
 		if (

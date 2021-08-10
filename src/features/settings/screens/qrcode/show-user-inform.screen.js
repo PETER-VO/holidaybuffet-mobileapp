@@ -11,7 +11,7 @@ import {
 	Number,
 } from './components/show-user-inform.styles';
 
-export const ShowUserInformScreen = () => {
+export const ShowUserInformScreen = ({ route }) => {
 	return (
 		<SafeArea style={{ padding: 20, marginTop: 0 }}>
 			<ScrollView>
@@ -25,6 +25,10 @@ export const ShowUserInformScreen = () => {
 
 					<TitleCustomTradesForm>User Profile</TitleCustomTradesForm>
 					<View style={{ marginLeft: 18, marginBottom: 20 }}>
+						<Section>
+							<TextTitle>* Id_User :</TextTitle>
+							<TextValue>0417503310</TextValue>
+						</Section>
 						<Section>
 							<TextTitle>* Phone number :</TextTitle>
 							<TextValue>0417503310</TextValue>

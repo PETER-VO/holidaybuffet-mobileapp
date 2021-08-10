@@ -4,12 +4,15 @@ import {
 	getUserByUserIdRequest,
 	getAllFeedBackByUserIdRequest,
 	addAllUserInformation,
+	updateListCheckInByUserIdRequest,
+	getAllScannedListRequest,
 } from './user.service';
 
 export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
 	const [users, setUsers] = useState([]);
+	const [scannedListUsers, setScannedListUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const getAllUsers = () => {
@@ -34,6 +37,21 @@ export const UserContextProvider = ({ children }) => {
 		addAllUserInformation(information);
 	};
 
+	const updateListCheckInByUser = (user) => {
+		const { id, listDateCheckIn } = user;
+		updateListCheckInByUserIdRequest(id, listDateCheckIn);
+	};
+
+	const getAllUserScannedLists = () => {
+		getAllScannedListRequest()
+			.then((results) => {
+				setScannedListUsers(results);
+			})
+			.catch((e) => {
+				console.log('Error Get All ScannedList', e.message);
+			});
+	};
+
 	const checkInForUser = () => {
 		console.log('1');
 	};
@@ -51,6 +69,9 @@ export const UserContextProvider = ({ children }) => {
 				getAllFeedBackByUserId,
 				addAllUserInformationAfterScanQRCode,
 				getAllUsers,
+				updateListCheckInByUser,
+				getAllUserScannedLists,
+				scannedListUsers,
 			}}
 		>
 			{children}

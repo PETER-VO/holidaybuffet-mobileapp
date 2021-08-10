@@ -5,11 +5,15 @@ import { UserInfoCard } from './components/user-info-card.component';
 import { UserList } from './components/list-user-scan.styles';
 import { Spacer } from '../../../../components/spacer/spacer.component';
 import { FadeInView } from '../../../../components/animations/fade.animation';
-import { VoucherContext } from '../../../../services/voucher/voucher.context';
+import { UserContext } from '../../../../services/user/user.context';
 
 export const ListUserScanScreen = ({ navigation }) => {
 	// const [isRemoveButton, setIsRemoveButton] = useState(false);
-	const { getVouchersByUserIdOnPhone, vouchers } = useContext(VoucherContext);
+	const { getAllUserScannedLists, scannedListUsers } = useContext(UserContext);
+
+	useEffect(() => {
+		getAllUserScannedLists();
+	}, []);
 
 	// useEffect(() => {
 	// 	if (isRemoveButton) {
@@ -19,19 +23,21 @@ export const ListUserScanScreen = ({ navigation }) => {
 	// }, [isRemoveButton]);
 
 	return (
-		<SafeArea>
+		<SafeArea style={{ marginTop: 0 }}>
 			<UserList
-				data={[1, 2]}
+				data={scannedListUsers}
 				renderItem={(item) => {
 					return (
 						<TouchableOpacity
-							onPress={() => navigation.navigate('ShowUserInform')}
+							onPress={() =>
+								navigation.navigate('ShowUserInform', { userInform: item })
+							}
 						>
 							<Spacer position='bottom' size='large'>
 								<FadeInView>
 									<UserInfoCard
 										key={item.id}
-										// voucher={item}
+										userCard={item}
 										// onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
 									/>
 								</FadeInView>
