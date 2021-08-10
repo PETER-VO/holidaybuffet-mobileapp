@@ -8,6 +8,7 @@ import { SettingNavigator } from './settings.navigator';
 import { UserContextProvider } from '../../services/user/user.context';
 import { VoucherContextProvider } from '../../services/voucher/voucher.context';
 import { VoucherNavigator } from './vouchers.navigator';
+import { RestaurantsNavigator } from './restaurants.navigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ export const AppNavigator = () => (
 									blur: () => navigation.setParams({ screen: undefined }),
 								})}
 							/>
-							{/* <Tab.Screen name='Restaurants' component={RestaurantsNavigator} /> */}
+							<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
 						</Tab.Navigator>
 					</VoucherContextProvider>
 				</UserContextProvider>

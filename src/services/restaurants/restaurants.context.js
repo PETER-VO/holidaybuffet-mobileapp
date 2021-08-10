@@ -16,11 +16,11 @@ export const RestaurantsContextProvider = ({ children }) => {
 	const retrieveRestaurants = (loc) => {
 		setIsLoading(true);
 		setRestaurants([]);
-
 		setTimeout(() => {
 			restaurantsRequest(loc)
 				.then(restaurantsTransform)
 				.then((results) => {
+					console.log('results Restaurant: ', results);
 					setIsLoading(false);
 					setRestaurants(results);
 				})
@@ -45,7 +45,7 @@ export const RestaurantsContextProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		retrieveRestaurants('Chicago');
+		retrieveRestaurants('41.878113,-87.629799');
 	}, []);
 
 	return (

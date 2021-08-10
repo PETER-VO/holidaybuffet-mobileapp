@@ -32,6 +32,7 @@ export const ShowUserInformScreen = ({ route }) => {
 	} = info.usedVouchers;
 
 	const existedVouchers = Object.values(info.existedVouchers);
+	const feedbacks = Object.values(info.feedback);
 
 	useEffect(() => {
 		if (listDateCheckIn.length !== 0) {
@@ -88,48 +89,34 @@ export const ShowUserInformScreen = ({ route }) => {
 							<TextValue>--</TextValue>
 						</Section>
 					</View>
-					{/* 
-					<TitleCustomTradesForm>Feedbacks</TitleCustomTradesForm>
-				
-					<Number>1.</Number>
-					<View style={{ marginLeft: 18, marginBottom: 20 }}>
-						<Section>
-							<TextTitle>* Name food:</TextTitle>
-							<TextValue>Pho Bo</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Rating:</TextTitle>
-							<TextValue>4</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Content:</TextTitle>
-							<TextValue>Good!</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Created date:</TextTitle>
-							<TextValue>20/07/2021</TextValue>
-						</Section>
-					</View>
 
-					<Number>2.</Number>
-					<View style={{ marginLeft: 18, marginBottom: 20 }}>
-						<Section>
-							<TextTitle>* Name food:</TextTitle>
-							<TextValue>Bun thit nuong</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Rating:</TextTitle>
-							<TextValue>3</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Content:</TextTitle>
-							<TextValue>Good!</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Created date:</TextTitle>
-							<TextValue>20/07/2021</TextValue>
-						</Section>
-					</View> */}
+					{/* Feedbacks */}
+					<TitleCustomTradesForm>Feedbacks</TitleCustomTradesForm>
+					{feedbacks.map(({ content, createdAt, id, rating, nameFood }) => (
+						<View>
+							<Number>1.</Number>
+							<View style={{ marginLeft: 18, marginBottom: 20 }}>
+								<Section>
+									<TextTitle>* Name food:</TextTitle>
+									<TextValue>{nameFood}</TextValue>
+								</Section>
+								<Section>
+									<TextTitle>* Rating:</TextTitle>
+									<TextValue>{rating}</TextValue>
+								</Section>
+								<Section>
+									<TextTitle>* Content:</TextTitle>
+									<TextValue>{content}</TextValue>
+								</Section>
+								<Section>
+									<TextTitle>* Created date:</TextTitle>
+									<TextValue>
+										{formattedDateAndTime(createdAt.seconds)}
+									</TextValue>
+								</Section>
+							</View>
+						</View>
+					))}
 
 					{/* ---- */}
 					<TitleCustomTradesForm>Existed Vouchers</TitleCustomTradesForm>

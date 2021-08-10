@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '../../../../../components/typography/text.component';
@@ -22,7 +22,6 @@ export const UserInfoCard = ({ userCard }) => {
 			} else {
 				lastDate = listDateCheckIn[0];
 			}
-			console.log('lastDate: ', lastDate);
 			let formattedLastDate = formattedDateAndTime(lastDate.seconds);
 
 			setLastDateCheckIn(formattedLastDate);
@@ -50,18 +49,16 @@ export const UserInfoCard = ({ userCard }) => {
 			style={{
 				height: 195,
 				margin: 10,
-				padding: 18,
+				padding: 16,
 				borderWidth: 3,
 				borderColor: 'black',
 			}}
 		>
-			<TouchableOpacity onPress={alertConfirmRemove}>
-				<FontAwesome
-					name='remove'
-					size={24}
-					color='#CC412F'
-					style={{ position: 'absolute', right: 0, top: -15 }}
-				/>
+			<TouchableOpacity
+				style={{ position: 'absolute', right: 0, top: 0 }}
+				onPress={() => console.log('Press me')}
+			>
+				<FontAwesome name='remove' size={24} color='#CC412F' />
 			</TouchableOpacity>
 
 			<Image
