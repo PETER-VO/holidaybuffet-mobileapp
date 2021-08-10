@@ -8,19 +8,19 @@ import { FadeInView } from '../../../../components/animations/fade.animation';
 import { UserContext } from '../../../../services/user/user.context';
 
 export const ListUserScanScreen = ({ navigation }) => {
-	// const [isRemoveButton, setIsRemoveButton] = useState(false);
+	const [isRemoveButton, setIsRemoveButton] = useState(false);
 	const { getAllUserScannedLists, scannedListUsers } = useContext(UserContext);
 
 	useEffect(() => {
 		getAllUserScannedLists();
 	}, []);
 
-	// useEffect(() => {
-	// 	if (isRemoveButton) {
-	// 		getVouchersByUserIdOnPhone();
-	// 	}
-	// 	setIsRemoveButton(false);
-	// }, [isRemoveButton]);
+	useEffect(() => {
+		if (isRemoveButton) {
+			getAllUserScannedLists();
+		}
+		setIsRemoveButton(false);
+	}, [isRemoveButton]);
 
 	return (
 		<SafeArea style={{ marginTop: 0 }}>
@@ -38,7 +38,7 @@ export const ListUserScanScreen = ({ navigation }) => {
 									<UserInfoCard
 										key={item.id}
 										userCard={item}
-										// onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
+										onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
 									/>
 								</FadeInView>
 							</Spacer>

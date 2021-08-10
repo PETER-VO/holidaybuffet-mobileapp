@@ -15,7 +15,7 @@ export const getAllUsersRequest = async () => {
 
 export const getAllScannedListRequest = async () => {
 	const results = [];
-	const scannedListRef = firestore.collection('ScannedLists');
+	const scannedListRef = firestore.collection('scannedLists');
 	const snapshot = await scannedListRef.get();
 	snapshot.forEach((doc) => {
 		results.push({
@@ -34,6 +34,7 @@ export const getUserByUserIdRequest = async (userId) => {
 		id: doc.id,
 		...doc.data(),
 	};
+
 	return result;
 };
 
@@ -53,8 +54,7 @@ export const getAllFeedBackByUserIdRequest = async (userId) => {
 export const addAllUserInformation = (information) => {
 	try {
 		const createdAt = new Date();
-
-		firestore.collection(`ScannedLists`).add({ createdAt, ...information });
+		firestore.collection(`scannedLists`).add({ createdAt, ...information });
 	} catch (e) {
 		console.log('error adding voucher: ', e.message);
 	}
@@ -71,5 +71,13 @@ export const updateListCheckInByUserIdRequest = async (
 		await userRef.update({ listDateCheckIn });
 	} catch (e) {
 		console.log('error updating listCheckIn: ', e.message);
+	}
+};
+
+export const deleteScannedListUserByIdRequest = (id) => {
+	try {
+		firestore.doc(`scannedLists/${id}`).delete();
+	} catch (e) {
+		console.log('Error delete scanned list, ', e.message);
 	}
 };

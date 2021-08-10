@@ -7,7 +7,6 @@ import {
 	getVouchersByUserIdRequest,
 	deleteVoucherByUserId,
 	getVouchersByUserIdAndVoucherId,
-	getListScannedUserRequest,
 } from './voucher.service';
 
 export const VoucherContext = createContext();
@@ -30,7 +29,6 @@ export const VoucherContextProvider = ({ children }) => {
 	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
 	const [voucherUserId, setVoucherUserId] = useState(null);
 	const [QRCode, setQRCode] = useState('');
-	const [listScannedUser, setListScannedUser] = useState([]);
 	const {
 		users,
 		getUserByUserId,
@@ -47,18 +45,7 @@ export const VoucherContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		getVouchersByUserIdOnPhone();
-		getAllListsScanUser();
 	}, []);
-
-	const getAllListsScanUser = () => {
-		getListScannedUserRequest()
-			.then((results) => {
-				setListScannedUser(results);
-			})
-			.catch((e) => {
-				console.log('Error get all list scan ', e.message);
-			});
-	};
 
 	const deleteVoucher = (voucherId) => {
 		deleteVoucherByUserId(user.id, voucherId);
@@ -132,16 +119,12 @@ export const VoucherContextProvider = ({ children }) => {
 		}
 	}, [voucherByUserIdAndVoucherId]);
 
-	const updateListDateCheckInForUser = (user) => {
-		updateListCheckInByUser(user);
-	};
-
 	useEffect(() => {
 		if (isVoucherValid && QRCode) {
 			let userId = QRCode.split(',')[0];
 			getUserByUserId(userId)
 				.then((result) => {
-					updateListDateCheckInForUser(result);
+					updateListCheckInByUser(result);
 					setUserInfoById(result);
 				})
 				.catch((e) => {
@@ -163,8 +146,10 @@ export const VoucherContextProvider = ({ children }) => {
 	useEffect(() => {
 		if (allUserInfo && isVoucherValid) {
 			addAllUserInformationAfterScanQRCode(allUserInfo);
+			setIsVoucherValid(false);
+			setAllUserInfo(null);
 		}
-	}, [allUserInfo]);
+	}, [allUserInfo, isVoucherValid]);
 
 	useEffect(() => {
 		if (
@@ -244,19 +229,19 @@ export const VoucherContextProvider = ({ children }) => {
 		}
 	}, [isLoadingQuantity]);
 
-	const resetVoucherContext = () => {
-		setIsLoadingQuantity(false);
-		setIsLoadingTest(false);
-		setIsLoadingPublish(false);
-		setVoucherByUserIdAndVoucherId(null);
-		setIsVoucherValid(false);
-		setIsVoucherError(false);
-		setAllUserInfo(null);
-		setUserInfoById(null);
-		setFeedbacksUserId(null);
-		setVoucherUserId(null);
-		setQRCode('');
-	};
+	// const resetVoucherContext = () => {
+	// 	setIsLoadingQuantity(false);
+	// 	setIsLoadingTest(false);
+	// 	setIsLoadingPublish(false);
+	// 	setVoucherByUserIdAndVoucherId(null);
+	// 	setIsVoucherValid(false);
+	// 	setIsVoucherError(false);
+	// 	setAllUserInfo(null);
+	// 	setUserInfoById(null);
+	// 	setFeedbacksUserId(null);
+	// 	setVoucherUserId(null);
+	// 	setQRCode('');
+	// };
 
 	return (
 		<VoucherContext.Provider
@@ -278,7 +263,7 @@ export const VoucherContextProvider = ({ children }) => {
 				isVoucherError,
 				isVoucherValid,
 				allUserInfo,
-				resetVoucherContext,
+				// resetVoucherContext,
 			}}
 		>
 			{children}

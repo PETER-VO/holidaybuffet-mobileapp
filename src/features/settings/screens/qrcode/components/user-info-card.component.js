@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '../../../../../components/typography/text.component';
 import { TextTitle, TextValue, Section } from './show-user-inform.styles';
+import { formattedDateAndTime } from '../../../../../components/utils/useful-method';
+import { UserContext } from '../../../../../services/user/user.context';
 
 export const UserInfoCard = ({ userCard }) => {
-	console.log('userProfile: ', userCard.item.userInfo);
-	const [lastDateCheckIn, setLastDateCheckIn] = useState('Not yet');
-	const [lastDateOfTime, setLastDateOfTime] = useState('');
+	const [lastDateCheckIn, setLastDateCheckIn] = useState('');
 	const { phoneNumber, noCheckIn, listDateCheckIn } = userCard.item.userInfo;
+	const { deleteScannedListUserById } = useContext(UserContext);
+	const { createdAt } = userCard.item;
 	// const feedbacks = userCard.item.feedback;
 
 	useEffect(() => {
@@ -20,20 +22,28 @@ export const UserInfoCard = ({ userCard }) => {
 			} else {
 				lastDate = listDateCheckIn[0];
 			}
-			let date = new Date(lastDate.seconds * 1000);
-			let hours = date.getHours();
-			let minutes = '0' + date.getMinutes();
-			let seconds = '0' + date.getSeconds();
-			let formattedTime =
-				hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+			console.log('lastDate: ', lastDate);
+			let formattedLastDate = formattedDateAndTime(lastDate.seconds);
 
-			let formattedDate = `${date.getDate()}/${
-				date.getMonth() + 1
-			}/${date.getFullYear()}`;
-			setLastDateOfTime(formattedTime);
-			setLastDateCheckIn(formattedDate);
+			setLastDateCheckIn(formattedLastDate);
 		}
 	}, [listDateCheckIn]);
+
+	const alertConfirmRemove = () =>
+		Alert.alert('Do you want to remove?', "Don't do that! :(", [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{
+				text: 'Yes',
+				onPress: () => {
+					deleteScannedListUserById(id);
+					onPressRemove();
+				},
+			},
+		]);
 
 	return (
 		<Card
@@ -45,12 +55,15 @@ export const UserInfoCard = ({ userCard }) => {
 				borderColor: 'black',
 			}}
 		>
-			<FontAwesome
-				name='remove'
-				size={24}
-				color='#CC412F'
-				style={{ position: 'absolute', right: 0, top: -15 }}
-			/>
+			<TouchableOpacity onPress={alertConfirmRemove}>
+				<FontAwesome
+					name='remove'
+					size={24}
+					color='#CC412F'
+					style={{ position: 'absolute', right: 0, top: -15 }}
+				/>
+			</TouchableOpacity>
+
 			<Image
 				style={{
 					width: 50,
@@ -68,7 +81,7 @@ export const UserInfoCard = ({ userCard }) => {
 					borderBottomColor: '#CC412F',
 				}}
 			>
-				Voucher (06/08/2021 - 17:43)
+				Voucher ({formattedDateAndTime(createdAt.seconds)})
 			</Text>
 			<View
 				style={{
@@ -81,8 +94,7 @@ export const UserInfoCard = ({ userCard }) => {
 				</Section>
 				<Section>
 					<Text>Last date:</Text>
-					<TextValue>{lastDateCheckIn} --</TextValue>
-					<TextValue>{lastDateOfTime}</TextValue>
+					<TextValue>{lastDateCheckIn}</TextValue>
 				</Section>
 				<Section>
 					<Text>Check-in:</Text>

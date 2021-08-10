@@ -8,15 +8,14 @@ import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export const ScanQRCodeLoading = ({ navigation, route }) => {
 	const [QRCode, setQRCode] = useState(route.params.QRCode);
-	const [isVerifyDone, setIsVerifyDone] = useState(false);
 	const {
 		verifyVoucherByQRCode,
 		allUserInfo,
 		error,
-		resetVoucherContext,
 		isVoucherError,
 		isVoucherValid,
 	} = useContext(VoucherContext);
+
 	const { checkInForUser } = useContext(UserContext);
 
 	useEffect(() => {
@@ -34,12 +33,10 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 		if (isVoucherValid && allUserInfo) {
 			setTimeout(() => {
 				navigation.navigate('ScanSuccess');
-
-				resetVoucherContext();
-			}, 3000);
+			}, 2000);
 		} else if (isVoucherError) {
 			setTimeout(() => {
-				console.log('Error');
+				console.log(error);
 			}, 3000);
 		}
 	}, [isVoucherValid, isVoucherError, allUserInfo]);

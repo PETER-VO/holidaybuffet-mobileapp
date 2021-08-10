@@ -6,6 +6,7 @@ import {
 	addAllUserInformation,
 	updateListCheckInByUserIdRequest,
 	getAllScannedListRequest,
+	deleteScannedListUserByIdRequest,
 } from './user.service';
 
 export const UserContext = createContext();
@@ -27,6 +28,10 @@ export const UserContextProvider = ({ children }) => {
 
 	const getUserByUserId = (userId) => {
 		return getUserByUserIdRequest(userId);
+	};
+
+	const deleteScannedListUserById = (id) => {
+		deleteScannedListUserByIdRequest(id);
 	};
 
 	const getAllFeedBackByUserId = (userId) => {
@@ -71,6 +76,7 @@ export const UserContextProvider = ({ children }) => {
 				getAllUsers,
 				updateListCheckInByUser,
 				getAllUserScannedLists,
+				deleteScannedListUserById,
 				scannedListUsers,
 			}}
 		>
