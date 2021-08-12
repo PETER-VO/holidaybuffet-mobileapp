@@ -75,9 +75,10 @@ export const QRCodeContextProvider = ({ children }) => {
 	useEffect(() => {
 		if (voucherByUserIdAndVoucherId) {
 			let currentDate = new Date();
-			let userDate = voucherByUserIdAndVoucherId['expiredDate'].split('/');
-			let expiredDate = new Date(userDate[2], userDate[1] - 1, userDate[0]); // new Date(year, month, date).
-
+			let userDate = voucherByUserIdAndVoucherId['expiredDate'];
+			let expiredDate = new Date(userDate.seconds * 1000);
+			console.log('currentDate.getTime: ', currentDate.getTime());
+			console.log('expiredDate.getTime: ', expiredDate.getTime());
 			if (currentDate.getTime() < expiredDate.getTime()) {
 				setIsVoucherValid(true);
 			} else {
@@ -88,8 +89,6 @@ export const QRCodeContextProvider = ({ children }) => {
 	}, [voucherByUserIdAndVoucherId]);
 
 	useEffect(() => {
-		console.log('isQRCodeValid: ', isQRCodeValid);
-		console.log('isVoucherError: ', isVoucherError);
 		if (isQRCodeValid && (isVoucherValid || isVoucherError)) {
 			getAllNeededUserInformationQRCodeScanning();
 		}

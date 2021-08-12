@@ -5,10 +5,12 @@ import { VoucherCard, VoucherCardCover } from './voucher-info-card.styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { VoucherContext } from '../../../services/voucher/voucher.context';
 import { formattedDate } from '../../../components/utils/useful-method';
+import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
 export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 	const { id, titleVoucher, expiredDate } = voucher.item;
 	const { deleteVoucher } = useContext(VoucherContext);
+	const { user } = useContext(AuthenticationContext);
 
 	const alertConfirmRemove = () =>
 		Alert.alert('Do you want to remove?', "Don't do that! :(", [
@@ -50,20 +52,22 @@ export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 					}}
 					source={require('../../../../assets/restaurant.png')}
 				/>
-				<TouchableOpacity
-					style={{
-						position: 'absolute',
-						top: 10,
-						right: 15,
-					}}
-					onPress={alertConfirmRemove}
-				>
-					<MaterialCommunityIcons
-						name='scissors-cutting'
-						size={28}
-						color='#CC412F'
-					/>
-				</TouchableOpacity>
+				{user.role === 'admin' ? (
+					<TouchableOpacity
+						style={{
+							position: 'absolute',
+							top: 10,
+							right: 15,
+						}}
+						onPress={alertConfirmRemove}
+					>
+						<MaterialCommunityIcons
+							name='scissors-cutting'
+							size={28}
+							color='#CC412F'
+						/>
+					</TouchableOpacity>
+				) : null}
 
 				<View
 					style={{

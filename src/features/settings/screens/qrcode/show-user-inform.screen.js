@@ -10,42 +10,21 @@ import {
 	TextValue,
 	Number,
 } from './components/show-user-inform.styles';
-import { formattedDateAndTime } from '../../../../components/utils/useful-method';
+import {
+	formattedDateAndTime,
+	formattedDate,
+} from '../../../../components/utils/useful-method';
+import { UsedVoucher } from './components/used-voucher.component';
+import { UserInfo } from './components/user-info.component';
+import { ExistedVoucher } from './components/existed-voucher.component';
+import { FeedbackInfo } from './components/feedback-info.component';
 
 export const ShowUserInformScreen = ({ route }) => {
 	const info = route.params.userInform.item;
 	const [lastDateCheckIn, setLastDateCheckIn] = useState('--');
-	const {
-		id: idUser,
-		phoneNumber,
-		noCheckIn,
-		listDateCheckIn,
-		customerType,
-	} = info.userInfo;
-	const {
-		expiredDate: expiredDateUsedVoucher,
-		id: idUsedVoucher,
-		keyword: keywordUsedVoucher,
-		titleVoucher: titleVoucherUsedVoucher,
-		createdAt: createdAtUsedVoucher,
-		customerType: customerTypeUsedVoucher,
-	} = info.usedVouchers;
 
 	const existedVouchers = Object.values(info.existedVouchers);
 	const feedbacks = Object.values(info.feedbacks);
-
-	useEffect(() => {
-		if (listDateCheckIn.length !== 0) {
-			let lastDate;
-			if (listDateCheckIn.length > 0) {
-				lastDate = listDateCheckIn[listDateCheckIn.length - 2];
-			} else {
-				lastDate = listDateCheckIn[0];
-			}
-			const lastDateStr = formattedDateAndTime(lastDate.seconds);
-			setLastDateCheckIn(lastDateStr);
-		}
-	}, [listDateCheckIn]);
 
 	return (
 		<SafeArea style={{ padding: 20, marginTop: 0 }}>
@@ -57,144 +36,31 @@ export const ShowUserInformScreen = ({ route }) => {
 							source={require('../../../../../assets/holidayBuffet.jpg')}
 						/>
 					</View>
-
-					<TitleCustomTradesForm>User Profile</TitleCustomTradesForm>
-					<View style={{ marginLeft: 18, marginBottom: 20 }}>
-						<Section>
-							<TextTitle>* Id_User :</TextTitle>
-							<TextValue>{idUser}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Phone number :</TextTitle>
-							<TextValue>{phoneNumber}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* No check-in :</TextTitle>
-							<TextValue>{noCheckIn}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Last date check-in :</TextTitle>
-							<TextValue>{`${lastDateCheckIn}`}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* No feedback :</TextTitle>
-							<TextValue>--</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* No Voucher:</TextTitle>
-							<TextValue>--</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* List of date check-in:</TextTitle>
-							<TextValue>--</TextValue>
-						</Section>
-					</View>
+					{/* User Info */}
+					{Object.values(info.userInfo).length !== 0 ? (
+						<UserInfo
+							userInfo={info.userInfo}
+							feedbacks={feedbacks}
+							existedVouchers={existedVouchers}
+						/>
+					) : null}
 
 					{/* Feedbacks */}
 					<TitleCustomTradesForm>Feedbacks</TitleCustomTradesForm>
-					{feedbacks.map(({ content, createdAt, id, rating, nameFood }) => (
-						<View>
-							<Number>1.</Number>
-							<View style={{ marginLeft: 18, marginBottom: 20 }}>
-								<Section>
-									<TextTitle>* Name food:</TextTitle>
-									<TextValue>{nameFood}</TextValue>
-								</Section>
-								<Section>
-									<TextTitle>* Rating:</TextTitle>
-									<TextValue>{rating}</TextValue>
-								</Section>
-								<Section>
-									<TextTitle>* Content:</TextTitle>
-									<TextValue>{content}</TextValue>
-								</Section>
-								<Section>
-									<TextTitle>* Created date:</TextTitle>
-									<TextValue>
-										{formattedDateAndTime(createdAt.seconds)}
-									</TextValue>
-								</Section>
-							</View>
-						</View>
+					{feedbacks.map((feedback, idx) => (
+						<FeedbackInfo feedback={feedback} key={idx} serial={idx} />
 					))}
 
-					{/* ---- */}
+					{/* Existed Vouchers */}
 					<TitleCustomTradesForm>Existed Vouchers</TitleCustomTradesForm>
-					{existedVouchers.map(
-						(
-							{
-								createdAt,
-								customerType,
-								expiredDate,
-								id,
-								keyword,
-								titleVoucher,
-							},
-							idx
-						) => (
-							<>
-								<Number>{idx + 1}.</Number>
-								<View style={{ marginLeft: 18, marginBottom: 20 }}>
-									<Section>
-										<TextTitle>* idVoucher:</TextTitle>
-										<TextValue>{id}</TextValue>
-									</Section>
-									<Section>
-										<TextTitle>* Title:</TextTitle>
-										<TextValue>{titleVoucher}</TextValue>
-									</Section>
-									<Section>
-										<TextTitle>* Expired date:</TextTitle>
-										<TextValue>{expiredDate}</TextValue>
-									</Section>
-									<Section>
-										<TextTitle>* Customer type:</TextTitle>
-										<TextValue>{customerType}</TextValue>
-									</Section>
-									<Section>
-										<TextTitle>* Keyword:</TextTitle>
-										<TextValue>{keyword}</TextValue>
-									</Section>
-									<Section>
-										<TextTitle>* CreatedAt:</TextTitle>
-										<TextValue>{formattedDateAndTime(createdAt)}</TextValue>
-									</Section>
-								</View>
-							</>
-						)
-					)}
+					{existedVouchers.map((voucher, idx) => (
+						<ExistedVoucher voucher={voucher} serial={idx} key={idx} />
+					))}
 
-					{/* ---- */}
-
-					<TitleCustomTradesForm>Used Voucher</TitleCustomTradesForm>
-					<View style={{ marginLeft: 18, marginBottom: 20 }}>
-						<Section>
-							<TextTitle>* idVoucher :</TextTitle>
-							<TextValue>{idUsedVoucher}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Title :</TextTitle>
-							<TextValue>{titleVoucherUsedVoucher}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Customer type :</TextTitle>
-							<TextValue>{customerTypeUsedVoucher}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Expired date :</TextTitle>
-							<TextValue>{expiredDateUsedVoucher}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* Keyword:</TextTitle>
-							<TextValue>{keywordUsedVoucher}</TextValue>
-						</Section>
-						<Section>
-							<TextTitle>* createdAt:</TextTitle>
-							<TextValue>
-								{formattedDateAndTime(createdAtUsedVoucher)}
-							</TextValue>
-						</Section>
-					</View>
+					{/* UsedVouchers */}
+					{info.status && Object.keys(info.usedVouchers).length !== 0 ? (
+						<UsedVoucher usedVouchers={info.usedVouchers} />
+					) : null}
 				</View>
 			</ScrollView>
 		</SafeArea>

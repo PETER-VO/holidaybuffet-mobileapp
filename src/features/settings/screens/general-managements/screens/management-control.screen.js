@@ -3,8 +3,6 @@ import { SafeArea } from '../../../../../components/utils/safe-area.component';
 import { List } from 'react-native-paper';
 
 export const ManagementControl = ({ navigation }) => {
-	console.log('Goi tao ne!');
-
 	return (
 		<SafeArea style={{ marginTop: 0 }}>
 			<List.Section>

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Text } from '../../../components/typography/text.component';
 import { Image, View } from 'react-native';
 import { Button } from 'react-native-paper';
-
+import { formattedDate } from '../../../components/utils/useful-method';
 import { SafeArea } from '../../../components/utils/safe-area.component';
 import { ImageQRCode } from '../../../components/utils/imageQRCode.component';
 import { AuthenticationContext } from '../../../services/authentication/authentication.context';
@@ -85,7 +85,7 @@ export const VoucherDetailScreen = ({ navigation, route }) => {
 						marginTop: 20,
 					}}
 				>
-					Valid through {expiredDate}
+					Valid through {formattedDate(expiredDate.seconds)}
 				</Text>
 				<View
 					style={{

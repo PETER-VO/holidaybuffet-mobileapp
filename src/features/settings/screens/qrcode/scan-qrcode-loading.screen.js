@@ -32,8 +32,6 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 	}, [QRCode]);
 
 	useEffect(() => {
-		console.log('isVoucherValid: ', isVoucherValid);
-		console.log('isVoucherError: ', isVoucherError);
 		setTimeout(() => {
 			if (isVoucherValid && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess');
