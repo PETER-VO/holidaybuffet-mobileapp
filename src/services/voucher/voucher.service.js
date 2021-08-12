@@ -29,13 +29,17 @@ export const getVouchersByUserIdAndVoucherIdRequest = async (
 	userId,
 	voucherId
 ) => {
-	let result = {};
+	let result = null;
 	const vouchersRef = firestore.doc(`users/${userId}/vouchers/${voucherId}`);
 	const doc = await vouchersRef.get();
-	result = {
-		id: doc.id,
-		...doc.data(),
-	};
+	if (doc.exists) {
+		result = {
+			id: doc.id,
+			...doc.data(),
+		};
+	} else {
+		return Promise.reject(new Error('This voucher does not exist'));
+	}
 	return result;
 };
 

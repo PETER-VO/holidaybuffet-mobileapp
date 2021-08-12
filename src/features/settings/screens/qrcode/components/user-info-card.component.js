@@ -11,8 +11,8 @@ export const UserInfoCard = ({ userCard }) => {
 	const [lastDateCheckIn, setLastDateCheckIn] = useState('');
 	const { phoneNumber, noCheckIn, listDateCheckIn } = userCard.item.userInfo;
 	const { deleteScannedListUserById } = useContext(UserContext);
-	const { createdAt } = userCard.item;
-	// const feedbacks = userCard.item.feedback;
+	const { createdAt, title, status, errors } = userCard.item;
+	const feedbacks = Object.values(userCard.item.feedbacks);
 
 	useEffect(() => {
 		if (
@@ -21,8 +21,10 @@ export const UserInfoCard = ({ userCard }) => {
 			listDateCheckIn.length !== 0
 		) {
 			let lastDate;
-			if (listDateCheckIn.length > 1) {
-				lastDate = listDateCheckIn[listDateCheckIn.length - 2];
+			if (listDateCheckIn.length > 2) {
+				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
+			} else if (listDateCheckIn.length > 1) {
+				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
 			} else {
 				lastDate = listDateCheckIn[0];
 			}
@@ -51,7 +53,7 @@ export const UserInfoCard = ({ userCard }) => {
 	return (
 		<Card
 			style={{
-				height: 195,
+				height: 210,
 				margin: 10,
 				padding: 16,
 				borderWidth: 3,
@@ -82,30 +84,62 @@ export const UserInfoCard = ({ userCard }) => {
 					borderBottomColor: '#CC412F',
 				}}
 			>
-				Voucher ({formattedDateAndTime(createdAt.seconds)})
+				<View>
+					<Text style={{ color: status ? '#38c172' : '#CC412F' }}>{title}</Text>
+					<Text style={{ fontSize: 12 }}>
+						({formattedDateAndTime(createdAt.seconds)})
+					</Text>
+				</View>
 			</Text>
-			<View
-				style={{
-					marginTop: 10,
-				}}
-			>
-				<Section>
-					<Text>Phone number:</Text>
-					<TextValue>{phoneNumber}</TextValue>
-				</Section>
-				<Section>
-					<Text>Last date:</Text>
-					<TextValue>{lastDateCheckIn}</TextValue>
-				</Section>
-				<Section>
-					<Text>Check-in:</Text>
-					<TextValue>{noCheckIn}</TextValue>
-				</Section>
-				<Section>
-					<Text>Feedback:</Text>
-					{/* <TextValue>{feedbacks ? feedbacks.length : 0}</TextValue> */}
-				</Section>
-			</View>
+			{status ? (
+				<View
+					style={{
+						marginTop: 10,
+					}}
+				>
+					<Section>
+						<Text>Phone number:</Text>
+						<TextValue>{phoneNumber}</TextValue>
+					</Section>
+					<Section>
+						<Text>Last date:</Text>
+						<TextValue>{lastDateCheckIn}</TextValue>
+					</Section>
+					<Section>
+						<Text>Check-in:</Text>
+						<TextValue>{noCheckIn}</TextValue>
+					</Section>
+					<Section>
+						<Text>Feedback:</Text>
+						<TextValue>
+							{feedbacks.length !== 0 ? feedbacks.length : 0}
+						</TextValue>
+					</Section>
+				</View>
+			) : (
+				<View
+					style={{
+						marginTop: 10,
+					}}
+				>
+					<Section>
+						<Text style={{ color: '#CC412F' }}>Error:</Text>
+						<TextValue>{errors}</TextValue>
+					</Section>
+					<Section>
+						<Text>Phone number:</Text>
+						<TextValue>{phoneNumber}</TextValue>
+					</Section>
+					<Section>
+						<Text>Last date:</Text>
+						<TextValue>{lastDateCheckIn}</TextValue>
+					</Section>
+					<Section>
+						<Text>Check-in:</Text>
+						<TextValue>{noCheckIn}</TextValue>
+					</Section>
+				</View>
+			)}
 		</Card>
 	);
 };

@@ -40,7 +40,7 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 			} else if (isVoucherError && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanFailed');
 			}
-		}, 2000);
+		}, 1500);
 	}, [isVoucherValid, isVoucherError, doneVerifyScannedVoucher]);
 
 	useEffect(() => {

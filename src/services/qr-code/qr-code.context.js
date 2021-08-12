@@ -26,7 +26,6 @@ export const QRCodeContextProvider = ({ children }) => {
 	const { getAllFeedbacksByUserId, getUserByUserId } = useContext(UserContext);
 
 	const refreshState = () => {
-		console.log('Start');
 		setIsVoucherError(false);
 		setIsVoucherValid(false);
 		setIsQRCodeValid(false);
@@ -59,14 +58,12 @@ export const QRCodeContextProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (splittedQRCode.length >= 3) {
-			console.log('Ok1');
+		if (splittedQRCode.length === 3) {
 			setIsQRCodeValid(true);
 			const userId = splittedQRCode[0];
 			const voucherId = splittedQRCode[1];
-			getVouchersByUserIdAndVoucherId(userId, voucherId)
+			const voucher = getVouchersByUserIdAndVoucherId(userId, voucherId)
 				.then((result) => {
-					console.log('Diem A');
 					setVoucherByUserIdAndVoucherId(result);
 				})
 				.catch((e) => {
@@ -91,6 +88,8 @@ export const QRCodeContextProvider = ({ children }) => {
 	}, [voucherByUserIdAndVoucherId]);
 
 	useEffect(() => {
+		console.log('isQRCodeValid: ', isQRCodeValid);
+		console.log('isVoucherError: ', isVoucherError);
 		if (isQRCodeValid && (isVoucherValid || isVoucherError)) {
 			getAllNeededUserInformationQRCodeScanning();
 		}
@@ -100,8 +99,9 @@ export const QRCodeContextProvider = ({ children }) => {
 		let userId = splittedQRCode[0];
 		getUserByUserId(userId)
 			.then((result) => {
-				console.log('Diem B');
-				setUserById(result);
+				if (result) {
+					setUserById(result);
+				}
 			})
 			.catch((e) => {
 				setError([
@@ -112,7 +112,6 @@ export const QRCodeContextProvider = ({ children }) => {
 			});
 		getAllFeedbacksByUserId(userId)
 			.then((result) => {
-				console.log('Diem C');
 				setFeedbacksByUserId(result);
 			})
 			.catch((e) => {
@@ -124,7 +123,6 @@ export const QRCodeContextProvider = ({ children }) => {
 			});
 		getAllVouchersByUserId(userId)
 			.then((results) => {
-				console.log('Diem D');
 				setVouchersByUserId(results);
 			})
 			.catch((e) => {
@@ -148,7 +146,6 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (isVoucherValid && neededData) {
-			console.log('Diem 10');
 			addAllUserInformationAfterScanQRCode({
 				...neededData,
 				usedVouchers: { ...voucherByUserIdAndVoucherId },

@@ -15,7 +15,9 @@ export const getAllUsersRequest = async () => {
 
 export const getAllScannedListRequest = async () => {
 	const results = [];
-	const scannedListRef = firestore.collection('scannedLists');
+	const scannedListRef = firestore
+		.collection('scannedLists')
+		.orderBy('createdAt', 'desc');
 	const snapshot = await scannedListRef.get();
 	snapshot.forEach((doc) => {
 		results.push({
@@ -27,14 +29,17 @@ export const getAllScannedListRequest = async () => {
 };
 
 export const getUserByUserIdRequest = async (userId) => {
-	let result = {};
+	let result = null;
 	const userRef = firestore.doc(`users/${userId}`);
 	const doc = await userRef.get();
-	result = {
-		id: doc.id,
-		...doc.data(),
-	};
-
+	if (doc.exists) {
+		result = {
+			id: doc.id,
+			...doc.data(),
+		};
+	} else {
+		return Promise.reject(new Error('This id_user does not exist'));
+	}
 	return result;
 };
 
