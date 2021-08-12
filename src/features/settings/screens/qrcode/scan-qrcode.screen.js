@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { VoucherContext } from '../../../../services/voucher/voucher.context';
 
 export const ScanQRCode = ({ navigation }) => {
 	const [hasPermission, setHasPermission] = useState(null);
+	const { resetStateBeforeVerifyingQRCode } = useContext(VoucherContext);
 
 	useEffect(() => {
 		(async () => {
@@ -14,6 +16,7 @@ export const ScanQRCode = ({ navigation }) => {
 
 	const handleBarCodeScanned = async ({ type, data }) => {
 		if (data) {
+			resetStateBeforeVerifyingQRCode();
 			navigation.navigate('ScanQRCodeLoading', { QRCode: data });
 		}
 	};

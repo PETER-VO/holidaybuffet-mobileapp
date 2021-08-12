@@ -3,7 +3,7 @@ import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
 import { SafeArea } from '../../../../components/utils/safe-area.component';
 
-export const ScanSuccessScreen = ({ navigation }) => {
+export const ScanFailedScreen = ({ navigation }) => {
 	let animation = null;
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ export const ScanSuccessScreen = ({ navigation }) => {
 					onAnimationFinish={() => {
 						navigation.navigate('ListUserScan');
 					}}
-					source={require('../../../../../assets/success-tick.json')}
+					source={require('../../../../../assets/icon-failed.json')}
 				/>
 			</View>
 		</SafeArea>

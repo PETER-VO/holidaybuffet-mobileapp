@@ -15,7 +15,11 @@ export const UserInfoCard = ({ userCard }) => {
 	// const feedbacks = userCard.item.feedback;
 
 	useEffect(() => {
-		if (listDateCheckIn.length !== 0) {
+		if (
+			listDateCheckIn &&
+			Object.keys(listDateCheckIn).length !== 0 &&
+			listDateCheckIn.length !== 0
+		) {
 			let lastDate;
 			if (listDateCheckIn.length > 0) {
 				lastDate = listDateCheckIn[listDateCheckIn.length - 2];

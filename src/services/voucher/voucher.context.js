@@ -12,12 +12,12 @@ import {
 export const VoucherContext = createContext();
 
 export const VoucherContextProvider = ({ children }) => {
+	const [error, setError] = useState([]);
 	const [isLoadingQuantity, setIsLoadingQuantity] = useState(false);
 	const [isLoadingTest, setIsLoadingTest] = useState(false);
 	const [isLoadingPublish, setIsLoadingPublish] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
-	const [error, setError] = useState('');
 	const [vouchers, setVouchers] = useState([]);
 	const [voucherByUserIdAndVoucherId, setVoucherByUserIdAndVoucherId] =
 		useState(null);
@@ -28,7 +28,11 @@ export const VoucherContextProvider = ({ children }) => {
 	const [allUserInfo, setAllUserInfo] = useState(null);
 	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
 	const [voucherUserId, setVoucherUserId] = useState(null);
+	const [neededUserInfo, setNeededUserInfo] = useState(null);
 	const [QRCode, setQRCode] = useState('');
+	const [doneVerifyScannedVoucher, setDoneVerifyScannedVoucher] =
+		useState(false);
+	const [isQRCodeValid, setIsQRCodeValid] = useState(false);
 	const {
 		users,
 		getUserByUserId,
@@ -87,9 +91,30 @@ export const VoucherContextProvider = ({ children }) => {
 		}, 2500);
 	};
 
+	// Start QRCode
+	const checkQRCodeValid = (QRCode_) => {
+		setError([]);
+		if (QRCode_) {
+			const arrayCode = QRCode_.split(',');
+			if (
+				arrayCode.length === 3 &&
+				Number.isInteger(parseInt(arrayCode[arrayCode.length - 1]))
+			) {
+				setQRCode(QRCode_);
+				setIsQRCodeValid(true);
+				return;
+			}
+		}
+		setError([...error, `QRCode {${QRCode_}} is not valid!`]);
+		setQRCode('');
+		setFeedbacksUserId({});
+		setVoucherUserId({});
+		setUserInfoById({});
+		setIsVoucherError(true);
+	};
+
 	const verifyVoucherByQRCode = async (QRCode_) => {
 		if (QRCode_) {
-			setQRCode(QRCode_);
 			const arrayCode = QRCode_.split(',');
 			const userId = arrayCode[0];
 			const voucherId = arrayCode[1];
@@ -98,7 +123,7 @@ export const VoucherContextProvider = ({ children }) => {
 					setVoucherByUserIdAndVoucherId(result);
 				})
 				.catch((e) => {
-					setError('The voucher does not exist!');
+					setError([...error, 'The voucher does not exist!']);
 					setIsVoucherError(true);
 				});
 		}
@@ -113,77 +138,109 @@ export const VoucherContextProvider = ({ children }) => {
 			if (currentDate.getTime() < expiredDate.getTime()) {
 				setIsVoucherValid(true);
 			} else {
-				setError('The voucher is expired!');
+				setError([...error, 'The voucher is expired!']);
 				setIsVoucherError(true);
 			}
 		}
 	}, [voucherByUserIdAndVoucherId]);
 
 	useEffect(() => {
-		if (isVoucherValid && QRCode) {
-			let userId = QRCode.split(',')[0];
-			getUserByUserId(userId)
-				.then((result) => {
-					updateListCheckInByUser(result);
-					setUserInfoById(result);
-				})
-				.catch((e) => {
-					setError('User does not exist!');
-					setIsVoucherError(true);
-				});
-			getAllFeedBackByUserId(userId)
-				.then((result) => {
-					setFeedbacksUserId(result);
-				})
-				.catch((e) => {
-					setError('Can not get all feedbacks from userId!');
-					setIsVoucherError(true);
-				});
-			getVouchersByUserId(userId);
+		if (isQRCodeValid && (isVoucherValid || isVoucherError)) {
+			getAllNeededUserInformationQRCodeScanning();
 		}
-	}, [isVoucherValid]);
+	}, [isVoucherValid, isVoucherError, isQRCodeValid]);
 
-	useEffect(() => {
-		if (allUserInfo && isVoucherValid) {
-			addAllUserInformationAfterScanQRCode(allUserInfo);
-			setIsVoucherValid(false);
-			setAllUserInfo(null);
-		}
-	}, [allUserInfo, isVoucherValid]);
-
-	useEffect(() => {
-		if (
-			userInfoById &&
-			voucherByUserIdAndVoucherId &&
-			feedbacksUserId &&
-			voucherUserId
-		) {
-			setAllUserInfo({
-				userInfo: { ...userInfoById },
-				usedVouchers: { ...voucherByUserIdAndVoucherId },
-				existedVouchers: { ...voucherUserId },
-				feedback: { ...feedbacksUserId },
-			});
-		}
-	}, [
-		voucherByUserIdAndVoucherId,
-		userInfoById,
-		feedbacksUserId,
-		voucherUserId,
-	]);
-
-	const getVouchersByUserIdOnPhone = () => {
-		getVouchersByUserIdRequest(user.id)
-			.then((results) => {
-				setVouchers(results);
+	const getAllNeededUserInformationQRCodeScanning = () => {
+		let userId = QRCode.split(',')[0];
+		console.log('userId ', userId);
+		getUserByUserId(userId)
+			.then((result) => {
+				setUserInfoById(result);
 			})
-			.catch((e) => console.log('Error loading vouchers ', e.message));
+			.catch((e) => {
+				setError([
+					...error,
+					`QRCode Scan - User does not exist with user_id: ${userId} && errorMessage: ${e.message}`,
+				]);
+				setUserInfoById({});
+			});
+		getAllFeedBackByUserId(userId)
+			.then((result) => {
+				setFeedbacksUserId(result);
+			})
+			.catch((e) => {
+				setError([
+					...error,
+					`QRCode Scan - Can not get all feedbacks from userId:  ${userId} && errorMessage: ${e.message}`,
+				]);
+				setFeedbacksUserId({});
+			});
+		getVouchersByUserId(userId);
 	};
 
 	const getVouchersByUserId = (userId) => {
 		getVouchersByUserIdRequest(userId)
 			.then((results) => {
 				setVoucherUserId(results);
+			})
+			.catch((e) => {
+				setError([
+					...error,
+					`QRCode Scan - Error loading vouchers  userId:  ${userId} && errorMessage: ${e.message}`,
+				]);
+				setVoucherUserId({});
+			});
+	};
+
+	useEffect(() => {
+		if (userInfoById && feedbacksUserId && voucherUserId) {
+			console.log('Yeah 1');
+			setNeededUserInfo({
+				userInfo: { ...userInfoById },
+				existedVouchers: { ...voucherUserId },
+				feedbacks: { ...feedbacksUserId },
+			});
+		}
+	}, [userInfoById, feedbacksUserId, voucherUserId]);
+
+	useEffect(() => {
+		console.log(isVoucherValid);
+		if (isVoucherValid && neededUserInfo) {
+			console.log('Yeah 2');
+			updateListCheckInByUser(userInfoById);
+			addAllUserInformationAfterScanQRCode({
+				...neededUserInfo,
+				usedVouchers: { ...voucherByUserIdAndVoucherId },
+				status: true,
+				title: 'Successfully scanned voucher',
+				errors: error.toString(),
+			});
+			setError([]);
+			setDoneVerifyScannedVoucher(true);
+			setNeededUserInfo(null);
+		}
+	}, [isVoucherValid, neededUserInfo]);
+
+	useEffect(() => {
+		if (isVoucherError && neededUserInfo) {
+			addAllUserInformationAfterScanQRCode({
+				...neededUserInfo,
+				status: false,
+				title: 'Failed scanned voucher',
+				errors: error.toString(),
+			});
+			setError([]);
+			setDoneVerifyScannedVoucher(true);
+			setNeededUserInfo(null);
+		}
+	}, [isVoucherError, neededUserInfo]);
+
+	//End QRCode Scan
+
+	const getVouchersByUserIdOnPhone = () => {
+		getVouchersByUserIdRequest(user.id)
+			.then((results) => {
+				setVouchers(results);
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 	};
@@ -229,19 +286,16 @@ export const VoucherContextProvider = ({ children }) => {
 		}
 	}, [isLoadingQuantity]);
 
-	// const resetVoucherContext = () => {
-	// 	setIsLoadingQuantity(false);
-	// 	setIsLoadingTest(false);
-	// 	setIsLoadingPublish(false);
-	// 	setVoucherByUserIdAndVoucherId(null);
-	// 	setIsVoucherValid(false);
-	// 	setIsVoucherError(false);
-	// 	setAllUserInfo(null);
-	// 	setUserInfoById(null);
-	// 	setFeedbacksUserId(null);
-	// 	setVoucherUserId(null);
-	// 	setQRCode('');
-	// };
+	const resetStateBeforeVerifyingQRCode = () => {
+		setDoneVerifyScannedVoucher(false);
+		setIsVoucherValid(false);
+		setIsVoucherError(false);
+		setError([]);
+		setVoucherByUserIdAndVoucherId(null);
+		setFeedbacksUserId(null);
+		setVoucherUserId(null);
+		setAllUserInfo(null);
+	};
 
 	return (
 		<VoucherContext.Provider
@@ -259,11 +313,12 @@ export const VoucherContextProvider = ({ children }) => {
 				deleteVoucher,
 				getVouchersByUserIdOnPhone,
 				verifyVoucherByQRCode,
-				error,
+				checkQRCodeValid,
 				isVoucherError,
 				isVoucherValid,
 				allUserInfo,
-				// resetVoucherContext,
+				doneVerifyScannedVoucher,
+				resetStateBeforeVerifyingQRCode,
 			}}
 		>
 			{children}

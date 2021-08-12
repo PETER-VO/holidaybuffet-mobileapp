@@ -32,7 +32,7 @@ export const ShowUserInformScreen = ({ route }) => {
 	} = info.usedVouchers;
 
 	const existedVouchers = Object.values(info.existedVouchers);
-	const feedbacks = Object.values(info.feedback);
+	const feedbacks = Object.values(info.feedbacks);
 
 	useEffect(() => {
 		if (listDateCheckIn.length !== 0) {

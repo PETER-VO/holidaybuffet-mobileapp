@@ -15,6 +15,7 @@ import { ScanQRCodeLoading } from '../../features/settings/screens/qrcode/scan-q
 import { ScanSuccessScreen } from '../../features/settings/screens/qrcode/scan-success.screen';
 import { ListUserScanScreen } from '../../features/settings/screens/qrcode/list-user-scan.screen';
 import { ShowUserInformScreen } from '../../features/settings/screens/qrcode/show-user-inform.screen';
+import { ScanFailedScreen } from '../../features/settings/screens/qrcode/scan-failed.screen';
 
 const SettingsStack = createStackNavigator();
 
@@ -56,6 +57,14 @@ export const SettingNavigator = () => {
 					}}
 					name='ScanSuccess'
 					component={ScanSuccessScreen}
+				/>
+
+				<SettingsStack.Screen
+					options={{
+						header: () => null,
+					}}
+					name='ScanFailed'
+					component={ScanFailedScreen}
 				/>
 				<SettingsStack.Screen
 					options={{
