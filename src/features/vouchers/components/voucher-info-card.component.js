@@ -4,6 +4,7 @@ import { Text } from '../../../components/typography/text.component';
 import { VoucherCard, VoucherCardCover } from './voucher-info-card.styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { VoucherContext } from '../../../services/voucher/voucher.context';
+import { formattedDate } from '../../../components/utils/useful-method';
 
 export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 	const { id, titleVoucher, expiredDate } = voucher.item;
@@ -81,7 +82,7 @@ export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 						{titleVoucher}
 					</Text>
 					<Text variant='label' style={{ fontSize: 12 }}>
-						Valid Until: {expiredDate}
+						Valid Until: {formattedDate(expiredDate.seconds)}
 					</Text>
 				</View>
 			</View>

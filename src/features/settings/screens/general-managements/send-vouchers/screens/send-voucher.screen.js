@@ -16,7 +16,7 @@ export const SendVoucherScreen = () => {
 	const [isSelected_3, setIsSelected_3] = useState(false);
 	const [isSelected_4, setIsSelected_4] = useState(false);
 	const [customerType, setCustomerType] = useState('');
-	const [expiredDate, setExpiredDate] = useState('');
+	const [expiredDate, setExpiredDate] = useState(new Date());
 	const [keyword, setKeyword] = useState('');
 	const [titleVoucher, setTitleVoucher] = useState('');
 	const [titleNotification, setTitleNotification] = useState('');

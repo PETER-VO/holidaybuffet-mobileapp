@@ -13,3 +13,13 @@ export const formattedDateAndTime = (dateSeconds) => {
 
 	return `${formattedDate} - ${formattedTime}`;
 };
+
+export const formattedDate = (dateSeconds) => {
+	let date = new Date(dateSeconds * 1000);
+
+	let formattedDate = `${date.getDate()}/${
+		date.getMonth() + 1
+	}/${date.getFullYear()}`;
+
+	return `${formattedDate}`;
+};

@@ -15,7 +15,7 @@ export const addVoucherToUserId = (userId, feedback) => {
 export const getAllVouchersByUserIdRequest = async (userId) => {
 	const results = [];
 	const vouchersRef = firestore.collection(`users/${userId}/vouchers`);
-	const snapshot = await vouchersRef.get();
+	const snapshot = await vouchersRef.orderBy('expiredDate', 'asc').get();
 	snapshot.forEach((doc) => {
 		results.push({
 			id: doc.id,

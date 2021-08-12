@@ -14,11 +14,13 @@ export const TimePickerCustom = ({ getDate }) => {
 		setDate(currentDate);
 	};
 
-	useEffect(() => {
-		getDate(dateFormat);
-	}, [dateFormat]);
+	// useEffect(() => {
+	// 	getDate(dateFormat);
+	// }, []);
 
 	useEffect(() => {
+		getDate(date);
+
 		const date_ = date.getDate();
 		const month_ = date.getMonth() + 1;
 		const year_ = date.getFullYear();
