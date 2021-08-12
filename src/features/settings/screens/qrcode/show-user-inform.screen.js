@@ -21,8 +21,6 @@ import { FeedbackInfo } from './components/feedback-info.component';
 
 export const ShowUserInformScreen = ({ route }) => {
 	const info = route.params.userInform.item;
-	const [lastDateCheckIn, setLastDateCheckIn] = useState('--');
-
 	const existedVouchers = Object.values(info.existedVouchers);
 	const feedbacks = Object.values(info.feedbacks);
 
@@ -58,7 +56,9 @@ export const ShowUserInformScreen = ({ route }) => {
 					))}
 
 					{/* UsedVouchers */}
-					{info.status && Object.keys(info.usedVouchers).length !== 0 ? (
+					{info.status &&
+					info.hasOwnProperty('usedVouchers') &&
+					Object.keys(info.usedVouchers).length !== 0 ? (
 						<UsedVoucher usedVouchers={info.usedVouchers} />
 					) : null}
 				</View>

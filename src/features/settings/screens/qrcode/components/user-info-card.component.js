@@ -10,16 +10,15 @@ import { UserContext } from '../../../../../services/user/user.context';
 export const UserInfoCard = ({ userCard }) => {
 	const [lastDateCheckIn, setLastDateCheckIn] = useState('');
 	const { phoneNumber, noCheckIn, listDateCheckIn } = userCard.item.userInfo;
+	console.log('---------------');
+	console.log('listDateCheckIn: ', listDateCheckIn);
 	const { deleteScannedListUserById } = useContext(UserContext);
 	const { createdAt, title, status, errors } = userCard.item;
 	const feedbacks = Object.values(userCard.item.feedbacks);
 
 	useEffect(() => {
-		if (
-			listDateCheckIn &&
-			Object.keys(listDateCheckIn).length !== 0 &&
-			listDateCheckIn.length !== 0
-		) {
+		if (listDateCheckIn && listDateCheckIn.length !== 0) {
+			console.log('Ok');
 			let lastDate;
 			if (listDateCheckIn.length > 2) {
 				lastDate = listDateCheckIn[listDateCheckIn.length - 1];

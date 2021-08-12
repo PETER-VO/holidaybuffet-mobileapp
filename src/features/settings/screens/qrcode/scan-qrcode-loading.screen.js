@@ -2,8 +2,8 @@ import React, { useEffect, useContext, useState } from 'react';
 import { View } from 'react-native';
 import { SafeArea } from '../../../../components/utils/safe-area.component';
 import LottieView from 'lottie-react-native';
-import { UserContext } from '../../../../services/user/user.context';
 import { QRCodeContext } from '../../../../services/qr-code/qr-code.context';
+
 export const ScanQRCodeLoading = ({ navigation, route }) => {
 	let animation = null;
 	const [QRCode, setQRCode] = useState(route.params.QRCode);
@@ -13,20 +13,20 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 		throwErrorQRCodeNotValid,
 		verifyVoucherByQRCode,
 		doneVerifyScannedVoucher,
+		verifyQRCodeForUserCheckIn,
+		isCheckInSuccess,
 	} = useContext(QRCodeContext);
-
-	const { checkInForUser } = useContext(UserContext);
 
 	useEffect(() => {
 		if (QRCode) {
 			console.log('QRCode: ', QRCode);
 			let category_id = QRCode[QRCode.length - 1];
 			if (category_id === '1') {
-				checkInForUser();
+				verifyQRCodeForUserCheckIn(QRCode);
 			} else if (category_id === '2') {
 				verifyVoucherByQRCode(QRCode);
 			} else {
-				throwErrorQRCodeNotValid(`QRCode ${QRCode} is not valid!`);
+				throwErrorQRCodeNotValid(`QRCode is not valid! ${QRCode}`);
 			}
 		}
 	}, [QRCode]);
@@ -34,9 +34,11 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 	useEffect(() => {
 		setTimeout(() => {
 			if (isVoucherValid && doneVerifyScannedVoucher) {
-				navigation.navigate('ScanSuccess');
+				navigation.navigate('ScanSuccess', { scanCategory_id: 2 });
 			} else if (isVoucherError && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanFailed');
+			} else if (isCheckInSuccess && doneVerifyScannedVoucher) {
+				navigation.navigate('ScanSuccess', { scanCategory_id: 1 });
 			}
 		}, 1500);
 	}, [isVoucherValid, isVoucherError, doneVerifyScannedVoucher]);

@@ -9,6 +9,7 @@ export const QRCodeContextProvider = ({ children }) => {
 	const [error, setError] = useState([]);
 	const [splittedQRCode, setSplittedQRCode] = useState([]);
 	const [isVoucherValid, setIsVoucherValid] = useState(false);
+	const [isCheckInSuccess, setIsCheckInSuccess] = useState(false);
 	const [isVoucherError, setIsVoucherError] = useState(false);
 	const [voucherByUserIdAndVoucherId, setVoucherByUserIdAndVoucherId] =
 		useState(null);
@@ -26,6 +27,7 @@ export const QRCodeContextProvider = ({ children }) => {
 	const { getAllFeedbacksByUserId, getUserByUserId } = useContext(UserContext);
 
 	const refreshState = () => {
+		setIsCheckInSuccess(false);
 		setIsVoucherError(false);
 		setIsVoucherValid(false);
 		setIsQRCodeValid(false);
@@ -46,6 +48,26 @@ export const QRCodeContextProvider = ({ children }) => {
 		setUserById({});
 	};
 
+	//Verify Check-in
+	const verifyQRCodeForUserCheckIn = (QRCode_) => {
+		if (QRCode_ && QRCode_.split(',').length == 2) {
+			setIsQRCodeValid(true);
+			const arrayCode = QRCode_.split(',');
+			setSplittedQRCode(arrayCode);
+			getUserByUserId(arrayCode[0])
+				.then((result) => {
+					setUserById(result);
+					setIsCheckInSuccess(true);
+				})
+				.catch((e) => {
+					throwErrorQRCodeNotValid(`Not Found!`);
+				});
+		} else {
+			throwErrorQRCodeNotValid(`QRCode is not valid: ${QRCode_}`);
+		}
+	};
+
+	// Verify Voucher * Start
 	const verifyVoucherByQRCode = (QRCode_) => {
 		if (QRCode_) {
 			const arrayCode = QRCode_.split(',');
@@ -77,8 +99,6 @@ export const QRCodeContextProvider = ({ children }) => {
 			let currentDate = new Date();
 			let userDate = voucherByUserIdAndVoucherId['expiredDate'];
 			let expiredDate = new Date(userDate.seconds * 1000);
-			console.log('currentDate.getTime: ', currentDate.getTime());
-			console.log('expiredDate.getTime: ', expiredDate.getTime());
 			if (currentDate.getTime() < expiredDate.getTime()) {
 				setIsVoucherValid(true);
 			} else {
@@ -89,10 +109,13 @@ export const QRCodeContextProvider = ({ children }) => {
 	}, [voucherByUserIdAndVoucherId]);
 
 	useEffect(() => {
-		if (isQRCodeValid && (isVoucherValid || isVoucherError)) {
+		if (
+			isQRCodeValid &&
+			(isVoucherValid || isVoucherError || isCheckInSuccess)
+		) {
 			getAllNeededUserInformationQRCodeScanning();
 		}
-	}, [isVoucherValid, isVoucherError, isQRCodeValid]);
+	}, [isVoucherValid, isVoucherError, isQRCodeValid, isCheckInSuccess]);
 
 	const getAllNeededUserInformationQRCodeScanning = () => {
 		let userId = splittedQRCode[0];
@@ -145,16 +168,19 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (isVoucherValid && neededData) {
-			addAllUserInformationAfterScanQRCode({
-				...neededData,
-				usedVouchers: { ...voucherByUserIdAndVoucherId },
-				status: true,
-				title: 'Successfully scanned voucher',
-				errors: error.toString(),
-			});
-			updateListCheckInByUser(userById);
-			setDoneVerifyScannedVoucher(true);
-			setNeededData(null);
+			async function asyncFunction() {
+				await updateListCheckInByUser(userById);
+				await addAllUserInformationAfterScanQRCode({
+					...neededData,
+					usedVouchers: { ...voucherByUserIdAndVoucherId },
+					status: true,
+					title: 'Successfully scanned voucher',
+					errors: error.toString(),
+				});
+				setDoneVerifyScannedVoucher(true);
+				setNeededData(null);
+			}
+			asyncFunction();
 		}
 	}, [isVoucherValid, neededData]);
 
@@ -175,15 +201,36 @@ export const QRCodeContextProvider = ({ children }) => {
 		addAllUserInformation(information);
 	};
 
+	// Verify Voucher * End
+
+	useEffect(() => {
+		if (isCheckInSuccess && neededData) {
+			async function asyncFunction() {
+				await updateListCheckInByUser(userById);
+				await addAllUserInformationAfterScanQRCode({
+					...neededData,
+					status: true,
+					title: 'Successfully Check-In',
+					errors: error.toString(),
+				});
+				setDoneVerifyScannedVoucher(true);
+				setNeededData(null);
+			}
+			asyncFunction();
+		}
+	}, [isCheckInSuccess, neededData]);
+
 	return (
 		<QRCodeContext.Provider
 			value={{
 				refreshState,
 				throwErrorQRCodeNotValid,
 				verifyVoucherByQRCode,
+				verifyQRCodeForUserCheckIn,
 				doneVerifyScannedVoucher,
 				isVoucherError,
 				isVoucherValid,
+				isCheckInSuccess,
 			}}
 		>
 			{children}
