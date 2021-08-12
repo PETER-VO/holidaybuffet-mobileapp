@@ -38,7 +38,7 @@ export const getUserByUserIdRequest = async (userId) => {
 	return result;
 };
 
-export const getAllFeedBackByUserIdRequest = async (userId) => {
+export const getAllFeedbacksByUserIdRequest = async (userId) => {
 	let results = [];
 	const feedbackRef = firestore.collection(`users/${userId}/feedbacks`);
 	const snapshot = await feedbackRef.get();
@@ -49,15 +49,6 @@ export const getAllFeedBackByUserIdRequest = async (userId) => {
 		});
 	});
 	return results;
-};
-
-export const addAllUserInformation = (information) => {
-	try {
-		const createdAt = new Date();
-		firestore.collection(`scannedLists`).add({ createdAt, ...information });
-	} catch (e) {
-		console.log('error adding voucher: ', e.message);
-	}
 };
 
 export const updateListCheckInByUserIdRequest = async (

@@ -4,9 +4,9 @@ import { NotificationContext } from '../notification/notification.context';
 import { UserContext } from '../user/user.context';
 import {
 	addVoucherToUserId,
-	getVouchersByUserIdRequest,
+	getAllVouchersByUserIdRequest,
 	deleteVoucherByUserId,
-	getVouchersByUserIdAndVoucherId,
+	getVouchersByUserIdAndVoucherIdRequest,
 } from './voucher.service';
 
 export const VoucherContext = createContext();
@@ -19,28 +19,8 @@ export const VoucherContextProvider = ({ children }) => {
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
 	const [vouchers, setVouchers] = useState([]);
-	const [voucherByUserIdAndVoucherId, setVoucherByUserIdAndVoucherId] =
-		useState(null);
 	const [quantity, setQuantity] = useState(0);
-	const [isVoucherValid, setIsVoucherValid] = useState(false);
-	const [isVoucherError, setIsVoucherError] = useState(false);
-	const [userInfoById, setUserInfoById] = useState(null);
-	const [allUserInfo, setAllUserInfo] = useState(null);
-	const [feedbacksUserId, setFeedbacksUserId] = useState(null);
-	const [voucherUserId, setVoucherUserId] = useState(null);
-	const [neededUserInfo, setNeededUserInfo] = useState(null);
-	const [QRCode, setQRCode] = useState('');
-	const [doneVerifyScannedVoucher, setDoneVerifyScannedVoucher] =
-		useState(false);
-	const [isQRCodeValid, setIsQRCodeValid] = useState(false);
-	const {
-		users,
-		getUserByUserId,
-		getAllFeedBackByUserId,
-		addAllUserInformationAfterScanQRCode,
-		updateListCheckInByUser,
-		getAllUsers,
-	} = useContext(UserContext);
+	const { users, getAllUsers } = useContext(UserContext);
 	const { user } = useContext(AuthenticationContext);
 
 	useEffect(() => {
@@ -91,154 +71,8 @@ export const VoucherContextProvider = ({ children }) => {
 		}, 2500);
 	};
 
-	// Start QRCode
-	const checkQRCodeValid = (QRCode_) => {
-		setError([]);
-		if (QRCode_) {
-			const arrayCode = QRCode_.split(',');
-			if (
-				arrayCode.length === 3 &&
-				Number.isInteger(parseInt(arrayCode[arrayCode.length - 1]))
-			) {
-				setQRCode(QRCode_);
-				setIsQRCodeValid(true);
-				return;
-			}
-		}
-		setError([...error, `QRCode {${QRCode_}} is not valid!`]);
-		setQRCode('');
-		setFeedbacksUserId({});
-		setVoucherUserId({});
-		setUserInfoById({});
-		setIsVoucherError(true);
-	};
-
-	const verifyVoucherByQRCode = async (QRCode_) => {
-		if (QRCode_) {
-			const arrayCode = QRCode_.split(',');
-			const userId = arrayCode[0];
-			const voucherId = arrayCode[1];
-			await getVouchersByUserIdAndVoucherId(userId, voucherId)
-				.then((result) => {
-					setVoucherByUserIdAndVoucherId(result);
-				})
-				.catch((e) => {
-					setError([...error, 'The voucher does not exist!']);
-					setIsVoucherError(true);
-				});
-		}
-	};
-
-	useEffect(() => {
-		if (voucherByUserIdAndVoucherId) {
-			let currentDate = new Date();
-			let userDate = voucherByUserIdAndVoucherId['expiredDate'].split('/');
-			let expiredDate = new Date(userDate[2], userDate[1] - 1, userDate[0]); // new Date(year, month, date).
-
-			if (currentDate.getTime() < expiredDate.getTime()) {
-				setIsVoucherValid(true);
-			} else {
-				setError([...error, 'The voucher is expired!']);
-				setIsVoucherError(true);
-			}
-		}
-	}, [voucherByUserIdAndVoucherId]);
-
-	useEffect(() => {
-		if (isQRCodeValid && (isVoucherValid || isVoucherError)) {
-			getAllNeededUserInformationQRCodeScanning();
-		}
-	}, [isVoucherValid, isVoucherError, isQRCodeValid]);
-
-	const getAllNeededUserInformationQRCodeScanning = () => {
-		let userId = QRCode.split(',')[0];
-		console.log('userId ', userId);
-		getUserByUserId(userId)
-			.then((result) => {
-				setUserInfoById(result);
-			})
-			.catch((e) => {
-				setError([
-					...error,
-					`QRCode Scan - User does not exist with user_id: ${userId} && errorMessage: ${e.message}`,
-				]);
-				setUserInfoById({});
-			});
-		getAllFeedBackByUserId(userId)
-			.then((result) => {
-				setFeedbacksUserId(result);
-			})
-			.catch((e) => {
-				setError([
-					...error,
-					`QRCode Scan - Can not get all feedbacks from userId:  ${userId} && errorMessage: ${e.message}`,
-				]);
-				setFeedbacksUserId({});
-			});
-		getVouchersByUserId(userId);
-	};
-
-	const getVouchersByUserId = (userId) => {
-		getVouchersByUserIdRequest(userId)
-			.then((results) => {
-				setVoucherUserId(results);
-			})
-			.catch((e) => {
-				setError([
-					...error,
-					`QRCode Scan - Error loading vouchers  userId:  ${userId} && errorMessage: ${e.message}`,
-				]);
-				setVoucherUserId({});
-			});
-	};
-
-	useEffect(() => {
-		if (userInfoById && feedbacksUserId && voucherUserId) {
-			console.log('Yeah 1');
-			setNeededUserInfo({
-				userInfo: { ...userInfoById },
-				existedVouchers: { ...voucherUserId },
-				feedbacks: { ...feedbacksUserId },
-			});
-		}
-	}, [userInfoById, feedbacksUserId, voucherUserId]);
-
-	useEffect(() => {
-		console.log(isVoucherValid);
-		if (isVoucherValid && neededUserInfo) {
-			console.log('Yeah 2');
-			updateListCheckInByUser(userInfoById);
-			addAllUserInformationAfterScanQRCode({
-				...neededUserInfo,
-				usedVouchers: { ...voucherByUserIdAndVoucherId },
-				status: true,
-				title: 'Successfully scanned voucher',
-				errors: error.toString(),
-			});
-			setError([]);
-			setDoneVerifyScannedVoucher(true);
-			setNeededUserInfo(null);
-		}
-	}, [isVoucherValid, neededUserInfo]);
-
-	useEffect(() => {
-		if (isVoucherError && neededUserInfo) {
-			addAllUserInformationAfterScanQRCode({
-				...neededUserInfo,
-				status: false,
-				title: 'Failed scanned voucher',
-				errors: error.toString(),
-			});
-			setError([]);
-			setDoneVerifyScannedVoucher(true);
-			setNeededUserInfo(null);
-		}
-	}, [isVoucherError, neededUserInfo]);
-
-	//End QRCode Scan
-
 	const getVouchersByUserIdOnPhone = () => {
-		getVouchersByUserIdRequest(user.id)
+		getAllVouchersByUserIdRequest(user.id)
 			.then((results) => {
 				setVouchers(results);
 			})
@@ -280,22 +114,19 @@ export const VoucherContextProvider = ({ children }) => {
 		}, 2400);
 	};
 
+	const getVouchersByUserIdAndVoucherId = (userId, voucherId) => {
+		return getVouchersByUserIdAndVoucherIdRequest(userId, voucherId);
+	};
+
+	const getAllVouchersByUserId = (userId) => {
+		return getAllVouchersByUserIdRequest(userId);
+	};
+
 	useEffect(() => {
 		if (isLoadingQuantity) {
 			getAllUsers();
 		}
 	}, [isLoadingQuantity]);
-
-	const resetStateBeforeVerifyingQRCode = () => {
-		setDoneVerifyScannedVoucher(false);
-		setIsVoucherValid(false);
-		setIsVoucherError(false);
-		setError([]);
-		setVoucherByUserIdAndVoucherId(null);
-		setFeedbacksUserId(null);
-		setVoucherUserId(null);
-		setAllUserInfo(null);
-	};
 
 	return (
 		<VoucherContext.Provider
@@ -312,13 +143,8 @@ export const VoucherContextProvider = ({ children }) => {
 				vouchers,
 				deleteVoucher,
 				getVouchersByUserIdOnPhone,
-				verifyVoucherByQRCode,
-				checkQRCodeValid,
-				isVoucherError,
-				isVoucherValid,
-				allUserInfo,
-				doneVerifyScannedVoucher,
-				resetStateBeforeVerifyingQRCode,
+				getVouchersByUserIdAndVoucherId,
+				getAllVouchersByUserId,
 			}}
 		>
 			{children}

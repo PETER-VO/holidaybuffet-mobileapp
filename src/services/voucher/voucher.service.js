@@ -12,7 +12,7 @@ export const addVoucherToUserId = (userId, feedback) => {
 	}
 };
 
-export const getVouchersByUserIdRequest = async (userId) => {
+export const getAllVouchersByUserIdRequest = async (userId) => {
 	const results = [];
 	const vouchersRef = firestore.collection(`users/${userId}/vouchers`);
 	const snapshot = await vouchersRef.get();
@@ -25,7 +25,10 @@ export const getVouchersByUserIdRequest = async (userId) => {
 	return results;
 };
 
-export const getVouchersByUserIdAndVoucherId = async (userId, voucherId) => {
+export const getVouchersByUserIdAndVoucherIdRequest = async (
+	userId,
+	voucherId
+) => {
 	let result = {};
 	const vouchersRef = firestore.doc(`users/${userId}/vouchers/${voucherId}`);
 	const doc = await vouchersRef.get();

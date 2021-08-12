@@ -16,12 +16,13 @@ import { ScanSuccessScreen } from '../../features/settings/screens/qrcode/scan-s
 import { ListUserScanScreen } from '../../features/settings/screens/qrcode/list-user-scan.screen';
 import { ShowUserInformScreen } from '../../features/settings/screens/qrcode/show-user-inform.screen';
 import { ScanFailedScreen } from '../../features/settings/screens/qrcode/scan-failed.screen';
+import { QRCodeContextProvider } from '../../services/qr-code/qr-code.context';
 
 const SettingsStack = createStackNavigator();
 
 export const SettingNavigator = () => {
 	return (
-		<NotificationContextProvider>
+		<QRCodeContextProvider>
 			<SettingsStack.Navigator
 				headerMode='screen'
 				screenOptions={{
@@ -87,6 +88,6 @@ export const SettingNavigator = () => {
 				{/* End List User Scan */}
 				<SettingsStack.Screen name='Logout' component={AccountScreen} />
 			</SettingsStack.Navigator>
-		</NotificationContextProvider>
+		</QRCodeContextProvider>
 	);
 };

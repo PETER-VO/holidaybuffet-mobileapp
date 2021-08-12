@@ -6,13 +6,16 @@ import { UserList } from './components/list-user-scan.styles';
 import { Spacer } from '../../../../components/spacer/spacer.component';
 import { FadeInView } from '../../../../components/animations/fade.animation';
 import { UserContext } from '../../../../services/user/user.context';
+import { QRCodeContext } from '../../../../services/qr-code/qr-code.context';
 
 export const ListUserScanScreen = ({ navigation }) => {
 	const [isRemoveButton, setIsRemoveButton] = useState(false);
 	const { getAllUserScannedLists, scannedListUsers } = useContext(UserContext);
+	const { refreshState } = useContext(QRCodeContext);
 
 	useEffect(() => {
 		getAllUserScannedLists();
+		refreshState();
 	}, []);
 
 	useEffect(() => {

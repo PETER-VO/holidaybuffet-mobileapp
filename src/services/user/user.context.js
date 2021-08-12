@@ -2,8 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import {
 	getAllUsersRequest,
 	getUserByUserIdRequest,
-	getAllFeedBackByUserIdRequest,
-	addAllUserInformation,
+	getAllFeedbacksByUserIdRequest,
 	updateListCheckInByUserIdRequest,
 	getAllScannedListRequest,
 	deleteScannedListUserByIdRequest,
@@ -34,12 +33,8 @@ export const UserContextProvider = ({ children }) => {
 		deleteScannedListUserByIdRequest(id);
 	};
 
-	const getAllFeedBackByUserId = (userId) => {
-		return getAllFeedBackByUserIdRequest(userId);
-	};
-
-	const addAllUserInformationAfterScanQRCode = (information) => {
-		addAllUserInformation(information);
+	const getAllFeedbacksByUserId = (userId) => {
+		return getAllFeedbacksByUserIdRequest(userId);
 	};
 
 	const updateListCheckInByUser = (user) => {
@@ -71,8 +66,7 @@ export const UserContextProvider = ({ children }) => {
 				users,
 				checkInForUser,
 				getUserByUserId,
-				getAllFeedBackByUserId,
-				addAllUserInformationAfterScanQRCode,
+				getAllFeedbacksByUserId,
 				getAllUsers,
 				updateListCheckInByUser,
 				getAllUserScannedLists,
