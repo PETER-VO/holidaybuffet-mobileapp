@@ -14,18 +14,22 @@ import {
 export const UserInfo = ({ userInfo, feedbacks, existedVouchers }) => {
 	const { id, phoneNumber, noCheckIn, listDateCheckIn, customerType } =
 		userInfo;
+	console.log('userInfo: ', userInfo);
 	const [lastDateCheckIn, setLastDateCheckIn] = useState();
 
 	useEffect(() => {
 		if (listDateCheckIn.length !== 0) {
 			let lastDate;
-			if (listDateCheckIn.length > 0) {
-				lastDate = listDateCheckIn[listDateCheckIn.length - 2];
+			if (listDateCheckIn.length > 2) {
+				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
+			} else if (listDateCheckIn.length > 1) {
+				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
 			} else {
 				lastDate = listDateCheckIn[0];
 			}
-			const lastDateStr = formattedDateAndTime(lastDate.seconds);
-			setLastDateCheckIn(lastDateStr);
+			let formattedLastDate = formattedDateAndTime(lastDate.seconds);
+
+			setLastDateCheckIn(formattedLastDate);
 		}
 	}, [listDateCheckIn]);
 
