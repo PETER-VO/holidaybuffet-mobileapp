@@ -19,7 +19,6 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 
 	useEffect(() => {
 		if (QRCode) {
-			console.log('QRCode: ', QRCode);
 			let category_id = QRCode[QRCode.length - 1];
 			if (category_id === '1') {
 				verifyQRCodeForUserCheckIn(QRCode);
@@ -36,11 +35,12 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 			if (isVoucherValid && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 2 });
 			} else if (isVoucherError && doneVerifyScannedVoucher) {
+				console.log('OK');
 				navigation.navigate('ScanFailed');
 			} else if (isCheckInSuccess && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 1 });
 			}
-		}, 1500);
+		}, 3000);
 	}, [isVoucherValid, isVoucherError, doneVerifyScannedVoucher]);
 
 	useEffect(() => {

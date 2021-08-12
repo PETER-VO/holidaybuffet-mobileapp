@@ -74,7 +74,7 @@ export const QRCodeContextProvider = ({ children }) => {
 			if (arrayCode.length === 3) {
 				setSplittedQRCode(arrayCode);
 			} else {
-				throwErrorQRCodeNotValid();
+				throwErrorQRCodeNotValid(`QRCode is not valid`);
 			}
 		}
 	};
@@ -113,6 +113,7 @@ export const QRCodeContextProvider = ({ children }) => {
 			isQRCodeValid &&
 			(isVoucherValid || isVoucherError || isCheckInSuccess)
 		) {
+			console.log('B');
 			getAllNeededUserInformationQRCodeScanning();
 		}
 	}, [isVoucherValid, isVoucherError, isQRCodeValid, isCheckInSuccess]);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
+import { List } from 'react-native-paper';
 import {
 	Section,
 	TextValue,
@@ -14,7 +15,8 @@ import {
 export const UserInfo = ({ userInfo, feedbacks, existedVouchers }) => {
 	const { id, phoneNumber, noCheckIn, listDateCheckIn, customerType } =
 		userInfo;
-	console.log('userInfo: ', userInfo);
+
+	const [listExpanded, setListExpanded] = useState(false);
 	const [lastDateCheckIn, setLastDateCheckIn] = useState();
 
 	useEffect(() => {
@@ -65,14 +67,30 @@ export const UserInfo = ({ userInfo, feedbacks, existedVouchers }) => {
 					<TextTitle>* No Voucher:</TextTitle>
 					<TextValue>{existedVouchers.length}</TextValue>
 				</Section>
-				<Section>
-					<TextTitle>* List of date check-in:</TextTitle>
-					<TextValue>--</TextValue>
-				</Section>
-				<Section>
-					<TextTitle>1. </TextTitle>
-					<TextValue>03/08/2021</TextValue>
-				</Section>
+				<List.Accordion
+					style={{ backgroundColor: 'white', padding: 0 }}
+					title='* Date check in'
+					// left={(props) => (
+					// 	<List.Icon
+					// 		{...props}
+					// 		color='black'
+					// 		style={{ marginLeft: 0 }}
+					// 		icon='piggy-bank'
+					// 	/>
+					// )}
+					theme={{ colors: { primary: '#CC412F' } }}
+					expanded={listExpanded}
+					onPress={() => setListExpanded(!listExpanded)}
+				>
+					{listDateCheckIn.map((e, i) => (
+						<Section>
+							<TextTitle style={{ color: '#CC412F', fontSize: 16 }}>
+								{i + 1}.
+							</TextTitle>
+							<TextValue>{formattedDateAndTime(e.seconds)}</TextValue>
+						</Section>
+					))}
+				</List.Accordion>
 			</View>
 		</>
 	);
