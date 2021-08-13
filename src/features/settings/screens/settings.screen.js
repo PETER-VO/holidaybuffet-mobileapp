@@ -37,7 +37,7 @@ export const SettingScreen = ({ navigation }) => {
 	return (
 		<SafeArea>
 			<AvatarContainer style={{ padding: 30 }}>
-				<ImageQRCode value='hello' style={{ marginBottom: 0 }} />
+				<ImageQRCode value={`${user.id},1`} style={{ marginBottom: 0 }} />
 			</AvatarContainer>
 			<List.Section>
 				<SettingsItem

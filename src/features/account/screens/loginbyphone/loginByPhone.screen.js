@@ -21,7 +21,9 @@ import { Text } from '../../../../components/typography/text.component';
 
 export const LoginByPhoneScreen = ({ navigation }) => {
 	let textInput = useRef(null);
-	const postalCode = '+358';
+
+	const POSTAL_CODE = '+358';
+
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [focusInput, setFocusInput] = useState(true);
 	const [code, setCode] = useState('');
@@ -58,8 +60,9 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 	useEffect(() => {
 		if (move) {
 			setMove(false);
+			//TODO: find out another way to trigger this without having to create a new state of move
 			navigation.navigate('InputOTP', {
-				phoneNumber: `${postalCode}${phoneNumber}`,
+				phoneNumber: `${POSTAL_CODE}${phoneNumber}`,
 			});
 		}
 	}, [move]);
@@ -114,7 +117,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							mode='contained'
 							onPress={async () => {
 								verificationPhoneNumber(
-									`${postalCode}${phoneNumber}`,
+									`${POSTAL_CODE}${phoneNumber}`,
 									recaptchaVerifier.current
 								);
 								setToggle(true);

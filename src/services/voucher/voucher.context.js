@@ -85,7 +85,6 @@ export const VoucherContextProvider = ({ children }) => {
 
 	const filterUsersByCheckInNumber = async (num_1, num_2) => {
 		setIsLoadingQuantity(true);
-		console.log('users: ', users);
 		await getAllUsers();
 		let type = checkInLevel(num_1);
 		setLevel(type);

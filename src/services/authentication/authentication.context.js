@@ -18,45 +18,42 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [checkVerificationCode, setCheckVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
-
+	console.log('user1', user);
 	if (!user) {
-		const value = AsyncStorage.getItem(`@users`);
-		value.then((result) => {
-			setUser(JSON.parse(result));
+		firebase.auth().onAuthStateChanged(async (user) => {
+			if (user) {
+				console.log('user2', user);
+				const userRef = await createUserProfileDocument(user, {
+					role: 'user',
+					customerType: 'New Customer',
+					noCheckIn: 0,
+					listDateCheckIn: [],
+				});
+				await userRef.onSnapshot(async (snapShot) => {
+					const userObj = { id: snapShot.id, ...snapShot.data() };
+					setUser({
+						...userObj,
+					});
+					// const jsonValue = JSON.stringify(userObj);
+					// await AsyncStorage.setItem(`@users`, jsonValue);
+					// const value = AsyncStorage.getItem(`@users`);
+					// value.then((result) => {
+					// 	setUser(JSON.parse(result));
+					// });
+				});
+				setIsLoading(false);
+				setCheckVerificationCode(false);
+			}
+			// } else {
+			// 	// Offline
+			// 	const value = AsyncStorage.getItem(`@users`);
+			// 	value.then((result) => {
+			// 		setUser(JSON.parse(result));
+			// 	});
+			// 	setIsLoading(false);
+			// }
 		});
 	}
-
-	const saveUserToFirebase = () => {
-		if (!user) {
-			firebase.auth().onAuthStateChanged(async (user) => {
-				if (user) {
-					const userRef = await createUserProfileDocument(user, {
-						role: 'user',
-						customerType: 'New Customer',
-						noCheckIn: 0,
-						listDateCheckIn: [],
-					});
-					await userRef.onSnapshot(async (snapShot) => {
-						const userObj = { id: snapShot.id, ...snapShot.data() };
-						setUser({
-							userObj,
-						});
-						const jsonValue = JSON.stringify(userObj);
-						await AsyncStorage.setItem(`@users`, jsonValue);
-						const value = AsyncStorage.getItem(`@users`);
-						value.then((result) => {
-							setUser(JSON.parse(result));
-						});
-					});
-					setIsLoading(false);
-					setCheckVerificationCode(false);
-				} else {
-					console.log('Cannot connect to firebase to get user!');
-					setIsLoading(false);
-				}
-			});
-		}
-	};
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);
@@ -111,10 +108,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 		setError([]);
 	};
 
-	const verifyCheckInForUser = () => {
-		console.log('1');
-	};
-
 	return (
 		<AuthenticationContext.Provider
 			value={{
@@ -129,7 +122,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 				clearError,
 				processVerificationCode,
 				checkVerificationCode,
-				saveUserToFirebase,
 			}}
 		>
 			{children}

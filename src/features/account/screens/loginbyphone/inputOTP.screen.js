@@ -41,7 +41,6 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		verificationPhoneNumber,
 		clearError,
 		processVerificationCode,
-		saveUserToFirebase,
 		checkVerificationCode,
 	} = useContext(AuthenticationContext);
 
@@ -88,11 +87,11 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	}, [code]);
 
-	useEffect(() => {
-		if (checkVerificationCode) {
-			saveUserToFirebase();
-		}
-	}, [checkVerificationCode]);
+	// useEffect(() => {
+	// 	if (checkVerificationCode) {
+	// 		saveUserToFirebase();
+	// 	}
+	// }, [checkVerificationCode]);
 
 	useEffect(() => {
 		if (error) {

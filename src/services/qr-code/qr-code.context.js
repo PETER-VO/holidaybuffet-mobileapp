@@ -116,7 +116,6 @@ export const QRCodeContextProvider = ({ children }) => {
 			isQRCodeValid &&
 			(isVoucherValid || isVoucherError || isCheckInSuccess)
 		) {
-			console.log('B');
 			getAllNeededUserInformationQRCodeScanning();
 		}
 	}, [isVoucherValid, isVoucherError, isQRCodeValid, isCheckInSuccess]);

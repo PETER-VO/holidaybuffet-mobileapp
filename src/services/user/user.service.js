@@ -63,8 +63,10 @@ export const updateListCheckInByUserIdRequest = async (
 	try {
 		const createdAt = new Date();
 		listDateCheckIn.push(createdAt);
+		const noCheckIn = listDateCheckIn.length;
 		const userRef = firestore.doc(`users/${userId}`);
 		await userRef.update({ listDateCheckIn });
+		await userRef.update({ noCheckIn });
 	} catch (e) {
 		console.log('error updating listCheckIn: ', e.message);
 	}
