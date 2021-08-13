@@ -90,8 +90,8 @@ export const registerForPushNotificationsAsync = async () => {
 	}
 
 	if (Platform.OS === 'android') {
-		Notifications.setNotificationChannelAsync('default', {
-			name: 'default',
+		Notifications.setNotificationChannelAsync('HolidayBuffet', {
+			name: 'HolidayBuffet',
 			importance: Notifications.AndroidImportance.MAX,
 			vibrationPattern: [0, 250, 250, 250],
 			lightColor: '#FF231F7C',

@@ -1,12 +1,12 @@
 {
 	"expo": {
-		"name": "MealsToGo",
-		"slug": "MealsToGo",
+		"name": "HolidayBuffet",
+		"slug": "HolidayBuffet",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon.png",
+		"icon": "./assets/icon-restaurant-96x96.png",
 		"splash": {
-			"image": "./assets/splash.png",
+			"image": "./assets/restaurant-splash.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -19,22 +19,26 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/icon.png",
+				"foregroundImage": "./assets/icon-restaurant-96x96.png",
 				"backgroundColor": "#FFFFFF"
 			},
 			"package": "com.phongvodeveloper.MealsToGo",
-			"useNextNotificationsApi": true
+			"useNextNotificationsApi": true,
+			"googleServicesFile": "./google-services.json"
+		},
+		"notification": {
+			"icon": "./assets/icon-restaurant-96x96.png",
+			"color": "#000000",
+			"androidMode": "default",
+			"androidCollapsedTitle": "HolidayBuffet",
+			"iosDisplayInForeground": true
 		},
 		"plugins": [
 			[
 				"expo-notifications",
 				{
-					"icon": "./assets/logo.png",
+					"icon": "./assets/icon-restaurant-96x96.png",
 					"color": "#ffffff",
-					"sounds": [
-						"./local/path/to/mySound.wav",
-						"./local/path/to/myOtherSound.wav"
-					],
 					"mode": "production"
 				}
 			]
