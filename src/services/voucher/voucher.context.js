@@ -79,8 +79,10 @@ export const VoucherContextProvider = ({ children }) => {
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 	};
 
-	const filterUsersByCheckInNumber = (num_1, num_2) => {
+	const filterUsersByCheckInNumber = async (num_1, num_2) => {
 		setIsLoadingQuantity(true);
+		console.log('users: ', users);
+		await getAllUsers();
 		let type = checkInLevel(num_1);
 		setLevel(type);
 		setTimeout(() => {
@@ -94,12 +96,13 @@ export const VoucherContextProvider = ({ children }) => {
 					let check_1 = false;
 					let check_2 = false;
 					let check = false;
-					if (num_1) {
-						NotificationContext;
+					if (num_1 || num_1 === 0) {
 						check_1 = user['noCheckIn'] >= num_1;
+						console.log('check1: ', check_1);
 					}
 					if (num_2) {
 						check_2 = user['noCheckIn'] <= num_2;
+						console.log('check2: ', check_2);
 					} else {
 						check_2 = true;
 					}

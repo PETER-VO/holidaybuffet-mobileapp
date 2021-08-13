@@ -72,7 +72,7 @@ export const SendVoucherScreen = () => {
 		} else if (isSelected_2) {
 			filterUsersByCheckInNumber(6, 10);
 		} else if (isSelected_1) {
-			filterUsersByCheckInNumber(1, 5);
+			filterUsersByCheckInNumber(0, 5);
 		}
 	}, [isSelected_1, isSelected_2, isSelected_3, isSelected_4]);
 
@@ -93,7 +93,7 @@ export const SendVoucherScreen = () => {
 				<View style={{ flexDirection: 'row' }}>
 					<CheckBoxCustom
 						value={isSelected_1}
-						label='1~5'
+						label='0~5'
 						onChange={() => setIsSelected_1(!isSelected_1)}
 					/>
 					<CheckBoxCustom
