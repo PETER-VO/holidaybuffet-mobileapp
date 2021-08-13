@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import { firestore } from '../../firebase/firebase.utils';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { addVoucherToUserId } from '../voucher/voucher.service';
 
 export const loginRequest = (email, password) =>
 	firebase.auth().signInWithEmailAndPassword(email, password);
@@ -34,12 +35,21 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 			.catch((e) => console.log('Register phone token error:', e.message));
 		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
+		const twoWeeks = 1000 * 60 * 60 * 24 * 14;
 		try {
-			userRef.set({
+			await userRef.set({
 				phoneNumber,
 				createdAt,
 				phoneToken,
 				...additionalData,
+			});
+			addVoucherToUserId(snapShot.id, {
+				createdAt,
+				customerType: 'New Customer',
+				expiredDate: new Date(createdAt.getTime() + twoWeeks),
+				keyword: '50% OFF',
+				status: true,
+				titleVoucher: 'GET OFF 50%',
 			});
 		} catch (e) {
 			console.log('error creating user', e.message);
