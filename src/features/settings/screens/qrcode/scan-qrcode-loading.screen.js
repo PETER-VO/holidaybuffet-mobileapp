@@ -35,7 +35,6 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 			if (isVoucherValid && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 2 });
 			} else if (isVoucherError && doneVerifyScannedVoucher) {
-				console.log('OK');
 				navigation.navigate('ScanFailed');
 			} else if (isCheckInSuccess && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 1 });

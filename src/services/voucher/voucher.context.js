@@ -35,6 +35,10 @@ export const VoucherContextProvider = ({ children }) => {
 		deleteVoucherByUserId(user.id, voucherId);
 	};
 
+	const deleteVoucherByUserIdAndVoucherId = (userId, voucherId) => {
+		deleteVoucherByUserId(userId, voucherId);
+	};
+
 	const checkInLevel = (count) => {
 		if (count >= 11) {
 			return 'Premium Customer';
@@ -148,6 +152,7 @@ export const VoucherContextProvider = ({ children }) => {
 				getVouchersByUserIdOnPhone,
 				getVouchersByUserIdAndVoucherId,
 				getAllVouchersByUserId,
+				deleteVoucherByUserIdAndVoucherId,
 			}}
 		>
 			{children}

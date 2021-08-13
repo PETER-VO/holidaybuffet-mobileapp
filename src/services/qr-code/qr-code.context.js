@@ -22,8 +22,11 @@ export const QRCodeContextProvider = ({ children }) => {
 	const [neededData, setNeededData] = useState(null);
 
 	const { updateListCheckInByUser } = useContext(UserContext);
-	const { getAllVouchersByUserId, getVouchersByUserIdAndVoucherId } =
-		useContext(VoucherContext);
+	const {
+		getAllVouchersByUserId,
+		getVouchersByUserIdAndVoucherId,
+		deleteVoucherByUserIdAndVoucherId,
+	} = useContext(VoucherContext);
 	const { getAllFeedbacksByUserId, getUserByUserId } = useContext(UserContext);
 
 	const refreshState = () => {
@@ -170,6 +173,10 @@ export const QRCodeContextProvider = ({ children }) => {
 	useEffect(() => {
 		if (isVoucherValid && neededData) {
 			async function asyncFunction() {
+				await deleteVoucherByUserIdAndVoucherId(
+					userById.id,
+					voucherByUserIdAndVoucherId.id
+				);
 				await updateListCheckInByUser(userById);
 				await addAllUserInformationAfterScanQRCode({
 					...neededData,
@@ -204,6 +211,7 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	// Verify Voucher * End
 
+	//Check in
 	useEffect(() => {
 		if (isCheckInSuccess && neededData) {
 			async function asyncFunction() {
