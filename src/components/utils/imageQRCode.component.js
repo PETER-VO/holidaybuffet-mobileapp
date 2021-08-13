@@ -21,13 +21,7 @@ export const ImageQRCode = ({ value, ...otherProps }) => {
 	return (
 		<>
 			<QRCode value={value} getRef={(c) => (svg = c)} size={200} />
-			{imgUrl ? (
-				<Image
-					style={{ width: 350, height: 350 }}
-					source={{ uri: imgUrl }}
-					{...otherProps}
-				/>
-			) : null}
+			{imgUrl ? <Image source={{ uri: imgUrl }} {...otherProps} /> : null}
 		</>
 	);
 };
