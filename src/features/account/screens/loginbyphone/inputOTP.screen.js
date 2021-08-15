@@ -87,11 +87,14 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	}, [code]);
 
-	// useEffect(() => {
-	// 	if (checkVerificationCode) {
-	// 		saveUserToFirebase();
-	// 	}
-	// }, [checkVerificationCode]);
+	useEffect(() => {
+		function callback() {
+			if (inputRef) {
+				setTimeout(() => inputRef.focus(), 200);
+			}
+		}
+		callback();
+	}, [inputRef]);
 
 	useEffect(() => {
 		if (error) {

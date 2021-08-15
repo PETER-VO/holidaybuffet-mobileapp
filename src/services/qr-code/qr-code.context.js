@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { UserContext } from '../user/user.context';
 import { VoucherContext } from '../voucher/voucher.context';
-import { addAllUserInformation } from './qr-code.service';
+import {
+	addAllUserInformation,
+	deleteAllScannedUserListRequest,
+} from './qr-code.service';
 
 export const QRCodeContext = createContext();
 
@@ -230,6 +233,10 @@ export const QRCodeContextProvider = ({ children }) => {
 		}
 	}, [isCheckInSuccess, neededData]);
 
+	const deleteAllScannedUserList = () => {
+		deleteAllScannedUserListRequest();
+	};
+
 	return (
 		<QRCodeContext.Provider
 			value={{
@@ -237,6 +244,7 @@ export const QRCodeContextProvider = ({ children }) => {
 				throwErrorQRCodeNotValid,
 				verifyVoucherByQRCode,
 				verifyQRCodeForUserCheckIn,
+				deleteAllScannedUserList,
 				doneVerifyScannedVoucher,
 				isVoucherError,
 				isVoucherValid,

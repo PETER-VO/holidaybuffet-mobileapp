@@ -19,7 +19,6 @@ export const VoucherScreen = ({ navigation }) => {
 
 	const [refreshing, setRefreshing] = useState(false);
 
-	console.log('length: ', vouchers.length);
 	const onRefresh = useCallback(() => {
 		setRefreshing(true);
 

@@ -20,10 +20,6 @@ import { AuthenticationContext } from '../../../../services/authentication/authe
 import { Text } from '../../../../components/typography/text.component';
 
 export const LoginByPhoneScreen = ({ navigation }) => {
-	let textInput = useRef(null);
-
-	const POSTAL_CODE = '+358';
-
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [focusInput, setFocusInput] = useState(true);
 	const [code, setCode] = useState('');
@@ -61,17 +57,27 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 		if (move) {
 			setMove(false);
 			//TODO: find out another way to trigger this without having to create a new state of move
+			const POSTAL_CODE = '+358';
+			let phoneNumber_ = phoneNumber.toString();
+
+			if (phoneNumber_[0] === '0') {
+				phoneNumber_ = phoneNumber_.slice(1);
+			}
+
 			navigation.navigate('InputOTP', {
-				phoneNumber: `${POSTAL_CODE}${phoneNumber}`,
+				phoneNumber: `${POSTAL_CODE}${phoneNumber_}`,
 			});
 		}
 	}, [move]);
 
-	// useEffect(() => {
-	// 	if (inputRef) {
-	// 		setTimeout(() => inputRef.focus(), 200);
-	// 	}
-	// }, [inputRef]);
+	useEffect(() => {
+		function callback() {
+			if (inputRef) {
+				setTimeout(() => inputRef.focus(), 200);
+			}
+		}
+		callback();
+	}, [inputRef]);
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -89,7 +95,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							borderBottomColor: focusInput ? '#244DB7' : '#ffffff',
 						}}
 					>
-						<SubText>+358 |</SubText>
+						<SubText>+358(FI) |</SubText>
 						<PhoneInput
 							ref={(input) => input && setInputRef(input)}
 							placeholder='41 750 3319'
@@ -117,7 +123,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							mode='contained'
 							onPress={async () => {
 								verificationPhoneNumber(
-									`${POSTAL_CODE}${phoneNumber}`,
+									`${phoneNumber}`,
 									recaptchaVerifier.current
 								);
 								setToggle(true);

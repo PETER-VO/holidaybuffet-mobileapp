@@ -17,7 +17,8 @@ export const getAllScannedListRequest = async () => {
 	const results = [];
 	const scannedListRef = firestore
 		.collection('scannedLists')
-		.orderBy('createdAt', 'desc');
+		.orderBy('createdAt', 'desc')
+		.limit(10);
 	const snapshot = await scannedListRef.get();
 	snapshot.forEach((doc) => {
 		results.push({

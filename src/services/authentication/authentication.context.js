@@ -23,7 +23,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 		firebase.auth().onAuthStateChanged(async (user) => {
 			setIsLoading(true);
 			if (user) {
-				console.log('user2', user);
 				const userRef = await createUserProfileDocument(user, {
 					role: 'user',
 					customerType: 'New Customer',
@@ -62,6 +61,14 @@ export const AuthenticationContextProvider = ({ children }) => {
 		if (!phoneNumber) {
 			return;
 		}
+
+		const POSTAL_CODE = '+358';
+		phoneNumber = phoneNumber.toString();
+
+		if (phoneNumber[0] === '0') {
+			phoneNumber = phoneNumber.slice(1);
+		}
+		phoneNumber = `${POSTAL_CODE}${phoneNumber}`;
 
 		sendVerificationRequest(phoneNumber, recaptchaVerifier)
 			.then((id) => {
