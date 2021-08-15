@@ -18,9 +18,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [checkVerificationCode, setCheckVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
-	console.log('user1', user);
+
 	if (!user) {
 		firebase.auth().onAuthStateChanged(async (user) => {
+			setIsLoading(true);
 			if (user) {
 				console.log('user2', user);
 				const userRef = await createUserProfileDocument(user, {

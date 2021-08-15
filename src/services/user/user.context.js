@@ -39,7 +39,7 @@ export const UserContextProvider = ({ children }) => {
 
 	const updateListCheckInByUser = (user) => {
 		const { id, listDateCheckIn } = user;
-		updateListCheckInByUserIdRequest(id, listDateCheckIn);
+		return updateListCheckInByUserIdRequest(id, listDateCheckIn);
 	};
 
 	const getAllUserScannedLists = () => {

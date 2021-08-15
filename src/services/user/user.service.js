@@ -61,12 +61,23 @@ export const updateListCheckInByUserIdRequest = async (
 	listDateCheckIn
 ) => {
 	try {
+		let result = null;
 		const createdAt = new Date();
 		listDateCheckIn.push(createdAt);
 		const noCheckIn = listDateCheckIn.length;
 		const userRef = firestore.doc(`users/${userId}`);
 		await userRef.update({ listDateCheckIn });
 		await userRef.update({ noCheckIn });
+		const doc = await userRef.get();
+		if (doc.exists) {
+			result = {
+				id: doc.id,
+				...doc.data(),
+			};
+		} else {
+			return Promise.reject(new Error('This id_user does not exist'));
+		}
+		return result;
 	} catch (e) {
 		console.log('error updating listCheckIn: ', e.message);
 	}

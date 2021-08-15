@@ -120,13 +120,17 @@ export const QRCodeContextProvider = ({ children }) => {
 		}
 	}, [isVoucherValid, isVoucherError, isQRCodeValid, isCheckInSuccess]);
 
-	const getAllNeededUserInformationQRCodeScanning = () => {
+	const getAllNeededUserInformationQRCodeScanning = async () => {
 		let userId = splittedQRCode[0];
 		getUserByUserId(userId)
 			.then((result) => {
-				if (result) {
-					setUserById(result);
-				}
+				updateListCheckInByUser(result)
+					.then((userObj) => {
+						setUserById(userObj);
+					})
+					.catch((e) => {
+						setUserById({});
+					});
 			})
 			.catch((e) => {
 				setError([
@@ -176,7 +180,6 @@ export const QRCodeContextProvider = ({ children }) => {
 					userById.id,
 					voucherByUserIdAndVoucherId.id
 				);
-				await updateListCheckInByUser(userById);
 				await addAllUserInformationAfterScanQRCode({
 					...neededData,
 					usedVouchers: { ...voucherByUserIdAndVoucherId },
@@ -214,7 +217,6 @@ export const QRCodeContextProvider = ({ children }) => {
 	useEffect(() => {
 		if (isCheckInSuccess && neededData) {
 			async function asyncFunction() {
-				await updateListCheckInByUser(userById);
 				await addAllUserInformationAfterScanQRCode({
 					...neededData,
 					status: true,

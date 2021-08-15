@@ -18,7 +18,7 @@ export const UserInfoCard = ({ userCard }) => {
 		if (listDateCheckIn && listDateCheckIn.length !== 0) {
 			let lastDate;
 			if (listDateCheckIn.length > 2) {
-				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
+				lastDate = listDateCheckIn[listDateCheckIn.length - 2];
 			} else if (listDateCheckIn.length > 1) {
 				lastDate = listDateCheckIn[listDateCheckIn.length - 1];
 			} else {
