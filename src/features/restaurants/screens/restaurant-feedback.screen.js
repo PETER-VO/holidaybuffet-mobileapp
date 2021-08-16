@@ -6,7 +6,7 @@ import {
 	Image,
 	TextInput,
 	ScrollView,
-	Button,
+	Alert,
 } from 'react-native';
 import { Text } from '../../../components/typography/text.component';
 import { SafeArea } from '../../../components/utils/safe-area.component';
@@ -63,6 +63,8 @@ export const RestaurantFeedback = ({ navigation }) => {
 		};
 
 		addFeedback(user, feedbackObj);
+		Alert.alert('Thank you for your feedback!', '<3<3<3');
+		navigation.navigate('Restaurants');
 	};
 
 	return (

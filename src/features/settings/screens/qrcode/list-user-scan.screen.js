@@ -7,12 +7,14 @@ import { Spacer } from '../../../../components/spacer/spacer.component';
 import { FadeInView } from '../../../../components/animations/fade.animation';
 import { UserContext } from '../../../../services/user/user.context';
 import { QRCodeContext } from '../../../../services/qr-code/qr-code.context';
-import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome, AntDesign } from '@expo/vector-icons';
+import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 
 export const ListUserScanScreen = ({ navigation }) => {
 	const [isRemoveButton, setIsRemoveButton] = useState(false);
 	const { getAllUserScannedLists, scannedListUsers } = useContext(UserContext);
 	const { refreshState, deleteAllScannedUserList } = useContext(QRCodeContext);
+	const { user } = useContext(AuthenticationContext);
 
 	const alertConfirmDelete = () =>
 		Alert.alert('Do you want to delete all scanned-user list?', 'Ok oK :))', [
@@ -45,6 +47,14 @@ export const ListUserScanScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea style={{ marginTop: 0, paddingTop: 40 }}>
+			<TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+				<AntDesign
+					style={{ marginLeft: 20 }}
+					name='back'
+					size={35}
+					color='black'
+				/>
+			</TouchableOpacity>
 			{scannedListUsers.length !== 0 ? (
 				<UserList
 					data={scannedListUsers}
@@ -111,41 +121,44 @@ export const ListUserScanScreen = ({ navigation }) => {
 					</View>
 				</TouchableOpacity>
 			</View>
-			<View
-				style={{
-					zIndex: 1,
-					position: 'absolute',
-					bottom: 0,
-					right: 0,
-					marginBottom: 20,
-					marginRight: 20,
-					borderRadius: 50,
-				}}
-			>
-				<TouchableOpacity onPress={alertConfirmDelete}>
-					<View
-						style={{
-							backgroundColor: '#CC412F',
-							height: 70,
-							width: 70,
-							borderRadius: 50,
-							elevation: 6,
-						}}
-					>
-						<FontAwesome
-							name='remove'
-							size={35}
+
+			{user.role === 'admin' && user.code === '3759350' ? (
+				<View
+					style={{
+						zIndex: 1,
+						position: 'absolute',
+						bottom: 0,
+						right: 0,
+						marginBottom: 20,
+						marginRight: 20,
+						borderRadius: 50,
+					}}
+				>
+					<TouchableOpacity onPress={alertConfirmDelete}>
+						<View
 							style={{
-								top: 16,
-								left: 21,
-								alignSelf: 'center',
-								position: 'absolute',
+								backgroundColor: '#CC412F',
+								height: 70,
+								width: 70,
+								borderRadius: 50,
+								elevation: 6,
 							}}
-							color='white'
-						/>
-					</View>
-				</TouchableOpacity>
-			</View>
+						>
+							<FontAwesome
+								name='remove'
+								size={35}
+								style={{
+									top: 16,
+									left: 21,
+									alignSelf: 'center',
+									position: 'absolute',
+								}}
+								color='white'
+							/>
+						</View>
+					</TouchableOpacity>
+				</View>
+			) : null}
 		</SafeArea>
 	);
 };

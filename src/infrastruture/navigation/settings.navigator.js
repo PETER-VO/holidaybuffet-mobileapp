@@ -17,6 +17,8 @@ import { ListUserScanScreen } from '../../features/settings/screens/qrcode/list-
 import { ShowUserInformScreen } from '../../features/settings/screens/qrcode/show-user-inform.screen';
 import { ScanFailedScreen } from '../../features/settings/screens/qrcode/scan-failed.screen';
 import { QRCodeContextProvider } from '../../services/qr-code/qr-code.context';
+import { ScanQRCodeRestauranMenu } from '../../features/settings/screens/qrcode/qrcode-scan-restaurant-menu.screen';
+import { RestaurantsScreen } from '../../features/restaurants/screens/restaurants.screen';
 
 const SettingsStack = createStackNavigator();
 
@@ -49,7 +51,6 @@ export const SettingNavigator = () => {
 					name='ManagementControl'
 					component={ManagementControl}
 				/>
-
 				{/* Start QR CODE */}
 				<SettingsStack.Screen name='ScanQRCode' component={ScanQRCode} />
 				<SettingsStack.Screen
@@ -59,7 +60,10 @@ export const SettingNavigator = () => {
 					name='ScanSuccess'
 					component={ScanSuccessScreen}
 				/>
-
+				<SettingsStack.Screen
+					name='ScanQRCodeForMenu'
+					component={ScanQRCodeRestauranMenu}
+				/>
 				<SettingsStack.Screen
 					options={{
 						header: () => null,
@@ -75,7 +79,6 @@ export const SettingNavigator = () => {
 					component={ScanQRCodeLoading}
 				/>
 				{/* End QR CODE */}
-
 				{/* Start List User Scan */}
 				<SettingsStack.Screen
 					options={{
@@ -89,6 +92,12 @@ export const SettingNavigator = () => {
 					component={ShowUserInformScreen}
 				/>
 				{/* End List User Scan */}
+
+				{/*Restaurant Menu */}
+				<SettingsStack.Screen
+					name='RestaurantMenu'
+					component={RestaurantsScreen}
+				/>
 				<SettingsStack.Screen name='Logout' component={AccountScreen} />
 			</SettingsStack.Navigator>
 		</QRCodeContextProvider>

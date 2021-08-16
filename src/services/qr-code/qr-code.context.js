@@ -92,7 +92,7 @@ export const QRCodeContextProvider = ({ children }) => {
 			setIsQRCodeValid(true);
 			const userId = splittedQRCode[0];
 			const voucherId = splittedQRCode[1];
-			const voucher = getVouchersByUserIdAndVoucherId(userId, voucherId)
+			getVouchersByUserIdAndVoucherId(userId, voucherId)
 				.then((result) => {
 					setVoucherByUserIdAndVoucherId(result);
 				})
@@ -206,6 +206,7 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (isVoucherError && neededData) {
+			console.log('OK');
 			addAllUserInformationAfterScanQRCode({
 				...neededData,
 				status: false,

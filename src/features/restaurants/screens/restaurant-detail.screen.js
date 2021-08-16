@@ -14,16 +14,6 @@ export const RestaurantDetailScreen = ({ navigation, route }) => {
 		<SafeArea>
 			<RestaurantInfoCard restaurant={restaurant} />
 			<ScrollView>
-				<List.Accordion
-					title='Introduction'
-					left={(props) => <List.Icon {...props} icon='bread-slice' />}
-					expanded={breakfastExpanded}
-					onPress={() => setBreakfastExpanded(!breakfastExpanded)}
-				>
-					<List.Item title='Eggs Benedict' />
-					<List.Item title='Classic Breakfast' />
-				</List.Accordion>
-
 				<List.Item
 					title='Feedback'
 					left={(props) => (
