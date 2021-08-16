@@ -6,6 +6,9 @@ import { SafeArea } from '../../../components/utils/safe-area.component';
 import { VoucherInfoCard } from '../components/voucher-info-card.component';
 import { VoucherList } from '../components/voucher-list.styles';
 import { VoucherContext } from '../../../services/voucher/voucher.context';
+import { ActivityIndicator, Colors } from 'react-native-paper';
+import { AuthenticationContext } from '../../../services/authentication/authentication.context';
+import { VoucherInfoCardUnable } from '../components/voucher-info-card-unable.component';
 
 const wait = (timeout) => {
 	return new Promise((resolve) => {
@@ -15,7 +18,9 @@ const wait = (timeout) => {
 
 export const VoucherScreen = ({ navigation }) => {
 	const [isRemoveButton, setIsRemoveButton] = useState(false);
-	const { getVouchersByUserIdOnPhone, vouchers } = useContext(VoucherContext);
+	const { getVouchersByUserIdOnPhone, vouchers, isLoadingVoucher } =
+		useContext(VoucherContext);
+	const { user } = useContext(AuthenticationContext);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -41,33 +46,50 @@ export const VoucherScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea>
-			{vouchers.length !== 0 ? (
-				<VoucherList
-					data={vouchers}
-					renderItem={(item) => {
-						return (
-							<TouchableOpacity
-								onPress={() =>
-									navigation.navigate('VoucherDetail', { voucher: item })
-								}
-							>
-								<Spacer position='bottom' size='large'>
-									<FadeInView>
-										<VoucherInfoCard
-											key={item.id}
-											voucher={item}
-											onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
-										/>
-									</FadeInView>
-								</Spacer>
-							</TouchableOpacity>
-						);
-					}}
-					keyExtractor={(item) => item.id}
-					refreshControl={
-						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					}
-				/>
+			{isLoadingVoucher ? (
+				<View style={{ justifyContent: 'center' }}>
+					<ActivityIndicator animating={true} color={Colors.blue300} />
+				</View>
+			) : vouchers.length !== 0 ? (
+				<>
+					<VoucherList
+						data={vouchers}
+						renderItem={(item) => {
+							return (
+								<TouchableOpacity
+									onPress={() =>
+										navigation.navigate('VoucherDetail', { voucher: item })
+									}
+								>
+									<Spacer position='bottom' size='large'>
+										<FadeInView>
+											{item['item'].hasOwnProperty('checkIn') &&
+											item['item'].checkIn >= user.noCheckIn ? (
+												<VoucherInfoCardUnable
+													key={item.id}
+													voucher={item}
+													userCheckIn={user.noCheckIn}
+												/>
+											) : (
+												<VoucherInfoCard
+													key={item.id}
+													voucher={item}
+													onPressRemove={() =>
+														setIsRemoveButton(!isRemoveButton)
+													}
+												/>
+											)}
+										</FadeInView>
+									</Spacer>
+								</TouchableOpacity>
+							);
+						}}
+						keyExtractor={(item) => item.id}
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+						}
+					/>
+				</>
 			) : (
 				<View
 					style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}

@@ -40,7 +40,6 @@ export const AppNavigator = () => (
 								inactiveTintColor: 'gray',
 							}}
 						>
-							<Tab.Screen name='Settings' component={SettingNavigator} />
 							<Tab.Screen
 								name='Vouchers'
 								component={VoucherNavigator}
@@ -49,6 +48,8 @@ export const AppNavigator = () => (
 									blur: () => navigation.setParams({ screen: undefined }),
 								})}
 							/>
+							<Tab.Screen name='Settings' component={SettingNavigator} />
+
 							<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
 						</Tab.Navigator>
 					</VoucherContextProvider>

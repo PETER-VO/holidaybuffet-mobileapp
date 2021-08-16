@@ -35,7 +35,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 			.catch((e) => console.log('Register phone token error:', e.message));
 		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
-		const twoWeeks = 1000 * 60 * 60 * 24 * 14;
 		try {
 			await userRef.set({
 				phoneNumber,
@@ -43,19 +42,69 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 				phoneToken,
 				...additionalData,
 			});
-			addVoucherToUserId(snapShot.id, {
-				createdAt,
-				customerType: 'New Customer',
-				expiredDate: new Date(createdAt.getTime() + twoWeeks),
-				keyword: '50% OFF',
-				status: true,
-				titleVoucher: 'GET OFF 50%',
+			const availableVouchers = vouchersForNewUser();
+			availableVouchers.map((voucher) => {
+				addVoucherToUserId(snapShot.id, voucher);
 			});
 		} catch (e) {
 			console.log('error creating user', e.message);
 		}
 	}
 	return userRef;
+};
+
+const vouchersForNewUser = () => {
+	const vouchers = [];
+	const createdAt = new Date();
+	const twoWeeks = 1000 * 60 * 60 * 24 * 14;
+	const oneYear = 1000 * 60 * 60 * 24 * 365;
+	const newCustomer = {
+		createdAt,
+		customerType: 'New Customer',
+		expiredDate: new Date(createdAt.getTime() + twoWeeks),
+		keyword: '50% OFF',
+		titleVoucher: 'GET OFF 3€ FOR 1 BUFFET',
+	};
+	const checkInVoucher_1 = {
+		createdAt,
+		customerType: 'New Customer',
+		expiredDate: new Date(createdAt.getTime() + oneYear),
+		keyword: '1 Buffet',
+		titleVoucher: 'FREE 1 DESSERT',
+		checkIn: 3,
+	};
+	const checkInVoucher_2 = {
+		createdAt,
+		customerType: 'New Customer',
+		expiredDate: new Date(createdAt.getTime() + oneYear),
+		keyword: '1 Buffet',
+		titleVoucher: 'GET OFF 30% FOR 1 BUFFET',
+		checkIn: 5,
+	};
+	const checkInVoucher_3 = {
+		createdAt,
+		customerType: 'New Customer',
+		expiredDate: new Date(createdAt.getTime() + oneYear),
+		keyword: '50% OFF',
+		titleVoucher: 'GET OFF 30% FOR 2 BUFFETS',
+		checkIn: 8,
+	};
+	const checkInVoucher_4 = {
+		createdAt,
+		customerType: 'New Customer',
+		expiredDate: new Date(createdAt.getTime() + oneYear),
+		keyword: '50% OFF',
+		titleVoucher: 'GET OFF 40% FOR 2 BUFFETS',
+		checkIn: 12,
+	};
+	vouchers.push(
+		newCustomer,
+		checkInVoucher_1,
+		checkInVoucher_2,
+		checkInVoucher_3,
+		checkInVoucher_4
+	);
+	return vouchers;
 };
 
 export const getUserFromId = async (id) => {

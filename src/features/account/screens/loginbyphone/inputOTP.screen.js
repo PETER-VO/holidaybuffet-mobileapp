@@ -72,14 +72,14 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	};
 
-	useEffect(() => {
-		clockCall = setInterval(() => {
-			decrementClock();
-		}, 1000);
-		return () => {
-			clearInterval(clockCall);
-		};
-	});
+	// useEffect(() => {
+	// 	clockCall = setInterval(() => {
+	// 		decrementClock();
+	// 	}, 1000);
+	// 	return () => {
+	// 		clearInterval(clockCall);
+	// 	};
+	// });
 
 	useEffect(() => {
 		if (code.length === 6) {

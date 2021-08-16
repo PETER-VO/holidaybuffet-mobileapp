@@ -16,6 +16,7 @@ export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingQuantity, setIsLoadingQuantity] = useState(false);
 	const [isLoadingTest, setIsLoadingTest] = useState(false);
 	const [isLoadingPublish, setIsLoadingPublish] = useState(false);
+	const [isLoadingVoucher, setIsLoadingVoucher] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
 	const [vouchers, setVouchers] = useState([]);
@@ -76,6 +77,7 @@ export const VoucherContextProvider = ({ children }) => {
 	};
 
 	const getVouchersByUserIdOnPhone = () => {
+		setIsLoadingVoucher(true);
 		getAllVouchersByUserIdRequest(user.id)
 			.then((results) => {
 				const filteredVoucher = results.filter((voucher) => {
@@ -90,6 +92,9 @@ export const VoucherContextProvider = ({ children }) => {
 				setVouchers(filteredVoucher);
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
+		setTimeout(() => {
+			setIsLoadingVoucher(false);
+		}, 3000);
 	};
 
 	const filterUsersByCheckInNumber = async (num_1, num_2) => {
@@ -161,6 +166,7 @@ export const VoucherContextProvider = ({ children }) => {
 				getVouchersByUserIdAndVoucherId,
 				getAllVouchersByUserId,
 				deleteVoucherByUserIdAndVoucherId,
+				isLoadingVoucher,
 			}}
 		>
 			{children}

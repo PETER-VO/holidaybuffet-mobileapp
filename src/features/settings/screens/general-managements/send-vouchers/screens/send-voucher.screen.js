@@ -42,7 +42,6 @@ export const SendVoucherScreen = () => {
 			customerType,
 			keyword,
 			expiredDate,
-			status: true,
 		};
 		addVoucherToUserForTesting(feedback);
 		sendNotificationTest(titleNotification, description);
