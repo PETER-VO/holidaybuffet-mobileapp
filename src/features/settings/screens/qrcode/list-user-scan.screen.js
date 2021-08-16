@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { TouchableOpacity, Button, View, Alert } from 'react-native';
+import { TouchableOpacity, Button, View, Alert, Text } from 'react-native';
 import { SafeArea } from '../../../../components/utils/safe-area.component';
 import { UserInfoCard } from './components/user-info-card.component';
 import { UserList } from './components/list-user-scan.styles';
@@ -24,7 +24,9 @@ export const ListUserScanScreen = ({ navigation }) => {
 			{
 				text: 'Yes',
 				onPress: () => {
+					getAllUserScannedLists();
 					deleteAllScannedUserList();
+					navigation.navigate('Settings');
 				},
 			},
 		]);
@@ -43,29 +45,38 @@ export const ListUserScanScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea style={{ marginTop: 0, paddingTop: 40 }}>
-			<UserList
-				data={scannedListUsers}
-				renderItem={(item) => {
-					return (
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate('ShowUserInform', { userInform: item })
-							}
-						>
-							<Spacer position='bottom' size='large'>
-								<FadeInView>
-									<UserInfoCard
-										key={item.id}
-										userCard={item}
-										onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
-									/>
-								</FadeInView>
-							</Spacer>
-						</TouchableOpacity>
-					);
-				}}
-				keyExtractor={(item) => item.id}
-			/>
+			{scannedListUsers.length !== 0 ? (
+				<UserList
+					data={scannedListUsers}
+					renderItem={(item) => {
+						return (
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate('ShowUserInform', { userInform: item })
+								}
+							>
+								<Spacer position='bottom' size='large'>
+									<FadeInView>
+										<UserInfoCard
+											key={item.id}
+											userCard={item}
+											onPressRemove={() => setIsRemoveButton(!isRemoveButton)}
+										/>
+									</FadeInView>
+								</Spacer>
+							</TouchableOpacity>
+						);
+					}}
+					keyExtractor={(item) => item.id}
+				/>
+			) : (
+				<View
+					style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}
+				>
+					<Text>Don't have any item</Text>
+				</View>
+			)}
+
 			<View
 				style={{
 					zIndex: 1,
@@ -76,7 +87,7 @@ export const ListUserScanScreen = ({ navigation }) => {
 					marginRight: 20,
 				}}
 			>
-				<TouchableOpacity onPress={() => navigation.navigate('QRCodeScan')}>
+				<TouchableOpacity onPress={() => navigation.navigate('ScanQRCode')}>
 					<View
 						style={{
 							backgroundColor: '#38c172',

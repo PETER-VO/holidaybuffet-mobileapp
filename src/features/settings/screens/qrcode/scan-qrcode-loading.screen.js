@@ -40,7 +40,12 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 1 });
 			}
 		}, 3000);
-	}, [isVoucherValid, isVoucherError, doneVerifyScannedVoucher]);
+	}, [
+		isVoucherValid,
+		isVoucherError,
+		doneVerifyScannedVoucher,
+		isCheckInSuccess,
+	]);
 
 	useEffect(() => {
 		animation.play();

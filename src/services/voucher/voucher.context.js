@@ -78,7 +78,16 @@ export const VoucherContextProvider = ({ children }) => {
 	const getVouchersByUserIdOnPhone = () => {
 		getAllVouchersByUserIdRequest(user.id)
 			.then((results) => {
-				setVouchers(results);
+				const filteredVoucher = results.filter((voucher) => {
+					const date = new Date();
+					const expiredDate = new Date(voucher.expiredDate.seconds * 1000);
+					if (date.getTime() > expiredDate.getTime()) {
+						deleteVoucher(voucher.id);
+						return false;
+					}
+					return true;
+				});
+				setVouchers(filteredVoucher);
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 	};

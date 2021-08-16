@@ -47,6 +47,14 @@ export const SettingScreen = ({ navigation }) => {
 					left={(props) => <List.Icon {...props} color='black' icon='heart' />}
 					onPress={() => navigation.navigate('Favourites')}
 				/>
+				<SettingsItem
+					style={{ padding: 16 }}
+					title='Check-in'
+					description={`${user.noCheckIn}`}
+					left={(props) => (
+						<List.Icon {...props} color='black' icon='calendar-check' />
+					)}
+				/>
 				{/* <List.Accordion
 					style={{ padding: 16 }}
 					title='Credits'
@@ -79,8 +87,8 @@ export const SettingScreen = ({ navigation }) => {
 						/>
 						<SettingsItem
 							style={{ padding: 16 }}
-							title='General Management'
-							description='Inform something'
+							title='Scan QRCode'
+							description='Verify voucher and check-in'
 							left={(props) => (
 								<List.Icon {...props} color='black' icon='qrcode-scan' />
 							)}

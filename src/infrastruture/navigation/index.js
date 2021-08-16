@@ -14,7 +14,7 @@ export const Navigation = () => {
 	useEffect(() => {
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 2000);
+		}, 4000);
 	}, []);
 
 	return (

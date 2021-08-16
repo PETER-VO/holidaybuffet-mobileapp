@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { NotificationContext } from '../notification/notification.context';
 import { UserContext } from '../user/user.context';
 import { VoucherContext } from '../voucher/voucher.context';
 import {
@@ -31,6 +32,7 @@ export const QRCodeContextProvider = ({ children }) => {
 		deleteVoucherByUserIdAndVoucherId,
 	} = useContext(VoucherContext);
 	const { getAllFeedbacksByUserId, getUserByUserId } = useContext(UserContext);
+	const { sendNotificationForUser } = useContext(NotificationContext);
 
 	const refreshState = () => {
 		setIsCheckInSuccess(false);
@@ -125,9 +127,9 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	const getAllNeededUserInformationQRCodeScanning = async () => {
 		let userId = splittedQRCode[0];
-		getUserByUserId(userId)
-			.then((result) => {
-				updateListCheckInByUser(result)
+		await getUserByUserId(userId)
+			.then(async (result) => {
+				await updateListCheckInByUser(result)
 					.then((userObj) => {
 						setUserById(userObj);
 					})
@@ -142,7 +144,7 @@ export const QRCodeContextProvider = ({ children }) => {
 				]);
 				setUserById({});
 			});
-		getAllFeedbacksByUserId(userId)
+		await getAllFeedbacksByUserId(userId)
 			.then((result) => {
 				setFeedbacksByUserId(result);
 			})
@@ -153,7 +155,7 @@ export const QRCodeContextProvider = ({ children }) => {
 				]);
 				setFeedbacksByUserId({});
 			});
-		getAllVouchersByUserId(userId)
+		await getAllVouchersByUserId(userId)
 			.then((results) => {
 				setVouchersByUserId(results);
 			})
@@ -190,6 +192,11 @@ export const QRCodeContextProvider = ({ children }) => {
 					title: 'Successfully scanned voucher',
 					errors: error.toString(),
 				});
+				sendNotificationForUser(
+					userById,
+					'Success!',
+					'Thank you for your coming! Have a nice day!'
+				);
 				setDoneVerifyScannedVoucher(true);
 				setNeededData(null);
 			}
@@ -226,6 +233,11 @@ export const QRCodeContextProvider = ({ children }) => {
 					title: 'Successfully Check-In',
 					errors: error.toString(),
 				});
+				sendNotificationForUser(
+					userById,
+					'Success!',
+					'Thank you for your coming! Have a nice day!'
+				);
 				setDoneVerifyScannedVoucher(true);
 				setNeededData(null);
 			}

@@ -48,12 +48,20 @@ export const NotificationContextProvider = ({ children }) => {
 		}
 	};
 
+	const sendNotificationForUser = (user, title, body) => {
+		if (title && user) {
+			let phoneToken = user.phoneToken;
+			sendPushNotification(phoneToken, title, body);
+		}
+	};
+
 	return (
 		<NotificationContext.Provider
 			value={{
 				sendNotificationAllDevices,
 				sendNotificationTest,
 				sendNotificationForUsers,
+				sendNotificationForUser,
 				isLoading,
 			}}
 		>
