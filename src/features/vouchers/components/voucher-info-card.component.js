@@ -36,17 +36,6 @@ export const VoucherInfoCard = ({ voucher }) => {
 					}}
 					source={require('../../../../assets/restaurant.png')}
 				/>
-				{user.role === 'admin' ? (
-					<TouchableOpacity
-						style={{
-							position: 'absolute',
-							top: 10,
-							right: 15,
-						}}
-					>
-						{/* OKOK */}
-					</TouchableOpacity>
-				) : null}
 				<View
 					style={{
 						position: 'absolute',
@@ -58,7 +47,7 @@ export const VoucherInfoCard = ({ voucher }) => {
 						width: 15,
 						height: 15,
 					}}
-				></View>
+				/>
 
 				<View
 					style={{

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput } from 'react-native-paper';
 
-export const InputCustom = ({ title, value, onChange }) => (
+export const InputCustom = ({ title, value, onChange, ...otherProps }) => (
 	<TextInput
 		label={title}
 		value={value}
@@ -9,5 +9,6 @@ export const InputCustom = ({ title, value, onChange }) => (
 		theme={{ colors: { primary: '#CC412F', underlineColor: 'transparent' } }}
 		style={{ marginBottom: 16 }}
 		mode='outlined'
+		{...otherProps}
 	/>
 );

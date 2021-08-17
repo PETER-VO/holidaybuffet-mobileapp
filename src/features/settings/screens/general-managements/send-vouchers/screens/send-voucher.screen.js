@@ -18,7 +18,7 @@ export const SendVoucherScreen = () => {
 	const [customerType, setCustomerType] = useState('');
 	const [expiredDate, setExpiredDate] = useState(new Date());
 	const [keyword, setKeyword] = useState('');
-	const [price, setPrice] = useState('11');
+	const [price, setPrice] = useState('');
 	const [titleVoucher, setTitleVoucher] = useState('');
 	const [titleNotification, setTitleNotification] = useState('');
 	const [description, setDescription] = useState('');
@@ -153,7 +153,13 @@ export const SendVoucherScreen = () => {
 					onChange={setTitleVoucher}
 				/>
 				<InputCustom title='Keyword' value={keyword} onChange={setKeyword} />
-				<InputCustom title='Price' value={price} onChange={setPrice} />
+				<InputCustom
+					title='Price'
+					value={price}
+					onChange={setPrice}
+					placeholder='11'
+					keyboardType='numeric'
+				/>
 				<InputCustom
 					title='Customer Type'
 					value={customerType}

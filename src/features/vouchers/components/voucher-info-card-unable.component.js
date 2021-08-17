@@ -35,6 +35,18 @@ export const VoucherInfoCardUnable = ({ voucher, userCheckIn }) => {
 					}}
 					source={require('../../../../assets/restaurant.png')}
 				/>
+				<View
+					style={{
+						position: 'absolute',
+						top: 10,
+						right: 15,
+						borderWidth: 1.5,
+						borderStyle: 'dashed',
+						borderRadius: 50,
+						width: 15,
+						height: 15,
+					}}
+				/>
 
 				<View
 					style={{
