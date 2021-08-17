@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, Image, View, ScrollView } from 'react-native';
+import { Text, Image, View, ScrollView, Alert } from 'react-native';
 import { Button, ActivityIndicator, Colors } from 'react-native-paper';
 import { CheckBoxCustom } from '../../../../../../components/utils/check-box-custom.component';
 import { InputCustom } from '../../../../../../components/utils/input-custom.component';
@@ -18,6 +18,7 @@ export const SendVoucherScreen = () => {
 	const [customerType, setCustomerType] = useState('');
 	const [expiredDate, setExpiredDate] = useState(new Date());
 	const [keyword, setKeyword] = useState('');
+	const [price, setPrice] = useState('11');
 	const [titleVoucher, setTitleVoucher] = useState('');
 	const [titleNotification, setTitleNotification] = useState('');
 	const [description, setDescription] = useState('');
@@ -47,12 +48,28 @@ export const SendVoucherScreen = () => {
 		sendNotificationTest(titleNotification, description);
 	};
 
+	const alertConfirmLogout = () =>
+		Alert.alert('Do you want to publish', 'OK! I believe you. <3', [
+			{
+				text: 'Cancel',
+				onPress: () => console.log('Cancel Pressed'),
+				style: 'cancel',
+			},
+			{
+				text: 'OK',
+				onPress: () => {
+					onPublishSubmit();
+				},
+			},
+		]);
+
 	const onPublishSubmit = () => {
 		const feedback = {
 			titleVoucher,
 			customerType,
 			keyword,
 			expiredDate,
+			price,
 			status: true,
 		};
 		addVoucherToUsers(feedback);
@@ -136,6 +153,7 @@ export const SendVoucherScreen = () => {
 					onChange={setTitleVoucher}
 				/>
 				<InputCustom title='Keyword' value={keyword} onChange={setKeyword} />
+				<InputCustom title='Price' value={price} onChange={setPrice} />
 				<InputCustom
 					title='Customer Type'
 					value={customerType}
@@ -201,7 +219,7 @@ export const SendVoucherScreen = () => {
 								flex: 0.48,
 							}}
 							color='white'
-							onPress={() => onPublishSubmit()}
+							onPress={alertConfirmLogout}
 						>
 							Publish
 						</Button>

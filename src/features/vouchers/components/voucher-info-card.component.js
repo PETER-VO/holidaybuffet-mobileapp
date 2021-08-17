@@ -7,26 +7,10 @@ import { VoucherContext } from '../../../services/voucher/voucher.context';
 import { formattedDate } from '../../../components/utils/useful-method';
 import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
-export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
-	const { id, titleVoucher, expiredDate } = voucher.item;
+export const VoucherInfoCard = ({ voucher }) => {
+	const { id, titleVoucher, expiredDate, price } = voucher.item;
 	const { deleteVoucher } = useContext(VoucherContext);
 	const { user } = useContext(AuthenticationContext);
-
-	const alertConfirmRemove = () =>
-		Alert.alert('Do you want to remove?', "Don't do that! :(", [
-			{
-				text: 'Cancel',
-				onPress: () => console.log('Cancel Pressed'),
-				style: 'cancel',
-			},
-			{
-				text: 'Yes',
-				onPress: () => {
-					deleteVoucher(id);
-					onPressRemove();
-				},
-			},
-		]);
 
 	return (
 		<VoucherCard
@@ -48,7 +32,7 @@ export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 				<VoucherCardCover
 					style={{
 						flex: 0.38,
-						height: 173,
+						height: 150,
 					}}
 					source={require('../../../../assets/restaurant.png')}
 				/>
@@ -59,15 +43,22 @@ export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 							top: 10,
 							right: 15,
 						}}
-						onPress={alertConfirmRemove}
 					>
-						<MaterialCommunityIcons
-							name='scissors-cutting'
-							size={28}
-							color='#CC412F'
-						/>
+						{/* OKOK */}
 					</TouchableOpacity>
 				) : null}
+				<View
+					style={{
+						position: 'absolute',
+						top: 10,
+						right: 15,
+						borderWidth: 1.5,
+						borderStyle: 'dashed',
+						borderRadius: 50,
+						width: 15,
+						height: 15,
+					}}
+				></View>
 
 				<View
 					style={{
@@ -87,6 +78,9 @@ export const VoucherInfoCard = ({ voucher, onPressRemove }) => {
 					</Text>
 					<Text variant='label' style={{ fontSize: 12 }}>
 						Valid Until: {formattedDate(expiredDate.seconds)}
+					</Text>
+					<Text variant='label' style={{ fontSize: 12, marginTop: 10 }}>
+						Normal: {price}€
 					</Text>
 				</View>
 			</View>

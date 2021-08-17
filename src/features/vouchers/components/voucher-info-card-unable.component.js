@@ -8,7 +8,7 @@ import { formattedDate } from '../../../components/utils/useful-method';
 import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
 export const VoucherInfoCardUnable = ({ voucher, userCheckIn }) => {
-	const { id, titleVoucher, expiredDate, checkIn } = voucher.item;
+	const { id, titleVoucher, expiredDate, checkIn, price } = voucher.item;
 	return (
 		<VoucherCard
 			style={{
@@ -54,6 +54,9 @@ export const VoucherInfoCardUnable = ({ voucher, userCheckIn }) => {
 					</Text>
 					<Text variant='label' style={{ fontSize: 12 }}>
 						Valid Until: {formattedDate(expiredDate.seconds)}
+					</Text>
+					<Text variant='label' style={{ fontSize: 12, marginTop: 10 }}>
+						Normal: {price}€
 					</Text>
 				</View>
 			</View>

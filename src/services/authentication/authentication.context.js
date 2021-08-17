@@ -5,9 +5,9 @@ import {
 	createUserProfileDocument,
 	sendVerificationRequest,
 	confirmCodeRequest,
-	incrementCreditRequest,
+	checkPhoneToken,
+	removePhoneToken,
 } from './authentication.service';
-
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
@@ -19,14 +19,15 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [checkVerificationCode, setCheckVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
 
-	if (!user) {
-		firebase.auth().onAuthStateChanged(async (user) => {
+	useEffect(() => {
+		const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
 			setIsLoading(true);
 			if (user) {
 				const userRef = await createUserProfileDocument(user, {
 					role: 'user',
 					customerType: 'New Customer',
 					noCheckIn: 0,
+					isNewCustomer: true,
 					listDateCheckIn: [],
 				});
 				await userRef.onSnapshot(async (snapShot) => {
@@ -42,7 +43,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 					// });
 				});
 				setIsLoading(false);
-				setCheckVerificationCode(false);
 			}
 			// } else {
 			// 	// Offline
@@ -53,7 +53,14 @@ export const AuthenticationContextProvider = ({ children }) => {
 			// 	setIsLoading(false);
 			// }
 		});
-	}
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
+	const checkPhoneTokenForUser = (user) => {
+		checkPhoneToken(user);
+	};
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);
@@ -84,29 +91,26 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const verificationCode = (code) => {
-		setIsLoading(true);
 		if (!code) {
 			return;
 		}
 		setProcessVerificationCode(true);
-		setTimeout(() => {
-			confirmCodeRequest(verificationId, code)
-				.then(() => {
-					setCheckVerificationCode(true);
-					setProcessVerificationCode(false);
-				})
-				.catch((e) => {
-					setProcessVerificationCode(false);
-					if (e.toString() !== exceptedError[0]) {
-						setError(e.toString());
-					}
-				});
-		}, 2000);
+		confirmCodeRequest(verificationId, code)
+			.then(() => {
+				setProcessVerificationCode(false);
+			})
+			.catch((e) => {
+				setProcessVerificationCode(false);
+				if (e.toString() !== exceptedError[0]) {
+					setError(e.toString());
+				}
+			});
 	};
 
-	const onLogout = () => {
-		AsyncStorage.removeItem('@users');
-		firebase.auth().signOut();
+	const onLogout = async () => {
+		await AsyncStorage.removeItem('@users');
+		await removePhoneToken(user);
+		await firebase.auth().signOut();
 		setUser(null);
 		setVerificationId(null);
 		setError([]);
@@ -126,10 +130,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 				onLogout,
 				verificationPhoneNumber,
 				verificationCode,
+				checkPhoneTokenForUser,
 				verificationId,
 				clearError,
 				processVerificationCode,
-				checkVerificationCode,
 			}}
 		>
 			{children}

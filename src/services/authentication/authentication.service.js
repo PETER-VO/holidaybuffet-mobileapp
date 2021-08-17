@@ -28,29 +28,66 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	if (!userAuth) return;
 	const userRef = firestore.doc(`users/${userAuth.uid}`);
 	const snapShot = await userRef.get();
-	let phoneToken = '';
+	let phoneTokens = [];
+	await registerForPushNotificationsAsync()
+		.then((result) => phoneTokens.push(result))
+		.catch((e) => console.log('Register phone token error:', e.message));
 	if (!snapShot.exists) {
-		await registerForPushNotificationsAsync()
-			.then((result) => (phoneToken = result))
-			.catch((e) => console.log('Register phone token error:', e.message));
 		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
 		try {
+			console.log('D');
 			await userRef.set({
 				phoneNumber,
 				createdAt,
-				phoneToken,
+				phoneTokens,
 				...additionalData,
 			});
-			const availableVouchers = vouchersForNewUser();
-			availableVouchers.map((voucher) => {
-				addVoucherToUserId(snapShot.id, voucher);
-			});
+			// More safety
+			const user = await userRef.get();
+			if (user.data().isNewCustomer === true) {
+				const availableVouchers = vouchersForNewUser();
+				await availableVouchers.map((voucher) => {
+					addVoucherToUserId(snapShot.id, voucher);
+				});
+				await userRef.update({ isNewCustomer: false });
+				check = false;
+			}
 		} catch (e) {
 			console.log('error creating user', e.message);
 		}
 	}
 	return userRef;
+};
+
+export const checkPhoneToken = async (user) => {
+	if (user) {
+		let phoneToken = '';
+		await registerForPushNotificationsAsync()
+			.then((result) => (phoneToken = result))
+			.catch((e) => console.log('Register phone token error:', e.message));
+		if (!user.phoneTokens.includes(phoneToken)) {
+			user.phoneTokens.push(phoneToken);
+			const userRef = firestore.doc(`users/${user.id}`);
+			await userRef.update({ phoneTokens: user.phoneTokens });
+		}
+		// Cannot get phoneToken from user of snapshot.data();
+	}
+};
+
+export const removePhoneToken = async (user) => {
+	if (user && user.phoneTokens) {
+		let phoneToken = '';
+		await registerForPushNotificationsAsync()
+			.then((result) => (phoneToken = result))
+			.catch((e) => console.log('Register phone token error:', e.message));
+		const index = user.phoneTokens.indexOf(phoneToken);
+		if (index > -1) {
+			user.phoneTokens.splice(index, 1);
+			const userRef = firestore.doc(`users/${user.id}`);
+			await userRef.update({ phoneTokens: user.phoneTokens });
+		}
+	}
 };
 
 const vouchersForNewUser = () => {
@@ -64,6 +101,7 @@ const vouchersForNewUser = () => {
 		expiredDate: new Date(createdAt.getTime() + twoWeeks),
 		keyword: '50% OFF',
 		titleVoucher: 'GET OFF 3€ FOR 1 BUFFET',
+		price: 11,
 	};
 	const checkInVoucher_1 = {
 		createdAt,
@@ -72,6 +110,7 @@ const vouchersForNewUser = () => {
 		keyword: '1 Buffet',
 		titleVoucher: 'FREE 1 DESSERT',
 		checkIn: 3,
+		price: 5,
 	};
 	const checkInVoucher_2 = {
 		createdAt,
@@ -80,6 +119,7 @@ const vouchersForNewUser = () => {
 		keyword: '1 Buffet',
 		titleVoucher: 'GET OFF 30% FOR 1 BUFFET',
 		checkIn: 5,
+		price: 11,
 	};
 	const checkInVoucher_3 = {
 		createdAt,
@@ -88,6 +128,7 @@ const vouchersForNewUser = () => {
 		keyword: '50% OFF',
 		titleVoucher: 'GET OFF 30% FOR 2 BUFFETS',
 		checkIn: 8,
+		price: 22,
 	};
 	const checkInVoucher_4 = {
 		createdAt,
@@ -96,6 +137,7 @@ const vouchersForNewUser = () => {
 		keyword: '50% OFF',
 		titleVoucher: 'GET OFF 40% FOR 2 BUFFETS',
 		checkIn: 12,
+		price: 11,
 	};
 	vouchers.push(
 		newCustomer,

@@ -63,9 +63,15 @@ export const QRCodeContextProvider = ({ children }) => {
 			const arrayCode = QRCode_.split(',');
 			setSplittedQRCode(arrayCode);
 			getUserByUserId(arrayCode[0])
-				.then((result) => {
-					setUserById(result);
-					setIsCheckInSuccess(true);
+				.then(async (result) => {
+					await updateListCheckInByUser(result)
+						.then((userObj) => {
+							setUserById(userObj);
+							setIsCheckInSuccess(true);
+						})
+						.catch((e) => {
+							throwErrorQRCodeNotValid(`Update Failed!`);
+						});
 				})
 				.catch((e) => {
 					throwErrorQRCodeNotValid(`Not Found!`);
@@ -103,17 +109,39 @@ export const QRCodeContextProvider = ({ children }) => {
 	}, [splittedQRCode]);
 
 	useEffect(() => {
-		if (voucherByUserIdAndVoucherId) {
-			let currentDate = new Date();
-			let userDate = voucherByUserIdAndVoucherId['expiredDate'];
-			let expiredDate = new Date(userDate.seconds * 1000);
-			if (currentDate.getTime() < expiredDate.getTime()) {
-				setIsVoucherValid(true);
-			} else {
-				setError([...error, 'The voucher is expired!']);
-				setIsVoucherError(true);
+		async function asyncFunction() {
+			if (voucherByUserIdAndVoucherId) {
+				let currentDate = new Date();
+				let userDate = voucherByUserIdAndVoucherId['expiredDate'];
+				let expiredDate = new Date(userDate.seconds * 1000);
+				let check = true;
+				if (currentDate.getTime() > expiredDate.getTime()) {
+					setError([...error, 'The voucher is expired!']);
+					setIsVoucherError(true);
+					check = false;
+				}
+
+				if (voucherByUserIdAndVoucherId.hasOwnProperty('checkIn')) {
+					let userId = splittedQRCode[0];
+					await getUserByUserId(userId).then((user) => {
+						setUserById(user);
+						if (user.noCheckIn < voucherByUserIdAndVoucherId.checkIn) {
+							setError([
+								...error,
+								`User: ${user.noCheckIn} check-in < voucher:${voucherByUserIdAndVoucherId.checkIn} check-in`,
+							]);
+							setIsVoucherError(true);
+							check = false;
+						}
+					});
+				}
+
+				if (check) {
+					setIsVoucherValid(true);
+				}
 			}
 		}
+		asyncFunction();
 	}, [voucherByUserIdAndVoucherId]);
 
 	useEffect(() => {
@@ -127,23 +155,25 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	const getAllNeededUserInformationQRCodeScanning = async () => {
 		let userId = splittedQRCode[0];
-		await getUserByUserId(userId)
-			.then(async (result) => {
-				await updateListCheckInByUser(result)
-					.then((userObj) => {
-						setUserById(userObj);
-					})
-					.catch((e) => {
-						setUserById({});
-					});
-			})
-			.catch((e) => {
-				setError([
-					...error,
-					`QRCode Scan - User does not exist with user_id: ${userId} && errorMessage: ${e.message}`,
-				]);
-				setUserById({});
-			});
+		if (!userById) {
+			await getUserByUserId(userId)
+				.then(async (result) => {
+					await updateListCheckInByUser(result)
+						.then((userObj) => {
+							setUserById(userObj);
+						})
+						.catch((e) => {
+							setUserById({});
+						});
+				})
+				.catch((e) => {
+					setError([
+						...error,
+						`QRCode Scan - User does not exist with user_id: ${userId} && errorMessage: ${e.message}`,
+					]);
+					setUserById({});
+				});
+		}
 		await getAllFeedbacksByUserId(userId)
 			.then((result) => {
 				setFeedbacksByUserId(result);
@@ -206,7 +236,6 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (isVoucherError && neededData) {
-			console.log('OK');
 			addAllUserInformationAfterScanQRCode({
 				...neededData,
 				status: false,

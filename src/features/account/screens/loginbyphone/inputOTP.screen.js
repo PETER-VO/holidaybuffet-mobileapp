@@ -34,14 +34,11 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		? firebase.app().options
 		: undefined;
 	const {
-		user,
 		verificationCode,
 		error,
-		isLoading,
 		verificationPhoneNumber,
 		clearError,
 		processVerificationCode,
-		checkVerificationCode,
 	} = useContext(AuthenticationContext);
 
 	const decrementClock = () => {
@@ -62,7 +59,6 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	const onResendOTP = () => {
 		if (enableResend) {
 			resendOTP();
-			verificationCode(code);
 			setCountDown(defaultCountDown);
 			setEnableResend(false);
 			clearInterval(clockCall);

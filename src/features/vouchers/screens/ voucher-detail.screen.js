@@ -9,8 +9,7 @@ import { AuthenticationContext } from '../../../services/authentication/authenti
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const VoucherDetailScreen = ({ navigation, route }) => {
-	const { voucher } = route.params;
-	const { id, expiredDate, customerType, keyword } = voucher.item;
+	const { id, expiredDate, customerType, keyword } = route.params.voucher.item;
 	const { user } = useContext(AuthenticationContext);
 
 	//user_id,voucher_id,category_id (1. check-in, 2. verify voucher)

@@ -39,7 +39,7 @@ export const ScanQRCodeLoading = ({ navigation, route }) => {
 			} else if (isCheckInSuccess && doneVerifyScannedVoucher) {
 				navigation.navigate('ScanSuccess', { scanCategory_id: 1 });
 			}
-		}, 3000);
+		}, 3500);
 	}, [
 		isVoucherValid,
 		isVoucherError,

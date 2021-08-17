@@ -17,7 +17,6 @@ const wait = (timeout) => {
 };
 
 export const VoucherScreen = ({ navigation }) => {
-	const [isRemoveButton, setIsRemoveButton] = useState(false);
 	const { getVouchersByUserIdOnPhone, vouchers, isLoadingVoucher } =
 		useContext(VoucherContext);
 	const { user } = useContext(AuthenticationContext);
@@ -32,13 +31,6 @@ export const VoucherScreen = ({ navigation }) => {
 			setRefreshing(false);
 		});
 	}, []);
-
-	useEffect(() => {
-		if (isRemoveButton) {
-			getVouchersByUserIdOnPhone();
-		}
-		setIsRemoveButton(false);
-	}, [isRemoveButton]);
 
 	useEffect(() => {
 		getVouchersByUserIdOnPhone();
@@ -56,32 +48,36 @@ export const VoucherScreen = ({ navigation }) => {
 						data={vouchers}
 						renderItem={(item) => {
 							return (
-								<TouchableOpacity
-									onPress={() =>
-										navigation.navigate('VoucherDetail', { voucher: item })
-									}
-								>
-									<Spacer position='bottom' size='large'>
-										<FadeInView>
-											{item['item'].hasOwnProperty('checkIn') &&
-											item['item'].checkIn >= user.noCheckIn ? (
+								<Spacer position='bottom' size='large'>
+									<FadeInView>
+										{item['item'].hasOwnProperty('checkIn') &&
+										item['item'].checkIn > user.noCheckIn ? (
+											<TouchableOpacity
+												onPress={() =>
+													navigation.navigate('VoucherDetail', {
+														voucher: item,
+													})
+												}
+											>
 												<VoucherInfoCardUnable
 													key={item.id}
 													voucher={item}
 													userCheckIn={user.noCheckIn}
 												/>
-											) : (
-												<VoucherInfoCard
-													key={item.id}
-													voucher={item}
-													onPressRemove={() =>
-														setIsRemoveButton(!isRemoveButton)
-													}
-												/>
-											)}
-										</FadeInView>
-									</Spacer>
-								</TouchableOpacity>
+											</TouchableOpacity>
+										) : (
+											<TouchableOpacity
+												onPress={() =>
+													navigation.navigate('VoucherDetail', {
+														voucher: item,
+													})
+												}
+											>
+												<VoucherInfoCard key={item.id} voucher={item} />
+											</TouchableOpacity>
+										)}
+									</FadeInView>
+								</Spacer>
 							);
 						}}
 						keyExtractor={(item) => item.id}

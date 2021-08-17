@@ -50,8 +50,10 @@ export const NotificationContextProvider = ({ children }) => {
 
 	const sendNotificationForUser = (user, title, body) => {
 		if (title && user) {
-			let phoneToken = user.phoneToken;
-			sendPushNotification(phoneToken, title, body);
+			let phoneTokens = user.phoneTokens;
+			phoneTokens.map((phoneToken) =>
+				sendPushNotification(phoneToken, title, body)
+			);
 		}
 	};
 

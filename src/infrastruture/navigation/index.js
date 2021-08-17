@@ -12,9 +12,12 @@ export const Navigation = () => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 4000);
+		async function callback_() {
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 3000);
+		}
+		callback_();
 	}, []);
 
 	return (

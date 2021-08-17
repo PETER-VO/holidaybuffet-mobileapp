@@ -22,7 +22,7 @@ export const VoucherContextProvider = ({ children }) => {
 	const [vouchers, setVouchers] = useState([]);
 	const [quantity, setQuantity] = useState(0);
 	const { users, getAllUsers } = useContext(UserContext);
-	const { user } = useContext(AuthenticationContext);
+	const { user, checkPhoneTokenForUser } = useContext(AuthenticationContext);
 
 	useEffect(() => {
 		setQuantity(filteredCheckIns.length);
@@ -30,6 +30,7 @@ export const VoucherContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		getVouchersByUserIdOnPhone();
+		checkPhoneTokenForUser(user);
 	}, []);
 
 	const deleteVoucher = (voucherId) => {
@@ -115,11 +116,9 @@ export const VoucherContextProvider = ({ children }) => {
 					let check = false;
 					if (num_1 || num_1 === 0) {
 						check_1 = user['noCheckIn'] >= num_1;
-						console.log('check1: ', check_1);
 					}
 					if (num_2) {
 						check_2 = user['noCheckIn'] <= num_2;
-						console.log('check2: ', check_2);
 					} else {
 						check_2 = true;
 					}

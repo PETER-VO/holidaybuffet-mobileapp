@@ -1,5 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { TouchableOpacity, Button, View, Alert, Text } from 'react-native';
+import React, { useEffect, useContext, useState, useCallback } from 'react';
+import {
+	TouchableOpacity,
+	Button,
+	View,
+	Alert,
+	Text,
+	RefreshControl,
+} from 'react-native';
 import { SafeArea } from '../../../../components/utils/safe-area.component';
 import { UserInfoCard } from './components/user-info-card.component';
 import { UserList } from './components/list-user-scan.styles';
@@ -10,11 +17,27 @@ import { QRCodeContext } from '../../../../services/qr-code/qr-code.context';
 import { MaterialIcons, FontAwesome, AntDesign } from '@expo/vector-icons';
 import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 
+const wait = (timeout) => {
+	return new Promise((resolve) => {
+		setTimeout(resolve, timeout);
+	});
+};
+
 export const ListUserScanScreen = ({ navigation }) => {
 	const [isRemoveButton, setIsRemoveButton] = useState(false);
 	const { getAllUserScannedLists, scannedListUsers } = useContext(UserContext);
 	const { refreshState, deleteAllScannedUserList } = useContext(QRCodeContext);
 	const { user } = useContext(AuthenticationContext);
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+
+		wait(2000).then(() => {
+			getAllUserScannedLists();
+			setRefreshing(false);
+		});
+	}, []);
 
 	const alertConfirmDelete = () =>
 		Alert.alert('Do you want to delete all scanned-user list?', 'Ok oK :))', [
@@ -78,6 +101,9 @@ export const ListUserScanScreen = ({ navigation }) => {
 						);
 					}}
 					keyExtractor={(item) => item.id}
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					}
 				/>
 			) : (
 				<View
