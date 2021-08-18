@@ -9,6 +9,7 @@ import {
 	Title,
 	AnimationWrapper,
 } from '../components/account.styles';
+import { Image } from 'react-native';
 
 export const AccountScreen = ({ navigation }) => {
 	return (
@@ -20,10 +21,20 @@ export const AccountScreen = ({ navigation }) => {
 					autoPlay
 					loop
 					resizeMode='cover'
-					source={require('../../../../assets/watermelon.json')}
+					source={require('../../../../assets/cute-sushi.json')}
 				/>
 			</AnimationWrapper>
-			<Title>Holiday Buffet</Title>
+			<Image
+				style={{
+					height: 100,
+					width: 100,
+					opacity: 0.4,
+					position: 'absolute',
+					top: 60,
+					left: 20,
+				}}
+				source={require('../../../../assets/icon-1x.png')}
+			/>
 			<AccountContainer>
 				<AuthButton
 					icon='phone-lock-outline'

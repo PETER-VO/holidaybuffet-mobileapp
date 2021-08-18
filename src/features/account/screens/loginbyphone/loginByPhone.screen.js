@@ -18,6 +18,7 @@ import {
 } from '../../components/account.styles';
 import { AuthenticationContext } from '../../../../services/authentication/authentication.context';
 import { Text } from '../../../../components/typography/text.component';
+import { TextTradesWindFont } from '../../../../components/utils/text-trades-wind-font.component';
 
 export const LoginByPhoneScreen = ({ navigation }) => {
 	const [phoneNumber, setPhoneNumber] = useState('');
@@ -88,7 +89,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 					firebaseConfig={firebaseConfig}
 					attemptInvisibleVerification={false}
 				/>
-				<Title>Holiday Buffet</Title>
+				<Title>Phone Number</Title>
 				<AccountContainer>
 					<ContainerPhoneInput
 						style={{
@@ -117,7 +118,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 						<AuthButton
 							icon='lock-open-outline'
 							style={{
-								backgroundColor: phoneNumber ? '#2182BD' : 'gray',
+								backgroundColor: phoneNumber ? '#46280C' : 'gray',
 							}}
 							disabled={!phoneNumber}
 							mode='contained'

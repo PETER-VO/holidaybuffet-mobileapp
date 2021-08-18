@@ -106,7 +106,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 					ref={recaptchaVerifier}
 					firebaseConfig={firebaseConfig}
 				/>
-				<Title>Holiday Buffet</Title>
+				<Title>Code</Title>
 				<AccountContainer>
 					<ViewInput>
 						<CodeInput
@@ -155,7 +155,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						{!processVerificationCode ? (
 							<AuthButton
 								icon='lock-open-outline'
-								style={{ backgroundColor: enableResend ? '#2182BD' : 'gray' }}
+								style={{ backgroundColor: enableResend ? '#46280C' : 'gray' }}
 								disabled={!enableResend}
 								mode='contained'
 								onPress={() => {

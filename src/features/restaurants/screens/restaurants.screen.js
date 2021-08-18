@@ -25,7 +25,9 @@ export const RestaurantsScreen = ({ navigation }) => {
 	const { isLoading, marketings } = useContext(RestaurantsContext);
 
 	const navigateToMenuLink = () => {
-		Linking.openURL('http://google.com');
+		Linking.openURL(
+			'https://phamt6.github.io/menu_fin_eng.pdf?fbclid=IwAR2_fqMSvxW8ZXDlr5mcpFS9wtPhguz13OOT6SzwLMwCAeuW7NvafJsJ2J0'
+		);
 	};
 
 	return (

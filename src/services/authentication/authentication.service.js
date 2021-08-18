@@ -70,7 +70,6 @@ export const getAllAvailableVouchers = async () => {
 	const snapshot = await vouchersRef.get();
 	snapshot.forEach((doc) => {
 		results.push({
-			id: doc.id,
 			...doc.data(),
 		});
 	});

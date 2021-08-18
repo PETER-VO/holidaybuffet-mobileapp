@@ -26,7 +26,7 @@ export const AccountContainer = styled.View`
 `;
 
 export const AuthButton = styled(Button).attrs({
-	color: colors.brand.primary,
+	color: '#46280C',
 })`
 	padding: ${(props) => props.theme.space[2]};
 `;
@@ -37,6 +37,8 @@ export const AuthInput = styled(TextInput)`
 
 export const Title = styled(Text)`
 	font-size: 30px;
+	font-family: 'TradeWinds_400Regular';
+	color: #46280c;
 `;
 
 export const ErrorContainer = styled.View`
