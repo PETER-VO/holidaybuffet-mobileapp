@@ -24,7 +24,7 @@ import { ActivityIndicator, Colors } from 'react-native-paper';
 export const InputOTPScreen = ({ navigation, route }) => {
 	let clockCall = null;
 	const lengthInput = 6;
-	const defaultCountDown = 5;
+	const defaultCountDown = 30;
 	const [countDown, setCountDown] = useState(defaultCountDown);
 	const recaptchaVerifier = useRef(null);
 	const [enableResend, setEnableResend] = useState(false);
@@ -68,14 +68,14 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		}
 	};
 
-	// useEffect(() => {
-	// 	clockCall = setInterval(() => {
-	// 		decrementClock();
-	// 	}, 1000);
-	// 	return () => {
-	// 		clearInterval(clockCall);
-	// 	};
-	// });
+	useEffect(() => {
+		clockCall = setInterval(() => {
+			decrementClock();
+		}, 1000);
+		return () => {
+			clearInterval(clockCall);
+		};
+	});
 
 	useEffect(() => {
 		if (code.length === 6) {

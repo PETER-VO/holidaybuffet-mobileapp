@@ -31,20 +31,11 @@ export const NotificationContextProvider = ({ children }) => {
 		}, 3000);
 	};
 
-	const sendNotificationTest = (title, body) => {
-		if (title) {
-			sendPushNotification(user.phoneToken, title, body);
-		}
-	};
-
 	const sendNotificationForUsers = (users, title, body) => {
 		if (title && users) {
-			let phoneTokens = users.map((user) => user.phoneToken);
-			phoneTokens
-				.filter((token, idx, array) => array.indexOf(token) === idx)
-				.map((token) => {
-					sendPushNotification(token, title, body);
-				});
+			users.map((user) => {
+				sendNotificationForUser(user, title, body);
+			});
 		}
 	};
 
@@ -61,7 +52,6 @@ export const NotificationContextProvider = ({ children }) => {
 		<NotificationContext.Provider
 			value={{
 				sendNotificationAllDevices,
-				sendNotificationTest,
 				sendNotificationForUsers,
 				sendNotificationForUser,
 				isLoading,

@@ -29,9 +29,16 @@ export const VoucherContextProvider = ({ children }) => {
 	}, [filteredCheckIns]);
 
 	useEffect(() => {
-		getVouchersByUserIdOnPhone();
 		checkPhoneTokenForUser(user);
 	}, []);
+
+	useEffect(() => {
+		setIsLoadingVoucher(true);
+		if (!user.isNewCustomer) {
+			console.log('isNewCustomer: ', user.isNewCustomer);
+			getVouchersByUserIdOnPhone();
+		}
+	}, [user]);
 
 	const deleteVoucher = (voucherId) => {
 		deleteVoucherByUserId(user.id, voucherId);
@@ -74,7 +81,7 @@ export const VoucherContextProvider = ({ children }) => {
 
 		setTimeout(() => {
 			setIsLoadingPublish(false);
-		}, 2500);
+		}, 1500);
 	};
 
 	const getVouchersByUserIdOnPhone = () => {
@@ -95,7 +102,7 @@ export const VoucherContextProvider = ({ children }) => {
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 		setTimeout(() => {
 			setIsLoadingVoucher(false);
-		}, 3000);
+		}, 1500);
 	};
 
 	const filterUsersByCheckInNumber = async (num_1, num_2) => {

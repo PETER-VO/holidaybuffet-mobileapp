@@ -22,7 +22,7 @@ const LoadingContainer = styled.View`
 `;
 
 export const RestaurantsScreen = ({ navigation }) => {
-	const { isLoading, restaurants } = useContext(RestaurantsContext);
+	const { isLoading, marketings } = useContext(RestaurantsContext);
 
 	const navigateToMenuLink = () => {
 		Linking.openURL('http://google.com');
@@ -36,14 +36,10 @@ export const RestaurantsScreen = ({ navigation }) => {
 				</LoadingContainer>
 			)}
 			<RestaurantList
-				data={restaurants}
+				data={marketings}
 				renderItem={({ item }) => {
 					return (
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate('RestaurantDetail', { restaurant: item })
-							}
-						>
+						<TouchableOpacity onPress={() => console.log('OK')}>
 							<Spacer position='bottom' size='large'>
 								<FadeInView>
 									<RestaurantInfoCard restaurant={item} />

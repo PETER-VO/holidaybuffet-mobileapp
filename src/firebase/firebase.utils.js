@@ -2,15 +2,14 @@ import * as firebase from 'firebase';
 
 // Initialize Firebase
 const firebaseConfig = {
-	apiKey: 'AIzaSyCG-VnlnobLlJAOUvKYsuSxmCNZSveYnYg',
-	authDomain: 'mealstogo-4bcab.firebaseapp.com',
-	projectId: 'mealstogo-4bcab',
-	storageBucket: 'mealstogo-4bcab.appspot.com',
-	messagingSenderId: '202467037900',
-	appId: '1:202467037900:web:f65cfd183e75e5a04fa869',
-	measurementId: 'G-GNGJSN6H6L',
+	apiKey: 'AIzaSyAKTo3Ss2TTVhsQL18ExF4nobiKpT-iI_o',
+	authDomain: 'holidaybuffetmobileapp.firebaseapp.com',
+	projectId: 'holidaybuffetmobileapp',
+	storageBucket: 'holidaybuffetmobileapp.appspot.com',
+	messagingSenderId: '793894654107',
+	appId: '1:793894654107:web:8bb5562d33c843c883363e',
+	measurementId: 'G-21WWMB1JZ6',
 };
-
 if (!firebase.apps.length) {
 	firebase.initializeApp(firebaseConfig);
 }

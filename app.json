@@ -4,9 +4,9 @@
 		"slug": "HolidayBuffet",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon-restaurant-96x96.png",
+		"icon": "./assets/icon-app.png",
 		"splash": {
-			"image": "./assets/restaurant-splash.png",
+			"image": "./assets/splash-app.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -19,29 +19,19 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/icon-restaurant-96x96.png",
+				"foregroundImage": "./assets/icon-app.png",
 				"backgroundColor": "#FFFFFF"
 			},
-			"package": "com.phongvodeveloper.MealsToGo",
+			"package": "com.holidaybuffet.restaurant",
 			"useNextNotificationsApi": true,
 			"googleServicesFile": "./google-services.json"
 		},
 		"notification": {
-			"icon": "./assets/icon-restaurant-96x96.png",
+			"icon": "./assets/icon-app.png",
 			"color": "#000000",
 			"androidMode": "default",
 			"androidCollapsedTitle": "HolidayBuffet",
 			"iosDisplayInForeground": true
-		},
-		"plugins": [
-			[
-				"expo-notifications",
-				{
-					"icon": "./assets/icon-restaurant-96x96.png",
-					"color": "#ffffff",
-					"mode": "production"
-				}
-			]
-		]
+		}
 	}
 }

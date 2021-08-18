@@ -36,7 +36,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
 		try {
-			console.log('D');
 			await userRef.set({
 				phoneNumber,
 				createdAt,
@@ -46,18 +45,37 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 			// More safety
 			const user = await userRef.get();
 			if (user.data().isNewCustomer === true) {
-				const availableVouchers = vouchersForNewUser();
-				await availableVouchers.map((voucher) => {
-					addVoucherToUserId(snapShot.id, voucher);
-				});
+				await getAllAvailableVouchers()
+					.then(async (results) => {
+						await results.map((voucher) => {
+							addVoucherToUserId(user.id, voucher);
+						});
+					})
+					.catch((e) => {
+						console.log('error update available vouchers: ', e.message);
+					});
 				await userRef.update({ isNewCustomer: false });
-				check = false;
 			}
 		} catch (e) {
 			console.log('error creating user', e.message);
 		}
 	}
 	return userRef;
+};
+
+export const getAllAvailableVouchers = async () => {
+	console.log('B');
+	const results = [];
+	const vouchersRef = firestore.collection(`availableVouchers`);
+	const snapshot = await vouchersRef.get();
+	snapshot.forEach((doc) => {
+		results.push({
+			id: doc.id,
+			...doc.data(),
+		});
+	});
+	console.log('available vouchers: ', results);
+	return results;
 };
 
 export const checkPhoneToken = async (user) => {
@@ -88,65 +106,6 @@ export const removePhoneToken = async (user) => {
 			await userRef.update({ phoneTokens: user.phoneTokens });
 		}
 	}
-};
-
-const vouchersForNewUser = () => {
-	const vouchers = [];
-	const createdAt = new Date();
-	const twoWeeks = 1000 * 60 * 60 * 24 * 14;
-	const oneYear = 1000 * 60 * 60 * 24 * 365;
-	const newCustomer = {
-		createdAt,
-		customerType: 'New Customer',
-		expiredDate: new Date(createdAt.getTime() + twoWeeks),
-		keyword: '50% OFF',
-		titleVoucher: 'GET OFF 3€ FOR 1 BUFFET',
-		price: 11,
-	};
-	const checkInVoucher_1 = {
-		createdAt,
-		customerType: 'New Customer',
-		expiredDate: new Date(createdAt.getTime() + oneYear),
-		keyword: '1 Buffet',
-		titleVoucher: 'FREE 1 DESSERT',
-		checkIn: 3,
-		price: 5,
-	};
-	const checkInVoucher_2 = {
-		createdAt,
-		customerType: 'New Customer',
-		expiredDate: new Date(createdAt.getTime() + oneYear),
-		keyword: '1 Buffet',
-		titleVoucher: 'GET OFF 30% FOR 1 BUFFET',
-		checkIn: 5,
-		price: 11,
-	};
-	const checkInVoucher_3 = {
-		createdAt,
-		customerType: 'New Customer',
-		expiredDate: new Date(createdAt.getTime() + oneYear),
-		keyword: '50% OFF',
-		titleVoucher: 'GET OFF 30% FOR 2 BUFFETS',
-		checkIn: 8,
-		price: 22,
-	};
-	const checkInVoucher_4 = {
-		createdAt,
-		customerType: 'New Customer',
-		expiredDate: new Date(createdAt.getTime() + oneYear),
-		keyword: '50% OFF',
-		titleVoucher: 'GET OFF 40% FOR 2 BUFFETS',
-		checkIn: 12,
-		price: 11,
-	};
-	vouchers.push(
-		newCustomer,
-		checkInVoucher_1,
-		checkInVoucher_2,
-		checkInVoucher_3,
-		checkInVoucher_4
-	);
-	return vouchers;
 };
 
 export const getUserFromId = async (id) => {

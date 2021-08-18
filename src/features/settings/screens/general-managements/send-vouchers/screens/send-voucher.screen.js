@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { VoucherContext } from '../../../../../../services/voucher/voucher.context';
 import { TimePickerCustom } from '../../../../../../components/utils/time-picker-custom.component';
 import { NotificationContext } from '../../../../../../services/notification/notification.context';
+import { AuthenticationContext } from '../../../../../../services/authentication/authentication.context';
 
 export const SendVoucherScreen = () => {
 	const [isSelected_1, setIsSelected_1] = useState(false);
@@ -22,8 +23,9 @@ export const SendVoucherScreen = () => {
 	const [titleVoucher, setTitleVoucher] = useState('');
 	const [titleNotification, setTitleNotification] = useState('');
 	const [description, setDescription] = useState('');
-	const { sendNotificationTest, sendNotificationForUsers } =
+	const { sendNotificationForUsers, sendNotificationForUser } =
 		useContext(NotificationContext);
+	const { user } = useContext(AuthenticationContext);
 
 	const {
 		filteredCheckIns,
@@ -43,9 +45,10 @@ export const SendVoucherScreen = () => {
 			customerType,
 			keyword,
 			expiredDate,
+			price,
 		};
 		addVoucherToUserForTesting(feedback);
-		sendNotificationTest(titleNotification, description);
+		sendNotificationForUser(user, titleNotification, description);
 	};
 
 	const alertConfirmLogout = () =>
@@ -69,8 +72,7 @@ export const SendVoucherScreen = () => {
 			customerType,
 			keyword,
 			expiredDate,
-			price,
-			status: true,
+			price: parseInt(price),
 		};
 		addVoucherToUsers(feedback);
 		sendNotificationForUsers(filteredCheckIns, titleNotification, description);

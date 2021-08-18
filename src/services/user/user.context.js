@@ -52,9 +52,7 @@ export const UserContextProvider = ({ children }) => {
 			});
 	};
 
-	const checkInForUser = () => {
-		console.log('1');
-	};
+	const checkInForUser = () => {};
 
 	useEffect(() => {
 		getAllUsers();

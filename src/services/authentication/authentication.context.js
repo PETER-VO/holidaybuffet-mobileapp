@@ -16,7 +16,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
 	const [verificationId, setVerificationId] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
-	const [checkVerificationCode, setCheckVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
 
 	useEffect(() => {

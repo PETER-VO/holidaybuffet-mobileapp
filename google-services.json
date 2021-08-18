@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "202467037900",
-    "firebase_url": "https://mealstogo-4bcab-default-rtdb.firebaseio.com",
-    "project_id": "mealstogo-4bcab",
-    "storage_bucket": "mealstogo-4bcab.appspot.com"
+    "project_number": "793894654107",
+    "project_id": "holidaybuffetmobileapp",
+    "storage_bucket": "holidaybuffetmobileapp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:202467037900:android:ef3be80771e687584fa869",
+        "mobilesdk_app_id": "1:793894654107:android:5e51339bd5dcc8be83363e",
         "android_client_info": {
-          "package_name": "holiday_buffet.app"
+          "package_name": "com.holidaybuffet.restaurant"
         }
       },
       "oauth_client": [
         {
-          "client_id": "202467037900-ltkuktrg7c56hbr50qk21tq083f0ih5a.apps.googleusercontent.com",
+          "client_id": "793894654107-v22thdhdcq4u72m1a7t2de8p0s5t1mld.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBS1NYR9hVGm5ox9OGK4rkXUaa8x-gGMJY"
+          "current_key": "AIzaSyCnfVIf3CXNWT-AWM1sc1sK1-JBEora_ck"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "202467037900-ltkuktrg7c56hbr50qk21tq083f0ih5a.apps.googleusercontent.com",
+              "client_id": "793894654107-v22thdhdcq4u72m1a7t2de8p0s5t1mld.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

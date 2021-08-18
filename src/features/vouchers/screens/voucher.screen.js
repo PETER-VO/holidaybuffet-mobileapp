@@ -32,10 +32,6 @@ export const VoucherScreen = ({ navigation }) => {
 		});
 	}, []);
 
-	useEffect(() => {
-		getVouchersByUserIdOnPhone();
-	}, []);
-
 	return (
 		<SafeArea>
 			{isLoadingVoucher ? (
@@ -52,19 +48,11 @@ export const VoucherScreen = ({ navigation }) => {
 									<FadeInView>
 										{item['item'].hasOwnProperty('checkIn') &&
 										item['item'].checkIn > user.noCheckIn ? (
-											<TouchableOpacity
-												onPress={() =>
-													navigation.navigate('VoucherDetail', {
-														voucher: item,
-													})
-												}
-											>
-												<VoucherInfoCardUnable
-													key={item.id}
-													voucher={item}
-													userCheckIn={user.noCheckIn}
-												/>
-											</TouchableOpacity>
+											<VoucherInfoCardUnable
+												key={item.id}
+												voucher={item}
+												userCheckIn={user.noCheckIn}
+											/>
 										) : (
 											<TouchableOpacity
 												onPress={() =>

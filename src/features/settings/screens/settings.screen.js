@@ -111,15 +111,17 @@ export const SettingScreen = ({ navigation }) => {
 							onPress={() => navigation.navigate('ManagementControl')}
 						/>
 					) : null}
-					<SettingsItem
-						style={{ padding: 16 }}
-						title='Scan QRCode'
-						description={`Scan to open HolidayBuffet's menu`}
-						left={(props) => (
-							<List.Icon {...props} color='black' icon='qrcode-scan' />
-						)}
-						onPress={() => navigation.navigate('ScanQRCodeForMenu')}
-					/>
+					{user.role === 'user' ? (
+						<SettingsItem
+							style={{ padding: 16 }}
+							title='Scan QRCode'
+							description={`Scan to open HolidayBuffet's menu`}
+							left={(props) => (
+								<List.Icon {...props} color='black' icon='qrcode-scan' />
+							)}
+							onPress={() => navigation.navigate('ScanQRCodeForMenu')}
+						/>
+					) : null}
 
 					<SettingsItem
 						style={{ padding: 16 }}
