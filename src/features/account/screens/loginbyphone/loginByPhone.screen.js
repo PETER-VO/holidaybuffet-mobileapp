@@ -33,14 +33,8 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 		? firebase.app().options
 		: undefined;
 
-	const {
-		verificationPhoneNumber,
-		verificationId,
-		verificationCode,
-		error,
-		isLoading,
-		clearError,
-	} = useContext(AuthenticationContext);
+	const { verificationPhoneNumber, verificationId, error, clearError } =
+		useContext(AuthenticationContext);
 
 	const onChangePhone = (number) => setPhoneNumber(number);
 
@@ -141,6 +135,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 					<AuthButton
 						mode='contained'
 						onPress={() => {
+							setPhoneNumber('');
 							navigation.goBack();
 							clearError();
 						}}

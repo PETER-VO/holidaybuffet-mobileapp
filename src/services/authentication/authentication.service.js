@@ -30,7 +30,10 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	const snapShot = await userRef.get();
 	let phoneTokens = [];
 	await registerForPushNotificationsAsync()
-		.then((result) => phoneTokens.push(result))
+		.then((result) => {
+			phoneToken = result;
+			phoneTokens.push(result);
+		})
 		.catch((e) => console.log('Register phone token error:', e.message));
 	if (!snapShot.exists) {
 		const { phoneNumber } = userAuth;
@@ -64,7 +67,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 };
 
 export const getAllAvailableVouchers = async () => {
-	console.log('B');
 	const results = [];
 	const vouchersRef = firestore.collection(`availableVouchers`);
 	const snapshot = await vouchersRef.get();
@@ -73,16 +75,15 @@ export const getAllAvailableVouchers = async () => {
 			...doc.data(),
 		});
 	});
-	console.log('available vouchers: ', results);
 	return results;
 };
 
 export const checkPhoneToken = async (user) => {
+	let phoneToken = '';
+	await registerForPushNotificationsAsync()
+		.then((result) => (phoneToken = result))
+		.catch((e) => console.log('Register phone token error:', e.message));
 	if (user) {
-		let phoneToken = '';
-		await registerForPushNotificationsAsync()
-			.then((result) => (phoneToken = result))
-			.catch((e) => console.log('Register phone token error:', e.message));
 		if (!user.phoneTokens.includes(phoneToken)) {
 			user.phoneTokens.push(phoneToken);
 			const userRef = firestore.doc(`users/${user.id}`);
@@ -94,6 +95,7 @@ export const checkPhoneToken = async (user) => {
 
 export const removePhoneToken = async (user) => {
 	if (user && user.phoneTokens) {
+		console.log('OK.T');
 		let phoneToken = '';
 		await registerForPushNotificationsAsync()
 			.then((result) => (phoneToken = result))
@@ -102,7 +104,8 @@ export const removePhoneToken = async (user) => {
 		if (index > -1) {
 			user.phoneTokens.splice(index, 1);
 			const userRef = firestore.doc(`users/${user.id}`);
-			await userRef.update({ phoneTokens: user.phoneTokens });
+			userRef.update({ phoneTokens: user.phoneTokens });
+			console.log('Finish');
 		}
 	}
 };

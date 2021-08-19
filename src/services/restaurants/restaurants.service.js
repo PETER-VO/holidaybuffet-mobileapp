@@ -13,6 +13,19 @@ export const getAllMarketingRequest = async () => {
 	return results;
 };
 
+export const getMenuURLRequest = async () => {
+	let results = null;
+	const menuRef = firestore.collection(`menu`);
+	const snapshot = await menuRef.get();
+	snapshot.forEach((doc) => {
+		results = {
+			id: doc.id,
+			...doc.data(),
+		};
+	});
+	return results;
+};
+
 export const createFeedback = async (userAuth, feedback) => {
 	try {
 		const createdAt = new Date();

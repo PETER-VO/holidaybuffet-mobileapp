@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Text, TouchableOpacity, View, Linking } from 'react-native';
 import styled from 'styled-components/native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
@@ -22,12 +22,13 @@ const LoadingContainer = styled.View`
 `;
 
 export const RestaurantsScreen = ({ navigation }) => {
-	const { isLoading, marketings } = useContext(RestaurantsContext);
+	const { isLoading, marketings, getMenuURL, menuURL } =
+		useContext(RestaurantsContext);
 
 	const navigateToMenuLink = () => {
-		Linking.openURL(
-			'https://phamt6.github.io/menu_fin_eng.pdf?fbclid=IwAR2_fqMSvxW8ZXDlr5mcpFS9wtPhguz13OOT6SzwLMwCAeuW7NvafJsJ2J0'
-		);
+		if (menuURL) {
+			Linking.openURL(menuURL.menuURL);
+		}
 	};
 
 	return (
@@ -41,7 +42,7 @@ export const RestaurantsScreen = ({ navigation }) => {
 				data={marketings}
 				renderItem={({ item }) => {
 					return (
-						<TouchableOpacity onPress={() => console.log('OK')}>
+						<TouchableOpacity onPress={() => Linking.openURL(item.imgURLDrive)}>
 							<Spacer position='bottom' size='large'>
 								<FadeInView>
 									<RestaurantInfoCard restaurant={item} />

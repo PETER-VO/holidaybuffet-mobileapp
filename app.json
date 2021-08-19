@@ -4,7 +4,7 @@
 		"slug": "HolidayBuffet",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./assets/icon-app.png",
+		"icon": "./assets/icon.png",
 		"splash": {
 			"image": "./assets/splash-app.png",
 			"resizeMode": "contain",
@@ -19,7 +19,7 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/icon-app.png",
+				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#FFFFFF"
 			},
 			"package": "com.holidaybuffet.restaurant",

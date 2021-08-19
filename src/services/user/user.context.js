@@ -55,7 +55,10 @@ export const UserContextProvider = ({ children }) => {
 	const checkInForUser = () => {};
 
 	useEffect(() => {
-		getAllUsers();
+		function callback() {
+			getAllUsers();
+		}
+		callback();
 	}, []);
 
 	return (

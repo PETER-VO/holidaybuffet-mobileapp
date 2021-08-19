@@ -29,13 +29,10 @@ export const VoucherContextProvider = ({ children }) => {
 	}, [filteredCheckIns]);
 
 	useEffect(() => {
-		checkPhoneTokenForUser(user);
-	}, []);
-
-	useEffect(() => {
-		setIsLoadingVoucher(true);
-		if (!user.isNewCustomer) {
-			console.log('isNewCustomer: ', user.isNewCustomer);
+		console.log('User: ', user);
+		if (user && !user.isNewCustomer) {
+			console.log('Ok?');
+			checkPhoneTokenForUser(user);
 			getVouchersByUserIdOnPhone();
 		}
 	}, [user]);

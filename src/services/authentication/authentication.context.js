@@ -17,11 +17,13 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [verificationId, setVerificationId] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
+	const [isLogout, setIsLogout] = useState(false);
 
 	useEffect(() => {
 		const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-			setIsLoading(true);
+			console.log('A');
 			if (user) {
+				console.log('B');
 				const userRef = await createUserProfileDocument(user, {
 					role: 'user',
 					customerType: 'New Customer',
@@ -34,31 +36,26 @@ export const AuthenticationContextProvider = ({ children }) => {
 					setUser({
 						...userObj,
 					});
-					// const jsonValue = JSON.stringify(userObj);
-					// await AsyncStorage.setItem(`@users`, jsonValue);
-					// const value = AsyncStorage.getItem(`@users`);
-					// value.then((result) => {
-					// 	setUser(JSON.parse(result));
-					// });
+					const jsonValue = JSON.stringify(userObj);
+					await AsyncStorage.setItem(`@users`, jsonValue);
 				});
-				setIsLoading(false);
+			} else {
+				console.log('Day ne: ');
+				const value = AsyncStorage.getItem(`@users`);
+				value.then((result) => {
+					setUser(JSON.parse(result));
+				});
 			}
-			// } else {
-			// 	// Offline
-			// 	const value = AsyncStorage.getItem(`@users`);
-			// 	value.then((result) => {
-			// 		setUser(JSON.parse(result));
-			// 	});
-			// 	setIsLoading(false);
-			// }
 		});
-		return () => {
-			unsubscribe();
-		};
-	}, []);
+		return () => unsubscribe();
+	}, [isLogout]);
 
 	const checkPhoneTokenForUser = (user) => {
 		checkPhoneToken(user);
+	};
+
+	const removePhoneTokenForUser = async () => {
+		await removePhoneToken(user);
 	};
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
@@ -66,6 +63,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 		if (!phoneNumber) {
 			return;
+			user;
 		}
 
 		const POSTAL_CODE = '+358';
@@ -107,12 +105,17 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const onLogout = async () => {
-		await AsyncStorage.removeItem('@users');
-		await removePhoneToken(user);
-		await firebase.auth().signOut();
-		setUser(null);
-		setVerificationId(null);
-		setError([]);
+		AsyncStorage.removeItem('@users');
+		firebase
+			.auth()
+			.signOut()
+			.then(() => {
+				console.log('Vao');
+				setUser(null);
+				setIsLogout(true);
+				setVerificationId(null);
+				setError([]);
+			});
 	};
 
 	const clearError = () => {
@@ -122,7 +125,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 	return (
 		<AuthenticationContext.Provider
 			value={{
-				isAuthenticated: user,
+				isAuthenticated: !!user,
 				user,
 				isLoading,
 				error,
@@ -133,6 +136,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				verificationId,
 				clearError,
 				processVerificationCode,
+				removePhoneTokenForUser,
 			}}
 		>
 			{children}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import LottieView from 'lottie-react-native';
 
 import {
@@ -10,20 +10,12 @@ import {
 	AnimationWrapper,
 } from '../components/account.styles';
 import { Image } from 'react-native';
+import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 
 export const AccountScreen = ({ navigation }) => {
 	return (
 		<AccountBackground>
 			<AccountCover />
-			<AnimationWrapper>
-				<LottieView
-					key='animation'
-					autoPlay
-					loop
-					resizeMode='cover'
-					source={require('../../../../assets/cute-sushi.json')}
-				/>
-			</AnimationWrapper>
 			<Image
 				style={{
 					height: 100,
@@ -39,7 +31,9 @@ export const AccountScreen = ({ navigation }) => {
 				<AuthButton
 					icon='phone-lock-outline'
 					mode='contained'
-					onPress={() => navigation.navigate('LoginByPhone')}
+					onPress={() => {
+						navigation.navigate('LoginByPhone');
+					}}
 				>
 					Login
 				</AuthButton>

@@ -1,5 +1,8 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { getAllMarketingRequest } from './restaurants.service';
+import {
+	getAllMarketingRequest,
+	getMenuURLRequest,
+} from './restaurants.service';
 
 export const RestaurantsContext = createContext();
 
@@ -7,6 +10,7 @@ export const RestaurantsContextProvider = ({ children }) => {
 	const [marketings, setMarketings] = useState([]);
 	const [isLoading, setIsLoading] = useState([]);
 	const [error, setError] = useState(null);
+	const [menuURL, setMenuURL] = useState('');
 	const [feedback, setFeedback] = useState(null);
 
 	const retrieveMarketings = () => {
@@ -25,6 +29,12 @@ export const RestaurantsContextProvider = ({ children }) => {
 		}, 1000);
 	};
 
+	const getMenuURL = () => {
+		getMenuURLRequest()
+			.then((result) => setMenuURL(result))
+			.catch((e) => console.log(e.message));
+	};
+
 	const addFeedback = (user, feedback) => {
 		setIsLoading(true);
 		createFeedback(user, feedback)
@@ -40,11 +50,12 @@ export const RestaurantsContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		retrieveMarketings();
+		getMenuURL();
 	}, []);
 
 	return (
 		<RestaurantsContext.Provider
-			value={{ marketings, isLoading, error, addFeedback }}
+			value={{ marketings, isLoading, error, addFeedback, getMenuURL, menuURL }}
 		>
 			{children}
 		</RestaurantsContext.Provider>

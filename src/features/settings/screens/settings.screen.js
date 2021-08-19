@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 import { Alert } from 'react-native';
 import { ImageQRCode } from '../../../components/utils/imageQRCode.component';
 import { ScrollView } from 'react-native';
+import { removePhoneToken } from '../../../services/authentication/authentication.service';
 
 const SettingsItem = styled(List.Item)`
 	padding: ${(props) => props.theme.space[3]};
@@ -16,11 +17,11 @@ const AvatarContainer = styled.View`
 `;
 
 export const SettingScreen = ({ navigation }) => {
-	const [coinExpanded, setCoinExpanded] = useState(false);
-	const [array, setArray] = useState([1, 2, 3]);
-	const { onLogout, user } = useContext(AuthenticationContext);
+	const { onLogout, user, removePhoneTokenForUser } = useContext(
+		AuthenticationContext
+	);
 
-	const alertConfirmLogout = () =>
+	const alertConfirmLogout = () => {
 		Alert.alert('Do you want to logout', 'My Alert Msg', [
 			{
 				text: 'Cancel',
@@ -30,10 +31,16 @@ export const SettingScreen = ({ navigation }) => {
 			{
 				text: 'OK',
 				onPress: () => {
-					onLogout();
+					setTimeout(() => {
+						removePhoneTokenForUser();
+					}, 120);
+					setTimeout(() => {
+						onLogout();
+					}, 4000);
 				},
 			},
 		]);
+	};
 
 	return (
 		<SafeArea>
@@ -127,7 +134,9 @@ export const SettingScreen = ({ navigation }) => {
 						style={{ padding: 16 }}
 						title='Logout'
 						left={(props) => <List.Icon {...props} color='black' icon='door' />}
-						onPress={alertConfirmLogout}
+						onPress={() => {
+							alertConfirmLogout();
+						}}
 					/>
 				</List.Section>
 			</ScrollView>

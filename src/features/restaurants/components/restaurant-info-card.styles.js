@@ -9,9 +9,19 @@ export const RestaurantCard = styled(Card)`
 
 export const RestaurantCardCover = styled(Card.Cover)`
 	flex: 1;
-	width: 400px;
-	height: 280px;
+	resize-mode: contain;
+	height: 235px;
 	padding: 20px;
+	background-color: ${(props) => props.theme.colors.bg.primary};
+`;
+
+export const ImageCardCoverContainer = styled(Card)`
+	background-color: ${(props) => props.theme.colors.bg.primary};
+	padding: 5px;
+`;
+
+export const ImageCardCover = styled(Card.Cover)`
+	resize-mode: contain;
 	background-color: ${(props) => props.theme.colors.bg.primary};
 `;
 
