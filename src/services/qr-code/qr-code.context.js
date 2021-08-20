@@ -64,6 +64,7 @@ export const QRCodeContextProvider = ({ children }) => {
 			setSplittedQRCode(arrayCode);
 			getUserByUserId(arrayCode[0])
 				.then(async (result) => {
+					console.log('result: ', result);
 					await updateListCheckInByUser(result)
 						.then((userObj) => {
 							setUserById(userObj);
@@ -236,6 +237,7 @@ export const QRCodeContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (isVoucherError && neededData) {
+			console.log('Ok');
 			addAllUserInformationAfterScanQRCode({
 				...neededData,
 				status: false,

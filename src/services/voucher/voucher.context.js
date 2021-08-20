@@ -22,17 +22,14 @@ export const VoucherContextProvider = ({ children }) => {
 	const [vouchers, setVouchers] = useState([]);
 	const [quantity, setQuantity] = useState(0);
 	const { users, getAllUsers } = useContext(UserContext);
-	const { user, checkPhoneTokenForUser } = useContext(AuthenticationContext);
+	const { user } = useContext(AuthenticationContext);
 
 	useEffect(() => {
 		setQuantity(filteredCheckIns.length);
 	}, [filteredCheckIns]);
 
 	useEffect(() => {
-		console.log('User: ', user);
 		if (user && !user.isNewCustomer) {
-			console.log('Ok?');
-			checkPhoneTokenForUser(user);
 			getVouchersByUserIdOnPhone();
 		}
 	}, [user]);

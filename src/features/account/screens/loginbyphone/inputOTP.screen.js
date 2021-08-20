@@ -24,7 +24,7 @@ import { ActivityIndicator, Colors } from 'react-native-paper';
 export const InputOTPScreen = ({ navigation, route }) => {
 	let clockCall = null;
 	const lengthInput = 6;
-	const defaultCountDown = 30;
+	const defaultCountDown = 25;
 	const [countDown, setCountDown] = useState(defaultCountDown);
 	const recaptchaVerifier = useRef(null);
 	const [enableResend, setEnableResend] = useState(false);
@@ -40,6 +40,8 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		clearError,
 		processVerificationCode,
 	} = useContext(AuthenticationContext);
+
+	const onChangeCode = (number) => setCode(number);
 
 	const decrementClock = () => {
 		if (countDown === 0) {
@@ -111,13 +113,11 @@ export const InputOTPScreen = ({ navigation, route }) => {
 					<ViewInput>
 						<CodeInput
 							ref={(input) => input && setInputRef(input)}
-							onChangeText={(n) => setCode(n)}
+							onChangeText={onChangeCode}
 							style={{ width: 0, height: 0 }}
 							value={code}
 							maxLength={lengthInput}
-							returnKeyType='done'
-							keyboardType='numeric'
-							autoFocus={true}
+							secureTextEntry={false}
 						/>
 						<TouchableOpacity
 							onPress={() => {

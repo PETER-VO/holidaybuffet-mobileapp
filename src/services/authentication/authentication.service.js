@@ -24,9 +24,12 @@ export const confirmCodeRequest = async (verificationId, code) => {
 	return await firebase.auth().signInWithCredential(credential);
 };
 
+var phoneToken = '';
+
 export const createUserProfileDocument = async (userAuth, additionalData) => {
 	if (!userAuth) return;
-	const userRef = firestore.doc(`users/${userAuth.uid}`);
+	const { uid, phoneNumber } = userAuth.user;
+	const userRef = firestore.doc(`users/${uid}`);
 	const snapShot = await userRef.get();
 	let phoneTokens = [];
 	await registerForPushNotificationsAsync()
@@ -35,8 +38,8 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 			phoneTokens.push(result);
 		})
 		.catch((e) => console.log('Register phone token error:', e.message));
+
 	if (!snapShot.exists) {
-		const { phoneNumber } = userAuth;
 		const createdAt = new Date();
 		try {
 			await userRef.set({
@@ -78,24 +81,19 @@ export const getAllAvailableVouchers = async () => {
 	return results;
 };
 
-export const checkPhoneToken = async (user) => {
-	let phoneToken = '';
-	await registerForPushNotificationsAsync()
-		.then((result) => (phoneToken = result))
-		.catch((e) => console.log('Register phone token error:', e.message));
+export const checkPhoneToken = (user) => {
 	if (user) {
 		if (!user.phoneTokens.includes(phoneToken)) {
 			user.phoneTokens.push(phoneToken);
 			const userRef = firestore.doc(`users/${user.id}`);
-			await userRef.update({ phoneTokens: user.phoneTokens });
+			userRef.update({ phoneTokens: user.phoneTokens });
+			console.log('Done');
 		}
-		// Cannot get phoneToken from user of snapshot.data();
 	}
 };
 
 export const removePhoneToken = async (user) => {
 	if (user && user.phoneTokens) {
-		console.log('OK.T');
 		let phoneToken = '';
 		await registerForPushNotificationsAsync()
 			.then((result) => (phoneToken = result))
@@ -104,32 +102,13 @@ export const removePhoneToken = async (user) => {
 		if (index > -1) {
 			user.phoneTokens.splice(index, 1);
 			const userRef = firestore.doc(`users/${user.id}`);
-			userRef.update({ phoneTokens: user.phoneTokens });
-			console.log('Finish');
+			await userRef.update({ phoneTokens: user.phoneTokens });
 		}
 	}
 };
 
 export const getUserFromId = async (id) => {
 	return (userRef = firestore.doc(`users/${id}`));
-};
-
-export const incrementCreditRequest = async (data) => {
-	const userRef = firestore.doc(`users/${data}`);
-	let updatedCredit = 1;
-	await userRef.onSnapshot((snapShot) => {
-		const { credits } = snapShot.data();
-		updatedCredit += credits;
-	});
-	try {
-		setTimeout(() => {
-			userRef.update({
-				credits: updatedCredit,
-			});
-		}, 2000);
-	} catch (e) {
-		console.log('Error increment credit: ', e.message);
-	}
 };
 
 export const registerForPushNotificationsAsync = async () => {

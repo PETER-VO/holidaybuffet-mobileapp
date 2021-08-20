@@ -1,4 +1,5 @@
 import { firestore } from '../../firebase/firebase.utils';
+import { formattedDateAndTime } from '../../components/utils/useful-method';
 
 export const getAllUsersRequest = async () => {
 	const results = [];
@@ -15,8 +16,12 @@ export const getAllUsersRequest = async () => {
 
 export const getAllScannedListRequest = async () => {
 	const results = [];
+	var twoDays = 60 * 60 * 24 * 2 * 1000;
+	var twoWeeksTime = new Date(new Date().getTime() - twoDays);
+
 	const scannedListRef = firestore
 		.collection('scannedLists')
+		.where('createdAt', '>=', twoWeeksTime)
 		.orderBy('createdAt', 'desc')
 		.limit(10);
 	const snapshot = await scannedListRef.get();
@@ -57,18 +62,16 @@ export const getAllFeedbacksByUserIdRequest = async (userId) => {
 	return results;
 };
 
-export const updateListCheckInByUserIdRequest = async (
-	userId,
-	listDateCheckIn
-) => {
+export const updateListCheckInByUserIdRequest = async (user) => {
 	try {
+		const { id, listDateCheckIn, noCheckIn } = user;
 		let result = null;
 		const createdAt = new Date();
 		listDateCheckIn.push(createdAt);
-		const noCheckIn = listDateCheckIn.length;
-		const userRef = firestore.doc(`users/${userId}`);
+		let checkIn = noCheckIn + 1;
+		const userRef = firestore.doc(`users/${id}`);
 		await userRef.update({ listDateCheckIn });
-		await userRef.update({ noCheckIn });
+		await userRef.update({ noCheckIn: checkIn });
 		const doc = await userRef.get();
 		if (doc.exists) {
 			result = {

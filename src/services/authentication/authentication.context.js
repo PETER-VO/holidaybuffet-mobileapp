@@ -17,46 +17,39 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [verificationId, setVerificationId] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
-	const [isLogout, setIsLogout] = useState(false);
+	const [myFunction, setMyFunction] = useState(null);
+
+	const onAuth = async (user) => {
+		const userRef = await createUserProfileDocument(user, {
+			role: 'user',
+			customerType: 'New Customer',
+			noCheckIn: 0,
+			isNewCustomer: true,
+			listDateCheckIn: [],
+		});
+		const unsubscribe = await userRef.onSnapshot(async (snapShot) => {
+			const userObj = { id: snapShot.id, ...snapShot.data() };
+			setUser({
+				...userObj,
+			});
+			checkPhoneToken(userObj);
+			const jsonValue = JSON.stringify(userObj);
+			await AsyncStorage.setItem(`@users`, jsonValue);
+		});
+		console.log('unsubscribe: ', unsubscribe);
+		setMyFunction(() => unsubscribe);
+	};
 
 	useEffect(() => {
-		const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-			console.log('A');
-			if (user) {
-				console.log('B');
-				const userRef = await createUserProfileDocument(user, {
-					role: 'user',
-					customerType: 'New Customer',
-					noCheckIn: 0,
-					isNewCustomer: true,
-					listDateCheckIn: [],
-				});
-				await userRef.onSnapshot(async (snapShot) => {
-					const userObj = { id: snapShot.id, ...snapShot.data() };
-					setUser({
-						...userObj,
-					});
-					const jsonValue = JSON.stringify(userObj);
-					await AsyncStorage.setItem(`@users`, jsonValue);
-				});
-			} else {
-				console.log('Day ne: ');
-				const value = AsyncStorage.getItem(`@users`);
+		if (!user) {
+			const value = AsyncStorage.getItem(`@users`);
+			if (value) {
 				value.then((result) => {
 					setUser(JSON.parse(result));
 				});
 			}
-		});
-		return () => unsubscribe();
-	}, [isLogout]);
-
-	const checkPhoneTokenForUser = (user) => {
-		checkPhoneToken(user);
-	};
-
-	const removePhoneTokenForUser = async () => {
-		await removePhoneToken(user);
-	};
+		}
+	}, []);
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);
@@ -93,7 +86,8 @@ export const AuthenticationContextProvider = ({ children }) => {
 		}
 		setProcessVerificationCode(true);
 		confirmCodeRequest(verificationId, code)
-			.then(() => {
+			.then((result) => {
+				onAuth(result);
 				setProcessVerificationCode(false);
 			})
 			.catch((e) => {
@@ -105,21 +99,23 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const onLogout = async () => {
-		AsyncStorage.removeItem('@users');
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				console.log('Vao');
-				setUser(null);
-				setIsLogout(true);
-				setVerificationId(null);
-				setError([]);
-			});
+		if (myFunction) {
+			await myFunction();
+		}
+		await removePhoneToken(user);
+		await AsyncStorage.removeItem('@users');
+		await firebase.auth().signOut();
+		setUser(null);
+		setVerificationId(null);
+		setError([]);
 	};
 
 	const clearError = () => {
 		setError([]);
+	};
+
+	const removePhoneTokenForUser = (user) => {
+		return removePhoneToken(user);
 	};
 
 	return (
@@ -132,57 +128,14 @@ export const AuthenticationContextProvider = ({ children }) => {
 				onLogout,
 				verificationPhoneNumber,
 				verificationCode,
-				checkPhoneTokenForUser,
 				verificationId,
 				clearError,
 				processVerificationCode,
 				removePhoneTokenForUser,
+				setUser,
 			}}
 		>
 			{children}
 		</AuthenticationContext.Provider>
 	);
 };
-
-// const onRegister = (email, password, repeatedPassword) => {
-// 	setIsLoading(true);
-// 	if (!email || !password || !repeatedPassword) {
-// 		setError('All information is not empty!');
-// 		return;
-// 	}
-
-// 	if (password !== repeatedPassword) {
-// 		setError('Error: Passwords do not match');
-// 		return;
-// 	}
-
-// 	firebase
-// 		.auth()
-// 		.createUserWithEmailAndPassword(email, password)
-// 		.then((u) => {
-// 			setUser(u);
-// 			setIsLoading(false);
-// 		})
-// 		.catch(() => {
-// 			setIsLoading(false);
-// 			setError(e.toString());
-// 		});
-// };
-
-// const onLogin = (email, password) => {
-// 	setIsLoading(true);
-// 	if (!email || !password) {
-// 		setError('All information is not empty!');
-// 		return;
-// 	}
-
-// 	loginRequest(email, password)
-// 		.then((user) => {
-// 			setUser(user);
-// 			setIsLoading(false);
-// 		})
-// 		.catch((e) => {
-// 			setIsLoading(false);
-// 			setError(e.toString());
-// 		});
-// };

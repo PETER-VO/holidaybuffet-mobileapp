@@ -10,7 +10,6 @@ import { ScanFailedScreen } from '../../features/settings/screens/qrcode/scan-fa
 export const Navigation = () => {
 	const { isAuthenticated } = useContext(AuthenticationContext);
 	const [isLoading, setIsLoading] = useState(true);
-	console.log('isAuthenticated: ', isAuthenticated);
 	useEffect(() => {
 		async function callback_() {
 			setTimeout(() => {

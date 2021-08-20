@@ -9,7 +9,6 @@ const Stack = createStackNavigator();
 
 export const AccountNavigator = () => (
 	<Stack.Navigator headerMode='none'>
-		{/* <Stack.Screen name='Main' component={RestaurantFeedback} /> */}
 		<Stack.Screen name='Main' component={AccountScreen} />
 		<Stack.Screen name='LoginByPhone' component={LoginByPhoneScreen} />
 		<Stack.Screen name='InputOTP' component={InputOTPScreen} />

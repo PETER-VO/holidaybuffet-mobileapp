@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { List } from 'react-native-paper';
 import { AuthenticationContext } from '../../../services/authentication/authentication.context';
 import { SafeArea } from '../../../components/utils/safe-area.component';
 import styled from 'styled-components/native';
-import { Alert } from 'react-native';
+import { Alert, RefreshControl } from 'react-native';
 import { ImageQRCode } from '../../../components/utils/imageQRCode.component';
 import { ScrollView } from 'react-native';
-import { removePhoneToken } from '../../../services/authentication/authentication.service';
+import { UserContext } from '../../../services/user/user.context';
 
 const SettingsItem = styled(List.Item)`
 	padding: ${(props) => props.theme.space[3]};
@@ -16,13 +16,30 @@ const AvatarContainer = styled.View`
 	align-items: center;
 `;
 
+const wait = (timeout) => {
+	return new Promise((resolve) => {
+		setTimeout(resolve, timeout);
+	});
+};
+
 export const SettingScreen = ({ navigation }) => {
-	const { onLogout, user, removePhoneTokenForUser } = useContext(
-		AuthenticationContext
-	);
+	const { onLogout, user, setUser } = useContext(AuthenticationContext);
+	const { getUserByUserId } = useContext(UserContext);
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+
+		wait(2000).then(() => {
+			getUserByUserId(user.id).then((result) => {
+				setUser(result);
+			});
+			setRefreshing(false);
+		});
+	}, []);
 
 	const alertConfirmLogout = () => {
-		Alert.alert('Do you want to logout', 'My Alert Msg', [
+		Alert.alert('Do you want to logout?', '', [
 			{
 				text: 'Cancel',
 				onPress: () => console.log('Cancel Pressed'),
@@ -31,12 +48,7 @@ export const SettingScreen = ({ navigation }) => {
 			{
 				text: 'OK',
 				onPress: () => {
-					setTimeout(() => {
-						removePhoneTokenForUser();
-					}, 120);
-					setTimeout(() => {
-						onLogout();
-					}, 4000);
+					onLogout();
 				},
 			},
 		]);
@@ -44,7 +56,11 @@ export const SettingScreen = ({ navigation }) => {
 
 	return (
 		<SafeArea>
-			<ScrollView>
+			<ScrollView
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+			>
 				<AvatarContainer style={{ padding: 30 }}>
 					<ImageQRCode value={`${user.id},1`} style={{ marginBottom: 0 }} />
 				</AvatarContainer>
@@ -66,25 +82,6 @@ export const SettingScreen = ({ navigation }) => {
 							<List.Icon {...props} color='black' icon='calendar-check' />
 						)}
 					/>
-					{/* <List.Accordion
-					style={{ padding: 16 }}
-					title='Credits'
-					description={user.credits ? `${user.credits} coins` : '0 coins'}
-					left={(props) => (
-						<List.Icon
-							{...props}
-							color='black'
-							style={{ marginLeft: 0 }}
-							icon='piggy-bank'
-						/>
-					)}
-					expanded={coinExpanded}
-					onPress={() => setCoinExpanded(!coinExpanded)}
-				>
-					{array.map((e, i, a) => {
-						return <CouponComponent key={i} />;
-					})}
-				</List.Accordion> */}
 					{user.role === 'admin' || user.role === 'manager' ? (
 						<>
 							<SettingsItem

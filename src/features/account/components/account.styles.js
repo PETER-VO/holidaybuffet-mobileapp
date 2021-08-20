@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { Button } from 'react-native-paper';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native';
 import { colors } from '../../../infrastruture/theme/colors';
 import { Text } from '../../../components/typography/text.component';
 

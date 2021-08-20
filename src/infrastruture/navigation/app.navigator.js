@@ -49,7 +49,6 @@ export const AppNavigator = () => (
 								})}
 							/>
 							<Tab.Screen name='Settings' component={SettingNavigator} />
-
 							<Tab.Screen name='Restaurants' component={RestaurantsNavigator} />
 						</Tab.Navigator>
 					</VoucherContextProvider>
