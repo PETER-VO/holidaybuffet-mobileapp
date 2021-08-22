@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
 import { SafeArea } from '../../../../components/utils/safe-area.component';

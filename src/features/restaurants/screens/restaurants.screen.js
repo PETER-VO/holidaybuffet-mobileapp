@@ -1,5 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Text, TouchableOpacity, View, Linking } from 'react-native';
+import React, { useContext, useState, useCallback } from 'react';
+import {
+	Text,
+	TouchableOpacity,
+	View,
+	Linking,
+	Alert,
+	RefreshControl,
+} from 'react-native';
 import styled from 'styled-components/native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 
@@ -10,7 +17,7 @@ import { Spacer } from '../../../components/spacer/spacer.component';
 import { RestaurantsContext } from '../../../services/restaurants/restaurants.context';
 import { RestaurantList } from '../components/restaurant-list.styles';
 import { FadeInView } from '../../../components/animations/fade.animation';
-import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Loading = styled(ActivityIndicator)`
 	margin-left: -25px;
@@ -21,15 +28,34 @@ const LoadingContainer = styled.View`
 	left: 50%;
 `;
 
-export const RestaurantsScreen = ({ navigation }) => {
-	const { isLoading, marketings, getMenuURL, menuURL } =
+const wait = (timeout) => {
+	return new Promise((resolve) => {
+		setTimeout(resolve, timeout);
+	});
+};
+
+export const RestaurantsScreen = () => {
+	const { isLoading, marketings, menuURL, retrieveMarketings } =
 		useContext(RestaurantsContext);
 
 	const navigateToMenuLink = () => {
 		if (menuURL) {
 			Linking.openURL(menuURL.menuURL);
+		} else {
+			Alert.alert('Opp! You need to connect the Internet!');
 		}
 	};
+
+	const [refreshing, setRefreshing] = useState(false);
+
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+
+		wait(2000).then(() => {
+			retrieveMarketings();
+			setRefreshing(false);
+		});
+	}, []);
 
 	return (
 		<SafeArea>
@@ -52,6 +78,9 @@ export const RestaurantsScreen = ({ navigation }) => {
 					);
 				}}
 				keyExtractor={(item) => item.name}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
 			/>
 
 			<View

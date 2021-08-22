@@ -1,13 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { AuthenticationContext } from '../authentication/authentication.context';
+import React, { createContext, useState } from 'react';
 import { getAllPhoneTokens } from './notification.service';
 
 export const NotificationContext = createContext();
 
 export const NotificationContextProvider = ({ children }) => {
-	const [error, setError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const { user } = useContext(AuthenticationContext);
 
 	const sendNotificationAllDevices = (title, body) => {
 		if (!title) {
@@ -63,6 +60,7 @@ export const NotificationContextProvider = ({ children }) => {
 };
 
 async function sendPushNotification(token, title, body) {
+	console.log('Vao roi ne:', token);
 	const message = {
 		to: token,
 		sound: 'default',

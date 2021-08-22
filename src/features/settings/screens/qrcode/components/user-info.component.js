@@ -7,10 +7,7 @@ import {
 	TextTitle,
 	TitleCustomTradesForm,
 } from './show-user-inform.styles';
-import {
-	formattedDate,
-	formattedDateAndTime,
-} from '../../../../../components/utils/useful-method';
+import { formattedDateAndTime } from '../../../../../components/utils/useful-method';
 
 export const UserInfo = ({ userInfo, feedbacks, existedVouchers }) => {
 	const { id, phoneNumber, noCheckIn, listDateCheckIn, customerType } =

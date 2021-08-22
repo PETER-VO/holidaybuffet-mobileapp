@@ -4,13 +4,9 @@ import {
 	Section,
 	TextValue,
 	TextTitle,
-	TitleCustomTradesForm,
 	Number,
 } from './show-user-inform.styles';
-import {
-	formattedDate,
-	formattedDateAndTime,
-} from '../../../../../components/utils/useful-method';
+import { formattedDateAndTime } from '../../../../../components/utils/useful-method';
 
 export const FeedbackInfo = ({ feedback, serial }) => {
 	const { content, createdAt, rating, nameFood } = feedback;

@@ -5,7 +5,6 @@ import {
 } from '@react-navigation/stack';
 import { SettingScreen } from '../../features/settings/screens/settings.screen';
 import { NotificationScreen } from '../../features/notification/notification.screen';
-import { NotificationContextProvider } from '../../services/notification/notification.context';
 import { AccountScreen } from '../../features/account/screens/account.screen';
 import { FavouritesScreen } from '../../features/settings/screens/favourites/favourties.screen';
 import { ManagementControl } from '../../features/settings/screens/general-managements/screens/management-control.screen';

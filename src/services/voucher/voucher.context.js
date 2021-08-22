@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { AuthenticationContext } from '../authentication/authentication.context';
-import { NotificationContext } from '../notification/notification.context';
 import { UserContext } from '../user/user.context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
 	addVoucherToUserId,
 	getAllVouchersByUserIdRequest,
@@ -19,20 +19,33 @@ export const VoucherContextProvider = ({ children }) => {
 	const [isLoadingVoucher, setIsLoadingVoucher] = useState(false);
 	const [filteredCheckIns, setFilteredCheckIns] = useState([]);
 	const [level, setLevel] = useState('');
-	const [vouchers, setVouchers] = useState([]);
+	const [vouchers, setVouchers] = useState();
 	const [quantity, setQuantity] = useState(0);
 	const { users, getAllUsers } = useContext(UserContext);
-	const { user } = useContext(AuthenticationContext);
+	const { user, isDoneLogin } = useContext(AuthenticationContext);
 
 	useEffect(() => {
 		setQuantity(filteredCheckIns.length);
 	}, [filteredCheckIns]);
 
 	useEffect(() => {
-		if (user && !user.isNewCustomer) {
+		getVouchersByUserIdOnPhone();
+	}, []);
+
+	useEffect(() => {
+		if (!vouchers) {
+			AsyncStorage.getItem(`@vouchers`).then((value) => {
+				setVouchers(JSON.parse(value));
+			});
+		}
+	}, [vouchers]);
+
+	//For new users
+	useEffect(() => {
+		if (isDoneLogin) {
 			getVouchersByUserIdOnPhone();
 		}
-	}, [user]);
+	}, [isDoneLogin]);
 
 	const deleteVoucher = (voucherId) => {
 		deleteVoucherByUserId(user.id, voucherId);
@@ -91,12 +104,16 @@ export const VoucherContextProvider = ({ children }) => {
 					}
 					return true;
 				});
-				setVouchers(filteredVoucher);
+				if (filteredVoucher && filteredVoucher.length !== 0) {
+					setVouchers(filteredVoucher);
+					const jsonValue = JSON.stringify(results);
+					AsyncStorage.setItem(`@vouchers`, jsonValue);
+				}
 			})
 			.catch((e) => console.log('Error loading vouchers ', e.message));
 		setTimeout(() => {
 			setIsLoadingVoucher(false);
-		}, 1500);
+		}, 1800);
 	};
 
 	const filterUsersByCheckInNumber = async (num_1, num_2) => {

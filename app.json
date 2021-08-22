@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "HolidayBuffet",
 		"slug": "HolidayBuffet",
-		"version": "1.0.0",
+		"version": "2.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"splash": {
@@ -15,7 +15,8 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"buildNumber": 2
 		},
 		"android": {
 			"adaptiveIcon": {
@@ -24,10 +25,17 @@
 			},
 			"package": "com.holidaybuffet.restaurant",
 			"useNextNotificationsApi": true,
-			"googleServicesFile": "./google-services.json"
+			"googleServicesFile": "./google-services.json",
+			"versionCode": 2,
+			"permissions": [
+				"CAMERA",
+				"READ_CONTACTS",
+				"RECORD_AUDIO",
+				"READ_PHONE_STATE"
+			]
 		},
 		"notification": {
-			"icon": "./assets/icon-app.png",
+			"icon": "./assets/icon.png",
 			"color": "#000000",
 			"androidMode": "default",
 			"androidCollapsedTitle": "HolidayBuffet",

@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { View, Button, Platform, ScrollView } from 'react-native';
 import { TextInput } from 'react-native';
 import { Text } from '../../components/typography/text.component';
@@ -21,8 +21,6 @@ export const NotificationScreen = () => {
 	const [notification, setNotification] = useState(false);
 	const [title, setTitle] = useState('');
 	const [subTitle, setSubTitle] = useState('');
-	const notificationListener = useRef();
-	const responseListener = useRef();
 	const { sendNotificationAllDevices, isLoading } =
 		useContext(NotificationContext);
 
@@ -88,54 +86,3 @@ export const NotificationScreen = () => {
 		</SafeArea>
 	);
 };
-
-async function sendPushNotification(token, title, body) {
-	const message = {
-		to: token,
-		sound: 'default',
-		title: title,
-		body: body,
-		data: { someData: 'goes here' },
-	};
-
-	await fetch('https://exp.host/--/api/v2/push/send', {
-		method: 'POST',
-		headers: {
-			Accept: 'application/json',
-			'Accept-encoding': 'gzip, deflate',
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(message),
-	});
-}
-
-async function registerForPushNotificationsAsync() {
-	let token;
-	if (Constants.isDevice) {
-		const { status: existingStatus } =
-			await Notifications.getPermissionsAsync();
-		let finalStatus = existingStatus;
-		if (existingStatus !== 'granted') {
-			const { status } = await Notifications.requestPermissionsAsync();
-			finalStatus = status;
-		}
-		if (finalStatus !== 'granted') {
-			alert('Failed to get push token for push notification!');
-			return;
-		}
-		token = (await Notifications.getExpoPushTokenAsync()).data;
-	} else {
-		alert('Must use physical device for Push Notifications');
-	}
-
-	if (Platform.OS === 'android') {
-		Notifications.setNotificationChannelAsync('default', {
-			name: 'default',
-			importance: Notifications.AndroidImportance.MAX,
-			vibrationPattern: [0, 250, 250, 250],
-			lightColor: '#FF231F7C',
-		});
-	}
-
-	return token;
-}

@@ -38,7 +38,7 @@ export const VoucherScreen = ({ navigation }) => {
 				<View style={{ justifyContent: 'center' }}>
 					<ActivityIndicator animating={true} color={Colors.blue300} />
 				</View>
-			) : vouchers.length !== 0 ? (
+			) : vouchers && vouchers.length !== 0 ? (
 				<>
 					<VoucherList
 						data={vouchers}

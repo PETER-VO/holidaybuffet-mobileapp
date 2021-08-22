@@ -4,7 +4,6 @@ import {
 	Section,
 	TextValue,
 	TextTitle,
-	TitleCustomTradesForm,
 	Number,
 } from './show-user-inform.styles';
 import {

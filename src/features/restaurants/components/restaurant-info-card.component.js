@@ -3,16 +3,12 @@ import { Image, View } from 'react-native';
 import { Text } from '../../../components/typography/text.component';
 import { SvgXml } from 'react-native-svg';
 import star from '../../../../assets/star';
-import open from '../../../../assets/open';
-import { Spacer } from '../../../components/spacer/spacer.component';
 import {
 	RestaurantCard,
 	RestaurantCardCover,
 	Info,
 	Section,
-	SectionEnd,
 	Rating,
-	Icon,
 	Address,
 } from './restaurant-info-card.styles';
 import { Favourite } from '../../../components/favourites/favourite.component';

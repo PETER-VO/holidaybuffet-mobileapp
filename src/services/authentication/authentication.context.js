@@ -1,4 +1,10 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, {
+	useState,
+	createContext,
+	useEffect,
+	useContext,
+	useRef,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as firebase from 'firebase';
 import {
@@ -7,7 +13,10 @@ import {
 	confirmCodeRequest,
 	checkPhoneToken,
 	removePhoneToken,
+	getUserRefByUserId,
 } from './authentication.service';
+import { UserContext } from '../user/user.context';
+
 export const AuthenticationContext = createContext();
 
 export const AuthenticationContextProvider = ({ children }) => {
@@ -17,6 +26,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 	const [verificationId, setVerificationId] = useState(null);
 	const [processVerificationCode, setProcessVerificationCode] = useState(false);
 	const [error, setError] = useState([]);
+	const [isDoneLogin, setIsDoneLogin] = useState(false);
 	const [myFunction, setMyFunction] = useState(null);
 
 	const onAuth = async (user) => {
@@ -27,29 +37,43 @@ export const AuthenticationContextProvider = ({ children }) => {
 			isNewCustomer: true,
 			listDateCheckIn: [],
 		});
+		subscribeUserSnapShot(userRef);
+	};
+
+	const subscribeUserSnapShot = async (userRef) => {
 		const unsubscribe = await userRef.onSnapshot(async (snapShot) => {
-			const userObj = { id: snapShot.id, ...snapShot.data() };
-			setUser({
-				...userObj,
-			});
-			checkPhoneToken(userObj);
-			const jsonValue = JSON.stringify(userObj);
-			await AsyncStorage.setItem(`@users`, jsonValue);
+			if (snapShot.data()) {
+				const userObj = { id: snapShot.id, ...snapShot.data() };
+				setUser({
+					...userObj,
+				});
+				setIsDoneLogin(true);
+				const jsonValue = JSON.stringify(userObj);
+				await AsyncStorage.setItem(`@users`, jsonValue);
+			}
 		});
-		console.log('unsubscribe: ', unsubscribe);
 		setMyFunction(() => unsubscribe);
 	};
 
 	useEffect(() => {
 		if (!user) {
-			const value = AsyncStorage.getItem(`@users`);
-			if (value) {
-				value.then((result) => {
-					setUser(JSON.parse(result));
-				});
-			}
+			AsyncStorage.getItem(`@users`).then((value) => {
+				if (value) {
+					const userJsonParse = JSON.parse(value);
+					setUser(userJsonParse);
+					const userRef = getUserRefByUserId(userJsonParse.id);
+					subscribeUserSnapShot(userRef);
+				}
+			});
 		}
 	}, []);
+
+	useEffect(() => {
+		if (user && isDoneLogin) {
+			checkPhoneToken(user);
+			setIsDoneLogin(false);
+		}
+	}, [user, isDoneLogin]);
 
 	const verificationPhoneNumber = (phoneNumber, recaptchaVerifier) => {
 		setIsLoading(true);
@@ -86,8 +110,8 @@ export const AuthenticationContextProvider = ({ children }) => {
 		}
 		setProcessVerificationCode(true);
 		confirmCodeRequest(verificationId, code)
-			.then((result) => {
-				onAuth(result);
+			.then(async (result) => {
+				await onAuth(result);
 				setProcessVerificationCode(false);
 			})
 			.catch((e) => {
@@ -99,12 +123,12 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const onLogout = async () => {
-		if (myFunction) {
-			await myFunction();
-		}
-		await removePhoneToken(user);
-		await AsyncStorage.removeItem('@users');
-		await firebase.auth().signOut();
+		// if (myFunction) {
+		// 	await myFunction();
+		// }
+		// await removePhoneToken(user);
+		// await AsyncStorage.removeItem('@users');
+		// await firebase.auth().signOut();
 		setUser(null);
 		setVerificationId(null);
 		setError([]);
@@ -133,6 +157,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				processVerificationCode,
 				removePhoneTokenForUser,
 				setUser,
+				isDoneLogin,
 			}}
 		>
 			{children}

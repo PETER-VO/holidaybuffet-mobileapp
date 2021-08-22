@@ -24,7 +24,10 @@ export const confirmCodeRequest = async (verificationId, code) => {
 	return await firebase.auth().signInWithCredential(credential);
 };
 
-var phoneToken = '';
+export const getUserRefByUserId = (userId) => {
+	const userRef = firestore.doc(`users/${userId}`);
+	return userRef;
+};
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
 	if (!userAuth) return;
@@ -32,12 +35,6 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 	const userRef = firestore.doc(`users/${uid}`);
 	const snapShot = await userRef.get();
 	let phoneTokens = [];
-	await registerForPushNotificationsAsync()
-		.then((result) => {
-			phoneToken = result;
-			phoneTokens.push(result);
-		})
-		.catch((e) => console.log('Register phone token error:', e.message));
 
 	if (!snapShot.exists) {
 		const createdAt = new Date();
@@ -81,23 +78,30 @@ export const getAllAvailableVouchers = async () => {
 	return results;
 };
 
-export const checkPhoneToken = (user) => {
+export const checkPhoneToken = async (user) => {
+	var phoneToken = '';
+	await registerForPushNotificationsAsync()
+		.then((result) => {
+			phoneToken = result;
+		})
+		.catch((e) => console.log('Register phone token error:', e.message));
 	if (user) {
 		if (!user.phoneTokens.includes(phoneToken)) {
 			user.phoneTokens.push(phoneToken);
 			const userRef = firestore.doc(`users/${user.id}`);
 			userRef.update({ phoneTokens: user.phoneTokens });
-			console.log('Done');
 		}
 	}
 };
 
 export const removePhoneToken = async (user) => {
+	var phoneToken = '';
+	await registerForPushNotificationsAsync()
+		.then((result) => {
+			phoneToken = result;
+		})
+		.catch((e) => console.log('Register phone token error:', e.message));
 	if (user && user.phoneTokens) {
-		let phoneToken = '';
-		await registerForPushNotificationsAsync()
-			.then((result) => (phoneToken = result))
-			.catch((e) => console.log('Register phone token error:', e.message));
 		const index = user.phoneTokens.indexOf(phoneToken);
 		if (index > -1) {
 			user.phoneTokens.splice(index, 1);

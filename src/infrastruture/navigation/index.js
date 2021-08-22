@@ -5,7 +5,6 @@ import { AppNavigator } from './app.navigator';
 import { AccountNavigator } from './account.navigator';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { SafeArea } from '../../components/utils/safe-area.component';
-import { ScanFailedScreen } from '../../features/settings/screens/qrcode/scan-failed.screen';
 
 export const Navigation = () => {
 	const { isAuthenticated } = useContext(AuthenticationContext);

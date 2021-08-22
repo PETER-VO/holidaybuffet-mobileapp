@@ -1,19 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Image, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Text } from '../../../../components/typography/text.component';
 import { SafeArea } from '../../../../components/utils/safe-area.component';
-import {
-	TitleCustomTradesForm,
-	Section,
-	TextTitle,
-	TextValue,
-	Number,
-} from './components/show-user-inform.styles';
-import {
-	formattedDateAndTime,
-	formattedDate,
-} from '../../../../components/utils/useful-method';
+import { TitleCustomTradesForm } from './components/show-user-inform.styles';
 import { UsedVoucher } from './components/used-voucher.component';
 import { UserInfo } from './components/user-info.component';
 import { ExistedVoucher } from './components/existed-voucher.component';

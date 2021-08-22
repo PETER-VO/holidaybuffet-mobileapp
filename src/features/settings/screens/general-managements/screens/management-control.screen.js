@@ -18,7 +18,7 @@ export const ManagementControl = ({ navigation }) => {
 					title='Notification'
 					description='View your favourites'
 					left={(props) => <List.Icon {...props} color='black' icon='heart' />}
-					onPress={() => navigation.navigate('Favourites')}
+					onPress={() => navigation.navigate('Notification')}
 				/>
 				<List.Item
 					style={{ padding: 16 }}

@@ -1,5 +1,4 @@
 import { firestore } from '../../firebase/firebase.utils';
-import { formattedDateAndTime } from '../../components/utils/useful-method';
 
 export const getAllUsersRequest = async () => {
 	const results = [];
@@ -47,6 +46,11 @@ export const getUserByUserIdRequest = async (userId) => {
 		return Promise.reject(new Error('This id_user does not exist'));
 	}
 	return result;
+};
+
+export const getUserRefByUserIdRequest = (userId) => {
+	const userRef = firestore.doc(`users/${userId}`);
+	return userRef;
 };
 
 export const getAllFeedbacksByUserIdRequest = async (userId) => {

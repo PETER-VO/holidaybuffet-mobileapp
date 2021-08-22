@@ -6,7 +6,7 @@ import { QRCodeContext } from '../../../../services/qr-code/qr-code.context';
 
 export const ScanQRCodeLoading = ({ navigation, route }) => {
 	let animation = null;
-	const [QRCode, setQRCode] = useState(route.params.QRCode);
+	const [QRCode] = useState(route.params.QRCode);
 	const {
 		isVoucherError,
 		isVoucherValid,
