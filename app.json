@@ -41,14 +41,6 @@
 			"androidMode": "default",
 			"androidCollapsedTitle": "HolidayBuffet",
 			"iosDisplayInForeground": true
-		},
-		"build": {
-			"release": {},
-			"preview": {
-				"ios": {
-					"simulator": true
-				}
-			}
 		}
 	}
 }

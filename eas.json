@@ -1,9 +1,14 @@
 {
-  "build": {
-    "release": {},
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    }
-  }
+	"build": {
+		"release": {},
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal"
+		},
+		"preview": {
+			"ios": {
+				"simulator": true
+			}
+		}
+	}
 }
