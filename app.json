@@ -16,7 +16,8 @@
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
-			"buildNumber": 2
+			"buildNumber": "2",
+			"bundleIdentifier": "com.holidaybuffet.restaurant"
 		},
 		"android": {
 			"adaptiveIcon": {
@@ -40,6 +41,14 @@
 			"androidMode": "default",
 			"androidCollapsedTitle": "HolidayBuffet",
 			"iosDisplayInForeground": true
+		},
+		"build": {
+			"release": {},
+			"preview": {
+				"ios": {
+					"simulator": true
+				}
+			}
 		}
 	}
 }
