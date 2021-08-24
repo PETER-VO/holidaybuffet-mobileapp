@@ -48,11 +48,6 @@ export const getUserByUserIdRequest = async (userId) => {
 	return result;
 };
 
-export const getUserRefByUserIdRequest = (userId) => {
-	const userRef = firestore.doc(`users/${userId}`);
-	return userRef;
-};
-
 export const getAllFeedbacksByUserIdRequest = async (userId) => {
 	let results = [];
 	const feedbackRef = firestore.collection(`users/${userId}/feedbacks`);

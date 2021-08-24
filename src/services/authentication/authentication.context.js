@@ -80,7 +80,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 		if (!phoneNumber) {
 			return;
-			user;
 		}
 
 		const POSTAL_CODE = '+358';
@@ -98,6 +97,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 			})
 			.catch((e) => {
 				setIsLoading(false);
+				console.log('Error1: ', e.message);
 				if (e.toString() !== exceptedError[0]) {
 					setError(e.toString());
 				}
@@ -123,12 +123,12 @@ export const AuthenticationContextProvider = ({ children }) => {
 	};
 
 	const onLogout = async () => {
-		// if (myFunction) {
-		// 	await myFunction();
-		// }
-		// await removePhoneToken(user);
-		// await AsyncStorage.removeItem('@users');
-		// await firebase.auth().signOut();
+		if (myFunction) {
+			await myFunction();
+		}
+		await removePhoneToken(user);
+		await AsyncStorage.removeItem('@users');
+		await firebase.auth().signOut();
 		setUser(null);
 		setVerificationId(null);
 		setError([]);
@@ -136,6 +136,10 @@ export const AuthenticationContextProvider = ({ children }) => {
 
 	const clearError = () => {
 		setError([]);
+	};
+
+	const removeVerification = () => {
+		setVerificationId(null);
 	};
 
 	const removePhoneTokenForUser = (user) => {
@@ -157,6 +161,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 				processVerificationCode,
 				removePhoneTokenForUser,
 				setUser,
+				removeVerification,
 				isDoneLogin,
 			}}
 		>

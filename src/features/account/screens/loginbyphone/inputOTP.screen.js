@@ -39,6 +39,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 		verificationPhoneNumber,
 		clearError,
 		processVerificationCode,
+		removeVerification,
 	} = useContext(AuthenticationContext);
 
 	const onChangeCode = (number) => setCode(number);
@@ -71,9 +72,12 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	};
 
 	useEffect(() => {
-		clockCall = setInterval(() => {
-			decrementClock();
-		}, 1000);
+		function callback() {
+			clockCall = setInterval(() => {
+				decrementClock();
+			}, 1000);
+		}
+		callback();
 		return () => {
 			clearInterval(clockCall);
 		};
@@ -95,7 +99,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 	}, [inputRef]);
 
 	useEffect(() => {
-		if (error) {
+		if (error.length !== 0) {
 			setCode('');
 		}
 	}, [error]);
@@ -175,6 +179,7 @@ export const InputOTPScreen = ({ navigation, route }) => {
 						onPress={() => {
 							navigation.goBack();
 							clearError();
+							removeVerification();
 						}}
 					>
 						Back

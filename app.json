@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "HolidayBuffet",
 		"slug": "HolidayBuffet",
-		"version": "2.0.0",
+		"version": "2.0.1",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"splash": {
@@ -27,7 +27,7 @@
 			"package": "com.holidaybuffet.restaurant",
 			"useNextNotificationsApi": true,
 			"googleServicesFile": "./google-services.json",
-			"versionCode": 2,
+			"versionCode": 3,
 			"permissions": [
 				"CAMERA",
 				"READ_CONTACTS",

@@ -23,47 +23,41 @@ import { TextTradesWindFont } from '../../../../components/utils/text-trades-win
 export const LoginByPhoneScreen = ({ navigation }) => {
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [focusInput, setFocusInput] = useState(true);
-	const [code, setCode] = useState('');
 	const [move, setMove] = useState(false);
-	const [checkForm, setCheckForm] = useState(false);
 	const [inputRef, setInputRef] = useState(null);
 	const recaptchaVerifier = useRef(null);
-	const [toggle, setToggle] = useState(false);
 	const firebaseConfig = firebase.apps.length
 		? firebase.app().options
 		: undefined;
 
-	const { verificationPhoneNumber, verificationId, error, clearError } =
-		useContext(AuthenticationContext);
+	const {
+		verificationPhoneNumber,
+		verificationId,
+		error,
+		clearError,
+		isLoading,
+		removeVerification,
+	} = useContext(AuthenticationContext);
 
 	const onChangePhone = (number) => setPhoneNumber(number);
 
 	useEffect(() => {
-		if (toggle && verificationId) {
-			setToggle(true);
+		if (verificationId) {
 			setTimeout(() => {
-				setToggle(false);
-				setMove(true);
+				const POSTAL_CODE = '+358';
+				let phoneNumber_ = phoneNumber.toString();
+
+				if (phoneNumber_[0] === '0') {
+					phoneNumber_ = phoneNumber_.slice(1);
+				}
+
+				clearError();
+				navigation.navigate('InputOTP', {
+					phoneNumber: `${POSTAL_CODE}${phoneNumber_}`,
+				});
 			}, 2000);
 		}
-	});
-
-	useEffect(() => {
-		if (move) {
-			setMove(false);
-			//TODO: find out another way to trigger this without having to create a new state of move
-			const POSTAL_CODE = '+358';
-			let phoneNumber_ = phoneNumber.toString();
-
-			if (phoneNumber_[0] === '0') {
-				phoneNumber_ = phoneNumber_.slice(1);
-			}
-
-			navigation.navigate('InputOTP', {
-				phoneNumber: `${POSTAL_CODE}${phoneNumber_}`,
-			});
-		}
-	}, [move]);
+	}, [verificationId]);
 
 	useEffect(() => {
 		function callback() {
@@ -107,7 +101,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							</ErrorContainer>
 						</Spacer>
 					)}
-					{!toggle ? (
+					{!isLoading ? (
 						<AuthButton
 							icon='lock-open-outline'
 							style={{
@@ -120,7 +114,6 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 									`${phoneNumber}`,
 									recaptchaVerifier.current
 								);
-								setToggle(true);
 							}}
 						>
 							Send Verification
@@ -137,6 +130,7 @@ export const LoginByPhoneScreen = ({ navigation }) => {
 							setPhoneNumber('');
 							navigation.goBack();
 							clearError();
+							removeVerification();
 						}}
 					>
 						Back
